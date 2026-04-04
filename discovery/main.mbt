@@ -51,14 +51,16 @@ async fn main {
   }
   match output_dir {
     Some(dir) => {
-      @fs.mkdir(dir, permission=0o755, recursive=true) catch {
-        e => {
-          let msg = match e {
-            @fs.IOError::IOError(s) => s
+      if !@fs.exists(dir) {
+        @fs.mkdir(dir, permission=0o755, recursive=true) catch {
+          e => {
+            let msg = match e {
+              @fs.IOError::IOError(s) => s
+            }
+            println(msg)
+            @sys.exit(1)
+            panic()
           }
-          println(msg)
-          @sys.exit(1)
-          panic()
         }
       }
       let types_content = generate_types(desc)

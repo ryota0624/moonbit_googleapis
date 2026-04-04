@@ -557,7 +557,7 @@ fn write_rest_method(
     b.write_string("  let qp : Array[(String, String)] = Array::new()\n")
     for qp in query_pairs {
       let arg = safe_field_name(qp.0)
-      write_query_param_push(b, qp.0, qp.1, arg + "?")
+      write_query_param_push(b, qp.0, qp.1, arg)
     }
     b.write_string("  let qs = build_query_string(qp)\n")
   }
@@ -569,7 +569,7 @@ fn write_rest_method(
     }
     for bp in body_opt {
       let arg = safe_field_name(bp.0)
-      write_body_field_match(b, bp.0, bp.1, arg + "?")
+      write_body_field_match(b, bp.0, bp.1, arg)
     }
     b.write_string("  let body = Json::object(meta).stringify()\n")
     b.write_string("  let h = self.auth_headers()\n")

@@ -150,7 +150,7 @@ test "generate_types and generate_client snapshot" {
       #|  let meta : Map[String, Json] = Map::new()
       #|  meta.set("name", Json::string(name))
       #|  meta.set("mimeType", Json::string(mime_type))
-      #|  match parents? {
+      #|  match parents {
       #|    Some(v) => {
       #|      let ja : Array[Json] = Array::new()
       #|      for x in v {
@@ -176,7 +176,7 @@ test "generate_types and generate_client snapshot" {
       #|  fields? : String? = None,
       #|) -> @http.HttpRequest {
       #|  let qp : Array[(String, String)] = Array::new()
-      #|  match fields? {
+      #|  match fields {
       #|    Some(v) => qp.push(("fields", url_encode(v)))
       #|    None => ()
       #|  }
@@ -199,15 +199,15 @@ test "generate_types and generate_client snapshot" {
       #|  q? : String? = None,
       #|) -> @http.HttpRequest {
       #|  let qp : Array[(String, String)] = Array::new()
-      #|  match page_size? {
+      #|  match page_size {
       #|    Some(v) => qp.push(("pageSize", v.to_string()))
       #|    None => ()
       #|  }
-      #|  match page_token? {
+      #|  match page_token {
       #|    Some(v) => qp.push(("pageToken", url_encode(v)))
       #|    None => ()
       #|  }
-      #|  match q? {
+      #|  match q {
       #|    Some(v) => qp.push(("q", url_encode(v)))
       #|    None => ()
       #|  }
