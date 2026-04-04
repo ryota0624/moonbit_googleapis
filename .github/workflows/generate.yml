@@ -1,0 +1,31 @@
+name: Generate API clients
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Drive Discovery Document
+        run: curl -sS -o /tmp/drive_discovery.json "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"
+
+      - name: Create output directory
+        run: mkdir -p generated/drive
+
+      - name: Generate Drive API client
+        run: moon run discovery/ --target native -- /tmp/drive_discovery.json --output generated/drive
+
+      - name: Format generated code
+        run: moon fmt generated/drive
+
+      - name: Update interfaces
+        run: moon info
+
+      - name: Check compilation
+        run: moon check
+
+      - name: Run tests
+        run: moon test
