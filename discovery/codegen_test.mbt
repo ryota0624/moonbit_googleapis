@@ -1,4 +1,22 @@
 ///|
+async test "generate_helpers matches services/drive/helpers.mbt" {
+  let expected = @fs.read_file("services/drive/helpers.mbt").text()
+  assert_eq(generate_helpers(), expected)
+}
+
+///|
+test "generate_moon_pkg" {
+  let want =
+    #|import {
+    #|  "moonbitlang/core/buffer" @buffer,
+    #|  "moonbitlang/core/json" @json,
+    #|  "ryota0624/googleapis/http" @http,
+    #|}
+
+  assert_eq(generate_moon_pkg("ryota0624/googleapis", "drive"), want + "\n")
+}
+
+///|
 test "to_snake_case" {
   assert_eq(to_snake_case("mimeType"), "mime_type")
   assert_eq(to_snake_case("drive"), "drive")
