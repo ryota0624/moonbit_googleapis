@@ -6,9 +6,13 @@ import {
 }
 
 // Values
+pub fn capitalize_first(String) -> String
+
 pub fn generate_client(RestDescription) -> String
 
 pub fn generate_types(RestDescription) -> String
+
+pub fn param_type_to_moonbit(String?) -> String
 
 pub fn parse_discovery(String) -> RestDescription raise ParseError
 
