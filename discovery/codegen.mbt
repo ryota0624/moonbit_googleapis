@@ -110,6 +110,56 @@ fn sanitize_type_identifier(raw : String) -> String {
 }
 
 ///|
+fn is_reserved_word(s : String) -> Bool {
+  s == "type" ||
+  s == "ref" ||
+  s == "match" ||
+  s == "if" ||
+  s == "else" ||
+  s == "for" ||
+  s == "while" ||
+  s == "break" ||
+  s == "continue" ||
+  s == "return" ||
+  s == "fn" ||
+  s == "let" ||
+  s == "mut" ||
+  s == "pub" ||
+  s == "priv" ||
+  s == "struct" ||
+  s == "enum" ||
+  s == "trait" ||
+  s == "impl" ||
+  s == "true" ||
+  s == "false" ||
+  s == "method"
+}
+
+///|
+fn safe_field_name(name : String) -> String {
+  let snake = to_snake_case(name)
+  if is_reserved_word(snake) {
+    snake + "_"
+  } else {
+    snake
+  }
+}
+
+///|
+fn collect_renamed_fields(
+  props : Map[String, JsonSchema],
+) -> Array[(String, String)] {
+  let renamed : Array[(String, String)] = []
+  props.each((field_name, _prop) => {
+    let safe = safe_field_name(field_name)
+    if safe != to_snake_case(field_name) {
+      renamed.push((safe, field_name))
+    }
+  })
+  renamed
+}
+
+///|
 fn write_schema_struct(
   b : StringBuilder,
   schema_name : String,
@@ -117,17 +167,40 @@ fn write_schema_struct(
 ) -> Unit {
   let type_name = sanitize_type_identifier(schema_name)
   b.write_string("///| Schema \{schema_name}\n")
-  b.write_string("pub struct \{type_name} {\n")
+  let renamed = match schema.properties {
+    Some(props) => collect_renamed_fields(props)
+    None => []
+  }
+  b.write_string("pub(all) struct \{type_name} {\n")
   match schema.properties {
     Some(props) =>
       props.each((field_name, prop) => {
-        let field = to_snake_case(field_name)
+        let field = safe_field_name(field_name)
         let ty = schema_to_field_type(prop)
-        b.write_string("  \{field} : \{ty}\n")
+        b.write_string("  \{field} : \{ty}?\n")
       })
     None => b.write_string("  // no properties\n")
   }
-  b.write_string("}\n\n")
+  b.write_string("}")
+  if renamed.is_empty() {
+    b.write_string(
+      " derive(Eq, Show, FromJson(rename_fields=\"camelCase\"))\n\n",
+    )
+  } else {
+    b.write_string(
+      " derive(Eq, Show, FromJson(rename_fields=\"camelCase\", fields(",
+    )
+    for i in 0..<renamed.length() {
+      if i > 0 {
+        b.write_string(", ")
+      }
+      let pair = renamed[i]
+      let safe = pair.0
+      let json_key = pair.1
+      b.write_string("\{safe}(rename=\"\{json_key}\")")
+    }
+    b.write_string(")))\n\n")
+  }
 }
 
 ///|

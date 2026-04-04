@@ -19,7 +19,9 @@ test "generate_types and generate_client snapshot" {
     #|      "type": "object",
     #|      "properties": {
     #|        "id": { "type": "string" },
-    #|        "mimeType": { "type": "string" }
+    #|        "mimeType": { "type": "string" },
+    #|        "type": { "type": "string" },
+    #|        "ref": { "type": "string" }
     #|      }
     #|    }
     #|  },
@@ -40,10 +42,12 @@ test "generate_types and generate_client snapshot" {
   let out = generate_types(d) + "\n---\n" + generate_client(d)
   let expected =
     #|///| Schema File
-    #|pub struct File {
-    #|  id : String
-    #|  mime_type : String
-    #|}
+    #|pub(all) struct File {
+    #|  id : String?
+    #|  mime_type : String?
+    #|  type_ : String?
+    #|  ref_ : String?
+    #|} derive(Eq, Show, FromJson(rename_fields="camelCase", fields(type_(rename="type"), ref_(rename="ref"))))
     #|
     #|
     #|---
