@@ -1,0 +1,52 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ryota0624/googleapis/http"
+
+// Values
+pub fn default_http_request(HttpRequest) -> HttpResponse raise HttpError
+
+pub fn parse_http_method(String) -> HttpMethod?
+
+// Errors
+pub suberror HttpError {
+  NetworkError(String)
+  TimeoutError(String)
+  InvalidUrl(String)
+}
+
+// Types and methods
+pub struct DefaultHttpClient {
+}
+pub fn DefaultHttpClient::new() -> Self
+pub async fn DefaultHttpClient::request_async(Self, HttpRequest) -> HttpResponse raise HttpError
+pub impl HttpClient for DefaultHttpClient
+
+pub(all) enum HttpMethod {
+  GET
+  POST
+  PUT
+  DELETE
+  PATCH
+} derive(Eq, Show)
+
+pub(all) struct HttpRequest {
+  url : String
+  method_ : HttpMethod
+  headers : Map[String, String]
+  body : String?
+}
+pub fn HttpRequest::new(String, HttpMethod, Map[String, String], body? : String?) -> Self
+
+pub(all) struct HttpResponse {
+  status_code : Int
+  headers : Map[String, String]
+  body : String
+}
+pub fn HttpResponse::new(Int, Map[String, String], String) -> Self
+
+// Type aliases
+
+// Traits
+pub(open) trait HttpClient {
+  request(Self, HttpRequest) -> HttpResponse raise HttpError
+}
+

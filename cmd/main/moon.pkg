@@ -1,0 +1,7 @@
+// import {
+//   "username/moonbit_googleapis" @lib,
+// }
+
+options(
+  "is-main": true,
+)

@@ -1,0 +1,16 @@
+import {
+  "moonbitlang/async",
+  "moonbitlang/core/json" @json,
+  "mizchi/x/fs" @fs,
+  "mizchi/x/sys" @sys,
+}
+
+warnings = "-0029"
+
+options(
+  "is-main": true,
+  targets: {
+    "main.mbt": [ "native", "js" ],
+    "main_wasm.mbt": [ "wasm", "wasm-gc" ],
+  },
+)
