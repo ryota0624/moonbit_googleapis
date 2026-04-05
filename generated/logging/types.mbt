@@ -392,11 +392,15 @@ pub(all) struct ProjectedField {
   field : String?
   operation : String?
   sql_aggregation_function : FunctionApplication?
-  alias : String?
+  alias_ : String?
   cast : String?
   regex_extraction : String?
   truncation_granularity : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(alias_(rename="alias"))),
+)
 
 ///|
 /// Schema FunctionApplication

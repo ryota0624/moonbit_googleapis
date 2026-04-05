@@ -15,7 +15,7 @@ pub(all) struct Aggregation {
   count : Count?
   sum : Sum?
   avg : Avg?
-  alias : String?
+  alias_ : String?
 } derive(Eq, Show, @json.FromJson)
 
 pub(all) struct AggregationResult {

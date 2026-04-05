@@ -12,6 +12,8 @@ test "generate_moon_pkg" {
     #|  "moonbitlang/core/json" @json,
     #|  "ryota0624/googleapis/http" @http,
     #|}
+    #|
+    #|warnings = "-0001"
 
   assert_eq(generate_moon_pkg("ryota0624/googleapis", "drive"), want + "\n")
 }

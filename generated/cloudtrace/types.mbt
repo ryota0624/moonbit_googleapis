@@ -74,9 +74,13 @@ pub(all) struct StackFrame {
 ///|
 /// Schema Module
 pub(all) struct Module {
-  module : TruncatableString?
+  module_ : TruncatableString?
   build_id : TruncatableString?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(module_(rename="module"))),
+)
 
 ///|
 /// Schema TimeEvents

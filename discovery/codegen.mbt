@@ -821,7 +821,10 @@ fn is_reserved_word(s : String) -> Bool {
   s == "false" ||
   s == "method" ||
   s == "unreachable" ||
-  s == "where"
+  s == "where" ||
+  s == "module" ||
+  s == "alias" ||
+  s == "namespace"
 }
 
 ///|
@@ -1018,6 +1021,7 @@ pub fn generate_moon_pkg(module_name : String, api_name : String) -> String {
   b.write_string("  \"moonbitlang/core/buffer\" @buffer,\n")
   b.write_string("  \"moonbitlang/core/json\" @json,\n")
   b.write_string("  \"\{module_name}/http\" @http,\n")
-  b.write_string("}\n")
+  b.write_string("}\n\n")
+  b.write_string("warnings = \"-0001\"\n")
   b.to_string()
 }

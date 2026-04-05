@@ -830,8 +830,12 @@ pub(all) struct Aggregation {
   count : Count?
   sum : Sum?
   avg : Avg?
-  alias : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+  alias_ : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(alias_(rename="alias"))),
+)
 
 ///|
 /// Schema Count

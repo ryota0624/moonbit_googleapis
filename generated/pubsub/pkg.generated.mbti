@@ -53,7 +53,7 @@ pub(all) struct AwsMsk {
 pub(all) struct AzureEventHubs {
   state : String?
   resource_group : String?
-  namespace : String?
+  namespace_ : String?
   event_hub : String?
   client_id : String?
   tenant_id : String?

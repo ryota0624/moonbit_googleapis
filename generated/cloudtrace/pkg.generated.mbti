@@ -62,7 +62,7 @@ pub(all) struct MessageEvent {
 } derive(Eq, Show, @json.FromJson)
 
 pub(all) struct Module {
-  module : TruncatableString?
+  module_ : TruncatableString?
   build_id : TruncatableString?
 } derive(Eq, Show, @json.FromJson)
 

@@ -208,13 +208,17 @@ pub(all) struct PubSubAvroFormat {} derive (
 pub(all) struct AzureEventHubs {
   state : String?
   resource_group : String?
-  namespace : String?
+  namespace_ : String?
   event_hub : String?
   client_id : String?
   tenant_id : String?
   subscription_id : String?
   gcp_service_account : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(namespace_(rename="namespace"))),
+)
 
 ///|
 /// Schema AwsMsk

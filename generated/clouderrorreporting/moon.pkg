@@ -3,3 +3,5 @@ import {
   "moonbitlang/core/json" @json,
   "ryota0624/googleapis/http" @http,
 }
+
+warnings = "-0001"
