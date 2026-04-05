@@ -28,7 +28,8 @@ Add to your `moon.mod.json`:
 
 ### Drive API - List files
 
-```moonbit
+```moonbit nocheck
+///|
 async fn main {
   let token = @sys.get_env_var("GOOGLE_ACCESS_TOKEN").unwrap()
   let drive = @drive.DriveService::new(token)
@@ -77,36 +78,54 @@ moon run discovery/ --target native -- /tmp/drive.json
 
 ### HTTP Layer
 
-```moonbit
+```moonbit nocheck
 // Pluggable HTTP client
+///|
 pub(open) trait HttpClient {
   request(Self, HttpRequest) -> HttpResponse raise HttpError
 }
 
 // Default implementation using mizchi/x/http
+
+///|
 let client = DefaultHttpClient::new()
+
+///|
 let resp = client.request(req)
 ```
 
 ### Drive API
 
-```moonbit
+```moonbit nocheck
+///|
 let drive = DriveService::new(access_token)
 
 // List files
+
+///|
 let req = drive.files_list(page_size=10, q="mimeType='application/pdf'")
 
 // Get file metadata
+
+///|
 let req = drive.files_get(file_id)
 
 // Create file (metadata only)
+
+///|
 let req = drive.files_create("report.txt", "text/plain", parents=["folder_id"])
 ```
 
 ### Google Service (generic)
 
-```moonbit
-let svc = GoogleService::new(access_token, base_url="https://www.googleapis.com")
+```moonbit nocheck
+///|
+let svc = GoogleService::new(
+  access_token,
+  base_url="https://www.googleapis.com",
+)
+
+///|
 let resp = svc.execute("/drive/v3/files", @http.HttpMethod::GET)
 ```
 

@@ -741,7 +741,8 @@ fn is_reserved_word(s : String) -> Bool {
   s == "impl" ||
   s == "true" ||
   s == "false" ||
-  s == "method"
+  s == "method" ||
+  s == "unreachable"
 }
 
 ///|

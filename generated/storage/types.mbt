@@ -113,8 +113,15 @@ pub(all) struct Buckets {
   items : Array[Bucket]?
   kind : String?
   next_page_token : String?
-  unreachable : Array[String]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+  unreachable_ : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(
+    rename_fields="camelCase",
+    fields(unreachable_(rename="unreachable")),
+  ),
+)
 
 ///|
 /// Schema Channel

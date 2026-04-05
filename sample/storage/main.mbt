@@ -24,7 +24,7 @@ async fn main {
     Some(p) => p
   }
   try {
-    let storage = @storage.StorageService::new(token)
+    let storage = @gcs.StorageService::new(token)
     let req = storage.buckets_list(project=Some(project), max_results=Some(20))
     let client = @http.DefaultHttpClient::new()
     let resp = client.request(req)
@@ -45,7 +45,7 @@ async fn main {
         panic()
       }
     }
-    let buckets : @storage.Buckets = @json.from_json(json) catch {
+    let buckets : @gcs.Buckets = @json.from_json(json) catch {
       e => {
         println("JSON decode error: " + e.to_string())
         @sys.exit(1)

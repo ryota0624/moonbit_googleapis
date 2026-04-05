@@ -110,7 +110,7 @@ pub(all) struct Buckets {
   items : Array[Bucket]?
   kind : String?
   next_page_token : String?
-  unreachable : Array[String]?
+  unreachable_ : Array[String]?
 } derive(Eq, Show, @json.FromJson)
 
 pub(all) struct BulkRestoreObjectsRequest {
