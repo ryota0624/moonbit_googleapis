@@ -1,6 +1,6 @@
 ///|
-async test "generate_helpers matches services/drive/helpers.mbt" {
-  let expected = @fs.read_file("services/drive/helpers.mbt").text()
+async test "generate_helpers matches generated/drive/helpers.mbt" {
+  let expected = @fs.read_file("generated/drive/helpers.mbt").text()
   assert_eq(generate_helpers(), expected)
 }
 

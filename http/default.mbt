@@ -84,7 +84,7 @@ fn read_text_response(
 }
 
 ///|
-fn client_request_skip_body(
+async fn client_request_skip_body(
   req : HttpRequest,
   meth : HttpMethod,
 ) -> HttpResponse raise HttpError {
@@ -122,7 +122,9 @@ fn client_request_skip_body(
 }
 
 ///|
-pub fn default_http_request(req : HttpRequest) -> HttpResponse raise HttpError {
+pub async fn default_http_request(
+  req : HttpRequest,
+) -> HttpResponse raise HttpError {
   match req.method_ {
     GET => {
       let (resp, data) = @xhttp.get(req.url, headers=req.headers) catch {
@@ -174,17 +176,6 @@ pub fn DefaultHttpClient::new() -> DefaultHttpClient {
 }
 
 ///|
-pub async fn DefaultHttpClient::request_async(
-  _self : DefaultHttpClient,
-  req : HttpRequest,
-) -> HttpResponse raise HttpError {
-  @async.sleep(0) catch {
-    e => raise HttpError::NetworkError(e.to_string())
-  }
-  default_http_request(req)
-}
-
-///|
-pub impl HttpClient for DefaultHttpClient with request(_self, req) -> HttpResponse raise HttpError {
+pub impl HttpClient for DefaultHttpClient with request(_self, req) {
   default_http_request(req)
 }

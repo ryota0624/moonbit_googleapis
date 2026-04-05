@@ -44,7 +44,7 @@ pub fn GoogleService::new(
 }
 
 ///|
-pub fn GoogleService::execute(
+pub async fn GoogleService::execute(
   self : GoogleService,
   path : String,
   method_ : @http.HttpMethod,

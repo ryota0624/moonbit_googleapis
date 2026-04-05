@@ -33,7 +33,7 @@ pub struct GoogleService {
   base_url : String
   access_token : String
 }
-pub fn GoogleService::execute(Self, String, @http.HttpMethod, body? : String?, extra_headers? : Map[String, String]?) -> @http.HttpResponse raise GoogleApiError
+pub async fn GoogleService::execute(Self, String, @http.HttpMethod, body? : String?, extra_headers? : Map[String, String]?) -> @http.HttpResponse raise GoogleApiError
 pub fn GoogleService::new(String, base_url? : String?) -> Self
 
 pub(all) struct PagedResponse[T] {

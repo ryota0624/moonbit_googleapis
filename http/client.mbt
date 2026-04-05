@@ -1,4 +1,4 @@
 ///|
 pub(open) trait HttpClient {
-  request(Self, HttpRequest) -> HttpResponse raise HttpError
+  async request(Self, HttpRequest) -> HttpResponse raise HttpError
 }

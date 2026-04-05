@@ -21,7 +21,7 @@ async fn main {
     // 2. Client for Drive v3; each request gets `Authorization: Bearer …`.
     let drive = @drive.DriveService::new(token)
     // 3. Build `GET https://www.googleapis.com/drive/v3/files?pageSize=10`.
-    let req = drive.files_list(page_size=10)
+    let req = drive.files_list(page_size=Some(10))
     // 4. Run the HTTP request (blocking implementation behind the trait).
     let client = @http.DefaultHttpClient::new()
     let resp = client.request(req)
@@ -59,7 +59,9 @@ async fn main {
           println("  (empty list)")
         } else {
           for file in files {
-            println("  " + file.name + " (" + file.id + ")")
+            let name = file.name.unwrap_or("(no name)")
+            let id = file.id.unwrap_or("(no id)")
+            println("  " + name + " (" + id + ")")
           }
         }
     }

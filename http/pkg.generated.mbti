@@ -2,7 +2,7 @@
 package "ryota0624/googleapis/http"
 
 // Values
-pub fn default_http_request(HttpRequest) -> HttpResponse raise HttpError
+pub async fn default_http_request(HttpRequest) -> HttpResponse raise HttpError
 
 pub fn parse_http_method(String) -> HttpMethod?
 
@@ -17,7 +17,6 @@ pub suberror HttpError {
 pub struct DefaultHttpClient {
 }
 pub fn DefaultHttpClient::new() -> Self
-pub async fn DefaultHttpClient::request_async(Self, HttpRequest) -> HttpResponse raise HttpError
 pub impl HttpClient for DefaultHttpClient
 
 pub(all) enum HttpMethod {
@@ -47,6 +46,6 @@ pub fn HttpResponse::new(Int, Map[String, String], String) -> Self
 
 // Traits
 pub(open) trait HttpClient {
-  request(Self, HttpRequest) -> HttpResponse raise HttpError
+  async request(Self, HttpRequest) -> HttpResponse raise HttpError
 }
 
