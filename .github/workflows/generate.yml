@@ -3,31 +3,36 @@ name: Generate API clients
 on:
   workflow_dispatch:
 
+env:
+  APIS: >-
+    drive:v3
+    storage:v1
+    firestore:v1
+    pubsub:v1
+    cloudtasks:v2
+    cloudscheduler:v1
+    logging:v2
+    cloudtrace:v2
+    clouderrorreporting:v1beta1
+    monitoring:v3
+    bigquery:v2
+
 jobs:
   generate:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download Drive Discovery Document
-        run: curl -sS -o /tmp/drive_discovery.json "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"
-
-      - name: Create output directory
-        run: mkdir -p generated/drive
-
-      - name: Generate Drive API client
-        run: moon run discovery/ --target native -- /tmp/drive_discovery.json --output generated/drive
-
-      - name: Download Storage Discovery Document
-        run: curl -sS -o /tmp/storage_discovery.json "https://www.googleapis.com/discovery/v1/apis/storage/v1/rest"
-
-      - name: Generate Storage API client
-        run: moon run discovery/ --target native -- /tmp/storage_discovery.json --output generated/storage
-
-      - name: Format generated code
+      - name: Generate all API clients
         run: |
-          moon fmt generated/drive
-          moon fmt generated/storage
+          for entry in $APIS; do
+            api="${entry%%:*}"
+            version="${entry##*:}"
+            echo "=== Generating $api ($version) ==="
+            curl -sS -o "/tmp/${api}.json" "https://www.googleapis.com/discovery/v1/apis/${api}/${version}/rest"
+            moon run discovery/ --target native -- "/tmp/${api}.json" --output "generated/${api}"
+            moon fmt "generated/${api}"
+          done
 
       - name: Update interfaces
         run: moon info

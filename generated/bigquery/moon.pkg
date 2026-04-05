@@ -1,0 +1,5 @@
+import {
+  "moonbitlang/core/buffer" @buffer,
+  "moonbitlang/core/json" @json,
+  "ryota0624/googleapis/http" @http,
+}
