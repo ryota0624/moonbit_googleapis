@@ -18,8 +18,16 @@ jobs:
       - name: Generate Drive API client
         run: moon run discovery/ --target native -- /tmp/drive_discovery.json --output generated/drive
 
+      - name: Download Storage Discovery Document
+        run: curl -sS -o /tmp/storage_discovery.json "https://www.googleapis.com/discovery/v1/apis/storage/v1/rest"
+
+      - name: Generate Storage API client
+        run: moon run discovery/ --target native -- /tmp/storage_discovery.json --output generated/storage
+
       - name: Format generated code
-        run: moon fmt generated/drive
+        run: |
+          moon fmt generated/drive
+          moon fmt generated/storage
 
       - name: Update interfaces
         run: moon info

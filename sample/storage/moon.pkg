@@ -1,0 +1,17 @@
+import {
+  "moonbitlang/async",
+  "moonbitlang/core/json" @json,
+  "mizchi/x/sys" @sys,
+  "ryota0624/googleapis/http" @http,
+  "ryota0624/googleapis/generated/storage" @storage,
+}
+
+warnings = "-0029"
+
+options(
+  "is-main": true,
+  targets: {
+    "main.mbt": [ "native", "js" ],
+    "main_wasm.mbt": [ "wasm", "wasm-gc" ],
+  },
+)
