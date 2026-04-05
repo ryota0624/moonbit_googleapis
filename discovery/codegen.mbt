@@ -99,6 +99,33 @@ fn escape_moonbit_string_lit(s : String) -> String {
 }
 
 ///|
+/// Normalizes a Discovery parameter or path placeholder name so it can become a MoonBit
+/// identifier: strips leading `+` from `{+name}` URL templates, replaces `.` and `-` and
+/// other non-alphanumeric characters (except `_`) with `_`. The original string must still
+/// be used for query keys and JSON property names.
+fn normalize_param_name_for_ident(raw : String) -> String {
+  let chars = raw.to_array()
+  let n = chars.length()
+  let mut i = 0
+  while i < n && chars[i] == '+' {
+    i = i + 1
+  }
+  let b = StringBuilder::new()
+  while i < n {
+    let c = chars[i]
+    if c == '.' || c == '-' {
+      b.write_char('_')
+    } else if c.is_ascii_alphabetic() || c.is_ascii_digit() || c == '_' {
+      b.write_char(c)
+    } else {
+      b.write_char('_')
+    }
+    i = i + 1
+  }
+  b.to_string()
+}
+
+///|
 /// Path segments: `(text, is_variable)` where `is_variable` means placeholder name.
 fn path_parse_segments(template : String) -> Array[(String, Bool)] {
   let out : Array[(String, Bool)] = Array::new()
@@ -138,7 +165,7 @@ fn path_param_names_ordered(template : String) -> Array[String] {
   let out : Array[String] = Array::new()
   for seg in path_parse_segments(template) {
     if seg.1 {
-      out.push(seg.0)
+      out.push(normalize_param_name_for_ident(seg.0))
     }
   }
   out
@@ -723,7 +750,23 @@ fn ref_to_type_name(r : String) -> String {
   } else {
     parts[parts.length() - 1].to_string()
   }
-  sanitize_type_identifier(name)
+  moonbit_schema_type_name(name)
+}
+
+///|
+/// MoonBit reserves some names for built-in types; avoid clashes with generated structs.
+fn is_reserved_type_name(s : String) -> Bool {
+  s == "Error"
+}
+
+///|
+fn moonbit_schema_type_name(raw_schema_segment : String) -> String {
+  let id = sanitize_type_identifier(raw_schema_segment)
+  if is_reserved_type_name(id) {
+    id + "_"
+  } else {
+    id
+  }
 }
 
 ///|
@@ -777,12 +820,13 @@ fn is_reserved_word(s : String) -> Bool {
   s == "true" ||
   s == "false" ||
   s == "method" ||
-  s == "unreachable"
+  s == "unreachable" ||
+  s == "where"
 }
 
 ///|
 fn safe_field_name(name : String) -> String {
-  let snake = to_snake_case(name)
+  let snake = to_snake_case(normalize_param_name_for_ident(name))
   if is_reserved_word(snake) {
     snake + "_"
   } else {
@@ -810,7 +854,7 @@ fn write_schema_struct(
   schema_name : String,
   schema : JsonSchema,
 ) -> Unit {
-  let type_name = sanitize_type_identifier(schema_name)
+  let type_name = moonbit_schema_type_name(schema_name)
   b.write_string("///| Schema \{schema_name}\n")
   let renamed = match schema.properties {
     Some(props) => collect_renamed_fields(props)

@@ -24,6 +24,18 @@ test "to_snake_case" {
 }
 
 ///|
+test "safe_field_name strips plus and sanitizes dots dashes" {
+  assert_eq(safe_field_name("+name"), "name")
+  assert_eq(safe_field_name("++project"), "project")
+  assert_eq(
+    safe_field_name("serviceFilter.resourceType"),
+    "service_filter_resource_type",
+  )
+  assert_eq(safe_field_name("serviceFilter.service"), "service_filter_service")
+  assert_eq(safe_field_name("foo-bar"), "foo_bar")
+}
+
+///|
 test "capitalize_first" {
   assert_eq(capitalize_first("drive"), "Drive")
   assert_eq(capitalize_first(""), "")
