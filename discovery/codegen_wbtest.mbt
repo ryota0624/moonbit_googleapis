@@ -58,6 +58,13 @@ test "generate_types and generate_client snapshot" {
     #|        "type": { "type": "string" },
     #|        "ref": { "type": "string" }
     #|      }
+    #|    },
+    #|    "FileList": {
+    #|      "id": "FileList",
+    #|      "type": "object",
+    #|      "properties": {
+    #|        "files": { "type": "array", "items": { "$ref": "File" } }
+    #|      }
     #|    }
     #|  },
     #|  "resources": {
@@ -68,6 +75,7 @@ test "generate_types and generate_client snapshot" {
     #|          "path": "files",
     #|          "httpMethod": "GET",
     #|          "description": "Lists files",
+    #|          "response": { "$ref": "FileList" },
     #|          "parameters": {
     #|            "pageSize": { "type": "integer", "location": "query" },
     #|            "pageToken": { "type": "string", "location": "query" },
@@ -79,6 +87,7 @@ test "generate_types and generate_client snapshot" {
     #|          "path": "files/{fileId}",
     #|          "httpMethod": "GET",
     #|          "description": "Gets a file",
+    #|          "response": { "$ref": "File" },
     #|          "parameters": {
     #|            "fileId": { "type": "string", "required": true, "location": "path" },
     #|            "fields": { "type": "string", "location": "query" }
@@ -89,6 +98,7 @@ test "generate_types and generate_client snapshot" {
     #|          "path": "files",
     #|          "httpMethod": "POST",
     #|          "description": "Creates a file",
+    #|          "response": { "$ref": "File" },
     #|          "parameters": {
     #|            "name": { "type": "string", "required": true, "location": "body" },
     #|            "mimeType": { "type": "string", "required": true, "location": "body" },
@@ -111,6 +121,11 @@ test "generate_types and generate_client snapshot" {
       #|  type_ : String?
       #|  ref_ : String?
       #|} derive(Eq, Show, FromJson(rename_fields="camelCase", fields(type_(rename="type"), ref_(rename="ref"))))
+      #|
+      #|///| Schema FileList
+      #|pub(all) struct FileList {
+      #|  files : Array[File]?
+      #|} derive(Eq, Show, FromJson(rename_fields="camelCase"))
       #|
       #|
       #|---
@@ -141,12 +156,13 @@ test "generate_types and generate_client snapshot" {
       #|
       #|///| drive.files.create
       #|///| Creates a file
-      #|pub fn DriveService::files_create(
+      #|pub async fn DriveService::files_create(
       #|  self : DriveService,
+      #|  client : &@http.HttpClient,
       #|  name : String,
       #|  mime_type : String,
       #|  parents? : Array[String]? = None,
-      #|) -> @http.HttpRequest {
+      #|) -> File raise @http.HttpError {
       #|  let meta : Map[String, Json] = Map::new()
       #|  meta.set("name", Json::string(name))
       #|  meta.set("mimeType", Json::string(mime_type))
@@ -165,16 +181,31 @@ test "generate_types and generate_client snapshot" {
       #|  h.set("Content-Type", "application/json")
       #|  let path = "/" + "files"
       #|  let url = self.base_url + path
-      #|  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+      #|  let resp = client.request(req) catch {
+      #|    e => raise e
+      #|  }
+      #|  if resp.status_code >= 400 {
+      #|    raise @http.HttpError::network_message(
+      #|      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+      #|    )
+      #|  }
+      #|  let json = @json.parse(resp.body) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
+      #|  @json.from_json(json) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
       #|}
       #|
       #|///| drive.files.get
       #|///| Gets a file
-      #|pub fn DriveService::files_get(
+      #|pub async fn DriveService::files_get(
       #|  self : DriveService,
+      #|  client : &@http.HttpClient,
       #|  file_id : String,
       #|  fields? : String? = None,
-      #|) -> @http.HttpRequest {
+      #|) -> File raise @http.HttpError {
       #|  let qp : Array[(String, String)] = Array::new()
       #|  match fields {
       #|    Some(v) => qp.push(("fields", url_encode(v)))
@@ -187,17 +218,32 @@ test "generate_types and generate_client snapshot" {
       #|  } else {
       #|    self.base_url + path + "?" + qs
       #|  }
-      #|  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+      #|  let resp = client.request(req) catch {
+      #|    e => raise e
+      #|  }
+      #|  if resp.status_code >= 400 {
+      #|    raise @http.HttpError::network_message(
+      #|      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+      #|    )
+      #|  }
+      #|  let json = @json.parse(resp.body) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
+      #|  @json.from_json(json) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
       #|}
       #|
       #|///| drive.files.list
       #|///| Lists files
-      #|pub fn DriveService::files_list(
+      #|pub async fn DriveService::files_list(
       #|  self : DriveService,
+      #|  client : &@http.HttpClient,
       #|  page_size? : Int? = None,
       #|  page_token? : String? = None,
       #|  q? : String? = None,
-      #|) -> @http.HttpRequest {
+      #|) -> FileList raise @http.HttpError {
       #|  let qp : Array[(String, String)] = Array::new()
       #|  match page_size {
       #|    Some(v) => qp.push(("pageSize", v.to_string()))
@@ -218,7 +264,21 @@ test "generate_types and generate_client snapshot" {
       #|  } else {
       #|    self.base_url + path + "?" + qs
       #|  }
-      #|  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+      #|  let resp = client.request(req) catch {
+      #|    e => raise e
+      #|  }
+      #|  if resp.status_code >= 400 {
+      #|    raise @http.HttpError::network_message(
+      #|      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+      #|    )
+      #|  }
+      #|  let json = @json.parse(resp.body) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
+      #|  @json.from_json(json) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
       #|}
       #|
       #|

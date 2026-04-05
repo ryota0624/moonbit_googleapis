@@ -12,6 +12,7 @@ pub suberror HttpError {
   TimeoutError(String)
   InvalidUrl(String)
 }
+pub fn HttpError::network_message(String) -> Self
 
 // Types and methods
 pub struct DefaultHttpClient {

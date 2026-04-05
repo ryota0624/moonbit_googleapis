@@ -33,11 +33,9 @@ Add to your `moon.mod.json`:
 async fn main {
   let token = @sys.get_env_var("GOOGLE_ACCESS_TOKEN").unwrap()
   let drive = @drive.DriveService::new(token)
-  let req = drive.files_list(page_size=10)
-  let client = @http.DefaultHttpClient::new()
-  let resp = client.request(req)
-  let json = @json.parse(resp.body)
-  let file_list : @drive.FileList = @json.from_json(json)
+  let http = @http.DefaultHttpClient::new()
+  let client = http as &@http.HttpClient
+  let file_list = drive.files_list(client, page_size=Some(10))
   match file_list.files {
     Some(files) =>
       for file in files {
@@ -80,9 +78,10 @@ moon run discovery/ --target native -- /tmp/drive.json
 
 ```moonbit nocheck
 // Pluggable HTTP client
+
 ///|
 pub(open) trait HttpClient {
-  request(Self, HttpRequest) -> HttpResponse raise HttpError
+  async request(Self, HttpRequest) -> HttpResponse raise HttpError
 }
 
 // Default implementation using mizchi/x/http
@@ -99,21 +98,23 @@ let resp = client.request(req)
 ```moonbit nocheck
 ///|
 let drive = DriveService::new(access_token)
+let http = DefaultHttpClient::new()
+let client = http as &HttpClient
 
 // List files
 
 ///|
-let req = drive.files_list(page_size=10, q="mimeType='application/pdf'")
+let list = drive.files_list(client, page_size=Some(10), q=Some("mimeType='application/pdf'"))
 
 // Get file metadata
 
 ///|
-let req = drive.files_get(file_id)
+let file = drive.files_get(client, file_id)
 
 // Create file (metadata only)
 
 ///|
-let req = drive.files_create("report.txt", "text/plain", parents=["folder_id"])
+let created = drive.files_create(client, "report.txt", "text/plain", parents=Some(["folder_id"]))
 ```
 
 ### Google Service (generic)

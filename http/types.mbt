@@ -30,6 +30,13 @@ pub suberror HttpError {
 }
 
 ///|
+/// Constructs [`NetworkError`] for callers outside this package (suberror
+/// payloads cannot be built with `@http.HttpError::NetworkError(...)` elsewhere).
+pub fn HttpError::network_message(msg : String) -> HttpError {
+  HttpError::NetworkError(msg)
+}
+
+///|
 pub fn parse_http_method(s : String) -> HttpMethod? {
   match s.to_upper() {
     "GET" => Some(GET)

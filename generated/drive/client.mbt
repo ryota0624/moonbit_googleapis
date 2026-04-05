@@ -28,21 +28,41 @@ fn DriveService::auth_headers(self : DriveService) -> Map[String, String] {
 
 ///|
 /// Gets information about the user, the user's Drive, and system capabilities. For more information, see [Return user info](https://developers.google.com/workspace/drive/api/guides/user-info). Required: The `fields` parameter must be set. To return the exact fields you need, see [Return specific fields](https://developers.google.com/workspace/drive/api/guides/fields-parameter).
-pub fn DriveService::about_get(self : DriveService) -> @http.HttpRequest {
+pub async fn DriveService::about_get(
+  self : DriveService,
+  client : &@http.HttpClient,
+) -> About raise @http.HttpError {
   let path = "/" + "about"
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.accessproposals.get
 
 ///|
 /// Retrieves an access proposal by ID. For more information, see [Manage pending access proposals](https://developers.google.com/workspace/drive/api/guides/pending-access).
-pub fn DriveService::accessproposals_get(
+pub async fn DriveService::accessproposals_get(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   proposal_id : String,
-) -> @http.HttpRequest {
+) -> AccessProposal raise @http.HttpError {
   let path = "/" +
     "files" +
     "/" +
@@ -52,19 +72,36 @@ pub fn DriveService::accessproposals_get(
     "/" +
     proposal_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.accessproposals.list
 
 ///|
 /// List the access proposals on a file. For more information, see [Manage pending access proposals](https://developers.google.com/workspace/drive/api/guides/pending-access). Note: Only approvers are able to list access proposals on a file. If the user isn't an approver, a 403 error is returned.
-pub fn DriveService::accessproposals_list(
+pub async fn DriveService::accessproposals_list(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-) -> @http.HttpRequest {
+) -> ListAccessProposalsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
     Some(v) => qp.push(("pageSize", v.to_string()))
@@ -81,18 +118,35 @@ pub fn DriveService::accessproposals_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.accessproposals.resolve
 
 ///|
 /// Approves or denies an access proposal. For more information, see [Manage pending access proposals](https://developers.google.com/workspace/drive/api/guides/pending-access).
-pub fn DriveService::accessproposals_resolve(
+pub async fn DriveService::accessproposals_resolve(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   proposal_id : String,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
@@ -108,18 +162,31 @@ pub fn DriveService::accessproposals_resolve(
     "/" +
     ":resolve"
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.approvals.get
 
 ///|
 /// Gets an Approval by ID.
-pub fn DriveService::approvals_get(
+pub async fn DriveService::approvals_get(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   approval_id : String,
-) -> @http.HttpRequest {
+) -> Approval raise @http.HttpError {
   let path = "/" +
     "files" +
     "/" +
@@ -129,19 +196,36 @@ pub fn DriveService::approvals_get(
     "/" +
     approval_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.approvals.list
 
 ///|
 /// Lists the Approvals on a file.
-pub fn DriveService::approvals_list(
+pub async fn DriveService::approvals_list(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-) -> @http.HttpRequest {
+) -> ApprovalList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
     Some(v) => qp.push(("pageSize", v.to_string()))
@@ -158,32 +242,66 @@ pub fn DriveService::approvals_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.apps.get
 
 ///|
 /// Gets a specific app. For more information, see [Return user info](https://developers.google.com/workspace/drive/api/guides/user-info).
-pub fn DriveService::apps_get(
+pub async fn DriveService::apps_get(
   self : DriveService,
+  client : &@http.HttpClient,
   app_id : String,
-) -> @http.HttpRequest {
+) -> App raise @http.HttpError {
   let path = "/" + "apps" + "/" + app_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.apps.list
 
 ///|
 /// Lists a user's installed apps. For more information, see [Return user info](https://developers.google.com/workspace/drive/api/guides/user-info).
-pub fn DriveService::apps_list(
+pub async fn DriveService::apps_list(
   self : DriveService,
+  client : &@http.HttpClient,
   app_filter_extensions? : String? = None,
   app_filter_mime_types? : String? = None,
   language_code? : String? = None,
-) -> @http.HttpRequest {
+) -> AppList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match app_filter_extensions {
     Some(v) => qp.push(("appFilterExtensions", url_encode(v)))
@@ -204,20 +322,37 @@ pub fn DriveService::apps_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.changes.getStartPageToken
 
 ///|
 /// Gets the starting pageToken for listing future changes. For more information, see [Retrieve changes](https://developers.google.com/workspace/drive/api/guides/manage-changes).
-pub fn DriveService::changes_get_start_page_token(
+pub async fn DriveService::changes_get_start_page_token(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id? : String? = None,
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   team_drive_id? : String? = None,
-) -> @http.HttpRequest {
+) -> StartPageToken raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match drive_id {
     Some(v) => qp.push(("driveId", url_encode(v)))
@@ -242,15 +377,32 @@ pub fn DriveService::changes_get_start_page_token(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.changes.list
 
 ///|
 /// Lists the changes for a user or shared drive. For more information, see [Retrieve changes](https://developers.google.com/workspace/drive/api/guides/manage-changes).
-pub fn DriveService::changes_list(
+pub async fn DriveService::changes_list(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id? : String? = None,
   include_corpus_removals? : Bool? = None,
   include_items_from_all_drives? : Bool? = None,
@@ -265,7 +417,7 @@ pub fn DriveService::changes_list(
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   team_drive_id? : String? = None,
-) -> @http.HttpRequest {
+) -> ChangeList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match drive_id {
     Some(v) => qp.push(("driveId", url_encode(v)))
@@ -333,15 +485,32 @@ pub fn DriveService::changes_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.changes.watch
 
 ///|
 /// Subscribes to changes for a user. For more information, see [Notifications for resource changes](https://developers.google.com/workspace/drive/api/guides/push).
-pub fn DriveService::changes_watch(
+pub async fn DriveService::changes_watch(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id? : String? = None,
   include_corpus_removals? : Bool? = None,
   include_items_from_all_drives? : Bool? = None,
@@ -356,7 +525,7 @@ pub fn DriveService::changes_watch(
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   team_drive_id? : String? = None,
-) -> @http.HttpRequest {
+) -> Channel raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match drive_id {
     Some(v) => qp.push(("driveId", url_encode(v)))
@@ -428,64 +597,127 @@ pub fn DriveService::changes_watch(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.channels.stop
 
 ///|
 /// Stops watching resources through this channel. For more information, see [Notifications for resource changes](https://developers.google.com/workspace/drive/api/guides/push).
-pub fn DriveService::channels_stop(self : DriveService) -> @http.HttpRequest {
+pub async fn DriveService::channels_stop(
+  self : DriveService,
+  client : &@http.HttpClient,
+) -> @http.HttpResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
   h.set("Content-Type", "application/json")
   let path = "/" + "channels" + "/" + "stop"
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.comments.create
 
 ///|
 /// Creates a comment on a file. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments). Required: The `fields` parameter must be set. To return the exact fields you need, see [Return specific fields](https://developers.google.com/workspace/drive/api/guides/fields-parameter).
-pub fn DriveService::comments_create(
+pub async fn DriveService::comments_create(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
-) -> @http.HttpRequest {
+) -> Comment raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "comments"
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.comments.delete
 
 ///|
 /// Deletes a comment. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments).
-pub fn DriveService::comments_delete(
+pub async fn DriveService::comments_delete(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   comment_id : String,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let path = "/" + "files" + "/" + file_id + "/" + "comments" + "/" + comment_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::DELETE, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::DELETE,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.comments.get
 
 ///|
 /// Gets a comment by ID. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments). Required: The `fields` parameter must be set. To return the exact fields you need, see [Return specific fields](https://developers.google.com/workspace/drive/api/guides/fields-parameter).
-pub fn DriveService::comments_get(
+pub async fn DriveService::comments_get(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   comment_id : String,
   include_deleted? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Comment raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match include_deleted {
     Some(v) => qp.push(("includeDeleted", if v { "true" } else { "false" }))
@@ -498,21 +730,38 @@ pub fn DriveService::comments_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.comments.list
 
 ///|
 /// Lists a file's comments. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments). Required: The `fields` parameter must be set. To return the exact fields you need, see [Return specific fields](https://developers.google.com/workspace/drive/api/guides/fields-parameter).
-pub fn DriveService::comments_list(
+pub async fn DriveService::comments_list(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   include_deleted? : Bool? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
   start_modified_time? : String? = None,
-) -> @http.HttpRequest {
+) -> CommentList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match include_deleted {
     Some(v) => qp.push(("includeDeleted", if v { "true" } else { "false" }))
@@ -537,35 +786,70 @@ pub fn DriveService::comments_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.comments.update
 
 ///|
 /// Updates a comment with patch semantics. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments). Required: The `fields` parameter must be set. To return the exact fields you need, see [Return specific fields](https://developers.google.com/workspace/drive/api/guides/fields-parameter).
-pub fn DriveService::comments_update(
+pub async fn DriveService::comments_update(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   comment_id : String,
-) -> @http.HttpRequest {
+) -> Comment raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "comments" + "/" + comment_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::PATCH, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::PATCH,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.drives.create
 
 ///|
 /// Creates a shared drive. For more information, see [Manage shared drives](https://developers.google.com/workspace/drive/api/guides/manage-shareddrives).
-pub fn DriveService::drives_create(
+pub async fn DriveService::drives_create(
   self : DriveService,
+  client : &@http.HttpClient,
   request_id? : String? = None,
-) -> @http.HttpRequest {
+) -> Drive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match request_id {
     Some(v) => qp.push(("requestId", url_encode(v)))
@@ -582,19 +866,37 @@ pub fn DriveService::drives_create(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.drives.delete
 
 ///|
 /// Permanently deletes a shared drive for which the user is an `organizer`. The shared drive cannot contain any untrashed items. For more information, see [Manage shared drives](https://developers.google.com/workspace/drive/api/guides/manage-shareddrives).
-pub fn DriveService::drives_delete(
+pub async fn DriveService::drives_delete(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id : String,
   allow_item_deletion? : Bool? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match allow_item_deletion {
     Some(v) => qp.push(("allowItemDeletion", if v { "true" } else { "false" }))
@@ -612,18 +914,30 @@ pub fn DriveService::drives_delete(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::DELETE, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::DELETE,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.drives.get
 
 ///|
 /// Gets a shared drive's metadata by ID. For more information, see [Manage shared drives](https://developers.google.com/workspace/drive/api/guides/manage-shareddrives).
-pub fn DriveService::drives_get(
+pub async fn DriveService::drives_get(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id : String,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Drive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match use_domain_admin_access {
     Some(v) =>
@@ -637,37 +951,72 @@ pub fn DriveService::drives_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.drives.hide
 
 ///|
 /// Hides a shared drive from the default view. For more information, see [Manage shared drives](https://developers.google.com/workspace/drive/api/guides/manage-shareddrives).
-pub fn DriveService::drives_hide(
+pub async fn DriveService::drives_hide(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id : String,
-) -> @http.HttpRequest {
+) -> Drive raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
   h.set("Content-Type", "application/json")
   let path = "/" + "drives" + "/" + drive_id + "/" + "hide"
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.drives.list
 
 ///|
 ///  Lists the user's shared drives. This method accepts the `q` parameter, which is a search query combining one or more search terms. For more information, see the [Search for shared drives](https://developers.google.com/workspace/drive/api/guides/search-shareddrives) guide.
-pub fn DriveService::drives_list(
+pub async fn DriveService::drives_list(
   self : DriveService,
+  client : &@http.HttpClient,
   page_size? : Int? = None,
   page_token? : String? = None,
   q? : String? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> DriveList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
     Some(v) => qp.push(("pageSize", v.to_string()))
@@ -693,35 +1042,70 @@ pub fn DriveService::drives_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.drives.unhide
 
 ///|
 /// Restores a shared drive to the default view. For more information, see [Manage shared drives](https://developers.google.com/workspace/drive/api/guides/manage-shareddrives).
-pub fn DriveService::drives_unhide(
+pub async fn DriveService::drives_unhide(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id : String,
-) -> @http.HttpRequest {
+) -> Drive raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
   h.set("Content-Type", "application/json")
   let path = "/" + "drives" + "/" + drive_id + "/" + "unhide"
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.drives.update
 
 ///|
 /// Updates the metadata for a shared drive. For more information, see [Manage shared drives](https://developers.google.com/workspace/drive/api/guides/manage-shareddrives).
-pub fn DriveService::drives_update(
+pub async fn DriveService::drives_update(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id : String,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Drive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match use_domain_admin_access {
     Some(v) =>
@@ -739,15 +1123,33 @@ pub fn DriveService::drives_update(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::PATCH, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::PATCH,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.copy
 
 ///|
 /// Creates a copy of a file and applies any requested updates with patch semantics. For more information, see [Create and manage files](https://developers.google.com/workspace/drive/api/guides/create-file).
-pub fn DriveService::files_copy(
+pub async fn DriveService::files_copy(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   enforce_single_parent? : Bool? = None,
   ignore_default_visibility? : Bool? = None,
@@ -757,7 +1159,7 @@ pub fn DriveService::files_copy(
   ocr_language? : String? = None,
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
-) -> @http.HttpRequest {
+) -> File raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match enforce_single_parent {
     Some(v) =>
@@ -805,15 +1207,33 @@ pub fn DriveService::files_copy(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.create
 
 ///|
 ///  Creates a file. For more information, see [Create and manage files](https://developers.google.com/workspace/drive/api/guides/create-file). This method supports an */upload* URI and accepts uploaded media with the following characteristics: - *Maximum file size:* 5,120 GB - *Accepted Media MIME types:* `*/*` (Specify a valid MIME type, rather than the literal `*/*` value. The literal `*/*` is only used to indicate that any valid MIME type can be uploaded. For more information, see [Google Workspace and Google Drive supported MIME types](https://developers.google.com/workspace/drive/api/guides/mime-types).) For more information on uploading files, see [Upload file data](https://developers.google.com/workspace/drive/api/guides/manage-uploads). Apps creating shortcuts with the `create` method must specify the MIME type `application/vnd.google-apps.shortcut`. Apps should specify a file extension in the `name` property when inserting files with the API. For example, an operation to insert a JPEG file should specify something like `"name": "cat.jpg"` in the metadata. Subsequent `GET` requests include the read-only `fileExtension` property populated with the extension originally specified in the `name` property. When a Google Drive user requests to download a file, or when the file is downloaded through the sync client, Drive builds a full filename (with extension) based on the name. In cases where the extension is missing, Drive attempts to determine the extension based on the file's MIME type.
-pub fn DriveService::files_create(
+pub async fn DriveService::files_create(
   self : DriveService,
+  client : &@http.HttpClient,
   enforce_single_parent? : Bool? = None,
   ignore_default_visibility? : Bool? = None,
   include_labels? : String? = None,
@@ -823,7 +1243,7 @@ pub fn DriveService::files_create(
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   use_content_as_indexable_text? : Bool? = None,
-) -> @http.HttpRequest {
+) -> File raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match enforce_single_parent {
     Some(v) =>
@@ -876,20 +1296,38 @@ pub fn DriveService::files_create(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.delete
 
 ///|
 /// Permanently deletes a file owned by the user without moving it to the trash. For more information, see [Trash or delete files and folders](https://developers.google.com/workspace/drive/api/guides/delete). If the file belongs to a shared drive, the user must be an `organizer` on the parent folder. If the target is a folder, all descendants owned by the user are also deleted.
-pub fn DriveService::files_delete(
+pub async fn DriveService::files_delete(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   enforce_single_parent? : Bool? = None,
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match enforce_single_parent {
     Some(v) =>
@@ -911,19 +1349,31 @@ pub fn DriveService::files_delete(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::DELETE, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::DELETE,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.files.download
 
 ///|
 /// Downloads the content of a file. For more information, see [Download and export files](https://developers.google.com/workspace/drive/api/guides/manage-downloads). Operations are valid for 24 hours from the time of creation.
-pub fn DriveService::files_download(
+pub async fn DriveService::files_download(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   mime_type? : String? = None,
   revision_id? : String? = None,
-) -> @http.HttpRequest {
+) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match mime_type {
     Some(v) => qp.push(("mimeType", url_encode(v)))
@@ -944,18 +1394,36 @@ pub fn DriveService::files_download(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.emptyTrash
 
 ///|
 /// Permanently deletes all of the user's trashed files. For more information, see [Trash or delete files and folders](https://developers.google.com/workspace/drive/api/guides/delete).
-pub fn DriveService::files_empty_trash(
+pub async fn DriveService::files_empty_trash(
   self : DriveService,
+  client : &@http.HttpClient,
   drive_id? : String? = None,
   enforce_single_parent? : Bool? = None,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match drive_id {
     Some(v) => qp.push(("driveId", url_encode(v)))
@@ -973,18 +1441,30 @@ pub fn DriveService::files_empty_trash(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::DELETE, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::DELETE,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.files.export
 
 ///|
 /// Exports a Google Workspace document to the requested MIME type and returns exported byte content. For more information, see [Download and export files](https://developers.google.com/workspace/drive/api/guides/manage-downloads). Note that the exported content is limited to 10 MB.
-pub fn DriveService::files_export(
+pub async fn DriveService::files_export(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   mime_type? : String? = None,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match mime_type {
     Some(v) => qp.push(("mimeType", url_encode(v)))
@@ -997,19 +1477,31 @@ pub fn DriveService::files_export(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.files.generateIds
 
 ///|
 /// Generates a set of file IDs which can be provided in create or copy requests. For more information, see [Create and manage files](https://developers.google.com/workspace/drive/api/guides/create-file).
-pub fn DriveService::files_generate_ids(
+pub async fn DriveService::files_generate_ids(
   self : DriveService,
+  client : &@http.HttpClient,
   count? : Int? = None,
   space? : String? = None,
   type_? : String? = None,
-) -> @http.HttpRequest {
+) -> GeneratedIds raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match count {
     Some(v) => qp.push(("count", v.to_string()))
@@ -1030,22 +1522,39 @@ pub fn DriveService::files_generate_ids(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.get
 
 ///|
 ///  Gets a file's metadata or content by ID. For more information, see [Search for files and folders](https://developers.google.com/workspace/drive/api/guides/search-files). If you provide the URL parameter `alt=media`, then the response includes the file contents in the response body. Downloading content with `alt=media` only works if the file is stored in Drive. To download Google Docs, Sheets, and Slides use [`files.export`](https://developers.google.com/workspace/drive/api/reference/rest/v3/files/export) instead. For more information, see [Download and export files](https://developers.google.com/workspace/drive/api/guides/manage-downloads).
-pub fn DriveService::files_get(
+pub async fn DriveService::files_get(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   acknowledge_abuse? : Bool? = None,
   include_labels? : String? = None,
   include_permissions_for_view? : String? = None,
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
-) -> @http.HttpRequest {
+) -> File raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match acknowledge_abuse {
     Some(v) => qp.push(("acknowledgeAbuse", if v { "true" } else { "false" }))
@@ -1074,15 +1583,32 @@ pub fn DriveService::files_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.list
 
 ///|
 ///  Lists the user's files. For more information, see [Search for files and folders](https://developers.google.com/workspace/drive/api/guides/search-files). This method accepts the `q` parameter, which is a search query combining one or more search terms. This method returns *all* files by default, including trashed files. If you don't want trashed files to appear in the list, use the `trashed=false` query parameter to remove trashed files from the results.
-pub fn DriveService::files_list(
+pub async fn DriveService::files_list(
   self : DriveService,
+  client : &@http.HttpClient,
   corpora? : String? = None,
   corpus? : String? = None,
   drive_id? : String? = None,
@@ -1098,7 +1624,7 @@ pub fn DriveService::files_list(
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   team_drive_id? : String? = None,
-) -> @http.HttpRequest {
+) -> FileList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match corpora {
     Some(v) => qp.push(("corpora", url_encode(v)))
@@ -1169,19 +1695,36 @@ pub fn DriveService::files_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.listLabels
 
 ///|
 /// Lists the labels on a file. For more information, see [List labels on a file](https://developers.google.com/workspace/drive/api/guides/list-labels).
-pub fn DriveService::files_list_labels(
+pub async fn DriveService::files_list_labels(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   max_results? : Int? = None,
   page_token? : String? = None,
-) -> @http.HttpRequest {
+) -> LabelList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match max_results {
     Some(v) => qp.push(("maxResults", v.to_string()))
@@ -1198,32 +1741,67 @@ pub fn DriveService::files_list_labels(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.modifyLabels
 
 ///|
 /// Modifies the set of labels applied to a file. For more information, see [Set a label field on a file](https://developers.google.com/workspace/drive/api/guides/set-label). Returns a list of the labels that were added or modified.
-pub fn DriveService::files_modify_labels(
+pub async fn DriveService::files_modify_labels(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
-) -> @http.HttpRequest {
+) -> ModifyLabelsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "modifyLabels"
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.update
 
 ///|
 ///  Updates a file's metadata, content, or both. When calling this method, only populate fields in the request that you want to modify. When updating fields, some fields might be changed automatically, such as `modifiedDate`. This method supports patch semantics. This method supports an */upload* URI and accepts uploaded media with the following characteristics: - *Maximum file size:* 5,120 GB - *Accepted Media MIME types:* `*/*` (Specify a valid MIME type, rather than the literal `*/*` value. The literal `*/*` is only used to indicate that any valid MIME type can be uploaded. For more information, see [Google Workspace and Google Drive supported MIME types](https://developers.google.com/workspace/drive/api/guides/mime-types).) For more information on uploading files, see [Upload file data](https://developers.google.com/workspace/drive/api/guides/manage-uploads).
-pub fn DriveService::files_update(
+pub async fn DriveService::files_update(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   add_parents? : String? = None,
   enforce_single_parent? : Bool? = None,
@@ -1235,7 +1813,7 @@ pub fn DriveService::files_update(
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   use_content_as_indexable_text? : Bool? = None,
-) -> @http.HttpRequest {
+) -> File raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match add_parents {
     Some(v) => qp.push(("addParents", url_encode(v)))
@@ -1291,22 +1869,40 @@ pub fn DriveService::files_update(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::PATCH, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::PATCH,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.watch
 
 ///|
 /// Subscribes to changes to a file. For more information, see [Notifications for resource changes](https://developers.google.com/workspace/drive/api/guides/push).
-pub fn DriveService::files_watch(
+pub async fn DriveService::files_watch(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   acknowledge_abuse? : Bool? = None,
   include_labels? : String? = None,
   include_permissions_for_view? : String? = None,
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Channel raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match acknowledge_abuse {
     Some(v) => qp.push(("acknowledgeAbuse", if v { "true" } else { "false" }))
@@ -1339,28 +1935,63 @@ pub fn DriveService::files_watch(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.operations.get
 
 ///|
 /// Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.
-pub fn DriveService::operations_get(
+pub async fn DriveService::operations_get(
   self : DriveService,
+  client : &@http.HttpClient,
   name : String,
-) -> @http.HttpRequest {
+) -> Operation raise @http.HttpError {
   let path = "/" + "operations" + "/" + name
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.permissions.create
 
 ///|
 /// Creates a permission for a file or shared drive. For more information, see [Share files, folders, and drives](https://developers.google.com/workspace/drive/api/guides/manage-sharing). **Warning:** Concurrent permissions operations on the same file aren't supported; only the last update is applied.
-pub fn DriveService::permissions_create(
+pub async fn DriveService::permissions_create(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   email_message? : String? = None,
   enforce_expansive_access? : Bool? = None,
@@ -1371,7 +2002,7 @@ pub fn DriveService::permissions_create(
   supports_team_drives? : Bool? = None,
   transfer_ownership? : Bool? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Permission raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match email_message {
     Some(v) => qp.push(("emailMessage", url_encode(v)))
@@ -1425,22 +2056,40 @@ pub fn DriveService::permissions_create(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.permissions.delete
 
 ///|
 /// Deletes a permission. For more information, see [Share files, folders, and drives](https://developers.google.com/workspace/drive/api/guides/manage-sharing). **Warning:** Concurrent permissions operations on the same file aren't supported; only the last update is applied.
-pub fn DriveService::permissions_delete(
+pub async fn DriveService::permissions_delete(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   permission_id : String,
   enforce_expansive_access? : Bool? = None,
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match enforce_expansive_access {
     Some(v) =>
@@ -1474,21 +2123,33 @@ pub fn DriveService::permissions_delete(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::DELETE, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::DELETE,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.permissions.get
 
 ///|
 /// Gets a permission by ID. For more information, see [Share files, folders, and drives](https://developers.google.com/workspace/drive/api/guides/manage-sharing).
-pub fn DriveService::permissions_get(
+pub async fn DriveService::permissions_get(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   permission_id : String,
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Permission raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match supports_all_drives {
     Some(v) => qp.push(("supportsAllDrives", if v { "true" } else { "false" }))
@@ -1517,15 +2178,32 @@ pub fn DriveService::permissions_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.permissions.list
 
 ///|
 /// Lists a file's or shared drive's permissions. For more information, see [Share files, folders, and drives](https://developers.google.com/workspace/drive/api/guides/manage-sharing).
-pub fn DriveService::permissions_list(
+pub async fn DriveService::permissions_list(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   include_permissions_for_view? : String? = None,
   page_size? : Int? = None,
@@ -1533,7 +2211,7 @@ pub fn DriveService::permissions_list(
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> PermissionList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match include_permissions_for_view {
     Some(v) => qp.push(("includePermissionsForView", url_encode(v)))
@@ -1567,15 +2245,32 @@ pub fn DriveService::permissions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.permissions.update
 
 ///|
 /// Updates a permission with patch semantics. For more information, see [Share files, folders, and drives](https://developers.google.com/workspace/drive/api/guides/manage-sharing). **Warning:** Concurrent permissions operations on the same file aren't supported; only the last update is applied.
-pub fn DriveService::permissions_update(
+pub async fn DriveService::permissions_update(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   permission_id : String,
   enforce_expansive_access? : Bool? = None,
@@ -1584,7 +2279,7 @@ pub fn DriveService::permissions_update(
   supports_team_drives? : Bool? = None,
   transfer_ownership? : Bool? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Permission raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match enforce_expansive_access {
     Some(v) =>
@@ -1630,18 +2325,36 @@ pub fn DriveService::permissions_update(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::PATCH, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::PATCH,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.replies.create
 
 ///|
 /// Creates a reply to a comment. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments).
-pub fn DriveService::replies_create(
+pub async fn DriveService::replies_create(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   comment_id : String,
-) -> @http.HttpRequest {
+) -> Reply raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
@@ -1657,19 +2370,37 @@ pub fn DriveService::replies_create(
     "/" +
     "replies"
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.replies.delete
 
 ///|
 /// Deletes a reply. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments).
-pub fn DriveService::replies_delete(
+pub async fn DriveService::replies_delete(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   comment_id : String,
   reply_id : String,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let path = "/" +
     "files" +
     "/" +
@@ -1683,20 +2414,32 @@ pub fn DriveService::replies_delete(
     "/" +
     reply_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::DELETE, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::DELETE,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.replies.get
 
 ///|
 /// Gets a reply by ID. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments).
-pub fn DriveService::replies_get(
+pub async fn DriveService::replies_get(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   comment_id : String,
   reply_id : String,
   include_deleted? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Reply raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match include_deleted {
     Some(v) => qp.push(("includeDeleted", if v { "true" } else { "false" }))
@@ -1720,21 +2463,38 @@ pub fn DriveService::replies_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.replies.list
 
 ///|
 /// Lists a comment's replies. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments).
-pub fn DriveService::replies_list(
+pub async fn DriveService::replies_list(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   comment_id : String,
   include_deleted? : Bool? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
-) -> @http.HttpRequest {
+) -> ReplyList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match include_deleted {
     Some(v) => qp.push(("includeDeleted", if v { "true" } else { "false" }))
@@ -1764,19 +2524,36 @@ pub fn DriveService::replies_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.replies.update
 
 ///|
 /// Updates a reply with patch semantics. For more information, see [Manage comments and replies](https://developers.google.com/workspace/drive/api/guides/manage-comments).
-pub fn DriveService::replies_update(
+pub async fn DriveService::replies_update(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   comment_id : String,
   reply_id : String,
-) -> @http.HttpRequest {
+) -> Reply raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
@@ -1794,18 +2571,36 @@ pub fn DriveService::replies_update(
     "/" +
     reply_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::PATCH, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::PATCH,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.revisions.delete
 
 ///|
 /// Permanently deletes a file version. You can only delete revisions for files with binary content in Google Drive, like images or videos. Revisions for other files, like Google Docs or Sheets, and the last remaining file version can't be deleted. For more information, see [Manage file revisions](https://developers.google.com/drive/api/guides/manage-revisions).
-pub fn DriveService::revisions_delete(
+pub async fn DriveService::revisions_delete(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   revision_id : String,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let path = "/" +
     "files" +
     "/" +
@@ -1815,19 +2610,31 @@ pub fn DriveService::revisions_delete(
     "/" +
     revision_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::DELETE, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::DELETE,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.revisions.get
 
 ///|
 /// Gets a revision's metadata or content by ID. For more information, see [Manage file revisions](https://developers.google.com/workspace/drive/api/guides/manage-revisions).
-pub fn DriveService::revisions_get(
+pub async fn DriveService::revisions_get(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   revision_id : String,
   acknowledge_abuse? : Bool? = None,
-) -> @http.HttpRequest {
+) -> Revision raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match acknowledge_abuse {
     Some(v) => qp.push(("acknowledgeAbuse", if v { "true" } else { "false" }))
@@ -1847,19 +2654,36 @@ pub fn DriveService::revisions_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.revisions.list
 
 ///|
 /// Lists a file's revisions. For more information, see [Manage file revisions](https://developers.google.com/workspace/drive/api/guides/manage-revisions). **Important:** The list of revisions returned by this method might be incomplete for files with a large revision history, including frequently edited Google Docs, Sheets, and Slides. Older revisions might be omitted from the response, meaning the first revision returned may not be the oldest existing revision. The revision history visible in the Workspace editor user interface might be more complete than the list returned by the API.
-pub fn DriveService::revisions_list(
+pub async fn DriveService::revisions_list(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-) -> @http.HttpRequest {
+) -> RevisionList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
     Some(v) => qp.push(("pageSize", v.to_string()))
@@ -1876,18 +2700,35 @@ pub fn DriveService::revisions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.revisions.update
 
 ///|
 /// Updates a revision with patch semantics. For more information, see [Manage file revisions](https://developers.google.com/workspace/drive/api/guides/manage-revisions).
-pub fn DriveService::revisions_update(
+pub async fn DriveService::revisions_update(
   self : DriveService,
+  client : &@http.HttpClient,
   file_id : String,
   revision_id : String,
-) -> @http.HttpRequest {
+) -> Revision raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h = self.auth_headers()
@@ -1901,17 +2742,35 @@ pub fn DriveService::revisions_update(
     "/" +
     revision_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::PATCH, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::PATCH,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.teamdrives.create
 
 ///|
 /// Deprecated: Use `drives.create` instead.
-pub fn DriveService::teamdrives_create(
+pub async fn DriveService::teamdrives_create(
   self : DriveService,
+  client : &@http.HttpClient,
   request_id? : String? = None,
-) -> @http.HttpRequest {
+) -> TeamDrive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match request_id {
     Some(v) => qp.push(("requestId", url_encode(v)))
@@ -1928,31 +2787,61 @@ pub fn DriveService::teamdrives_create(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::POST,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.teamdrives.delete
 
 ///|
 /// Deprecated: Use `drives.delete` instead.
-pub fn DriveService::teamdrives_delete(
+pub async fn DriveService::teamdrives_delete(
   self : DriveService,
+  client : &@http.HttpClient,
   team_drive_id : String,
-) -> @http.HttpRequest {
+) -> @http.HttpResponse raise @http.HttpError {
   let path = "/" + "teamdrives" + "/" + team_drive_id
   let url = self.base_url + path
-  @http.HttpRequest::new(url, @http.HttpMethod::DELETE, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::DELETE,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  resp
 }
 
 ///| drive.teamdrives.get
 
 ///|
 /// Deprecated: Use `drives.get` instead.
-pub fn DriveService::teamdrives_get(
+pub async fn DriveService::teamdrives_get(
   self : DriveService,
+  client : &@http.HttpClient,
   team_drive_id : String,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> TeamDrive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match use_domain_admin_access {
     Some(v) =>
@@ -1966,20 +2855,37 @@ pub fn DriveService::teamdrives_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.teamdrives.list
 
 ///|
 /// Deprecated: Use `drives.list` instead.
-pub fn DriveService::teamdrives_list(
+pub async fn DriveService::teamdrives_list(
   self : DriveService,
+  client : &@http.HttpClient,
   page_size? : Int? = None,
   page_token? : String? = None,
   q? : String? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> TeamDriveList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
     Some(v) => qp.push(("pageSize", v.to_string()))
@@ -2005,18 +2911,35 @@ pub fn DriveService::teamdrives_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::GET,
+    self.auth_headers(),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.teamdrives.update
 
 ///|
 /// Deprecated: Use `drives.update` instead.
-pub fn DriveService::teamdrives_update(
+pub async fn DriveService::teamdrives_update(
   self : DriveService,
+  client : &@http.HttpClient,
   team_drive_id : String,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpRequest {
+) -> TeamDrive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match use_domain_admin_access {
     Some(v) =>
@@ -2034,5 +2957,22 @@ pub fn DriveService::teamdrives_update(
   } else {
     self.base_url + path + "?" + qs
   }
-  @http.HttpRequest::new(url, @http.HttpMethod::PATCH, h, body=Some(body))
+  let req = @http.HttpRequest::new(
+    url,
+    @http.HttpMethod::PATCH,
+    h,
+    body=Some(body),
+  )
+  let resp = client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }

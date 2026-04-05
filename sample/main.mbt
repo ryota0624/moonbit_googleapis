@@ -20,37 +20,11 @@ async fn main {
   try {
     // 2. Client for Drive v3; each request gets `Authorization: Bearer …`.
     let drive = @drive.DriveService::new(token)
-    // 3. Build `GET https://www.googleapis.com/drive/v3/files?pageSize=10`.
-    let req = drive.files_list(page_size=Some(10))
-    // 4. Run the HTTP request (blocking implementation behind the trait).
-    let client = @http.DefaultHttpClient::new()
-    let resp = client.request(req)
-    if resp.status_code != 200 {
-      println(
-        "HTTP error: status=" +
-        resp.status_code.to_string() +
-        " body=" +
-        resp.body,
-      )
-      @sys.exit(1)
-      panic()
-    }
-    // 5. Parse the JSON body into `FileList` (field names use camelCase in JSON).
-    let json = @json.parse(resp.body) catch {
-      e => {
-        println("JSON parse error: " + e.to_string())
-        @sys.exit(1)
-        panic()
-      }
-    }
-    let file_list : @drive.FileList = @json.from_json(json) catch {
-      e => {
-        println("JSON decode error: " + e.to_string())
-        @sys.exit(1)
-        panic()
-      }
-    }
-    // 6. Print file names and ids (`files` may be absent in the payload).
+    let http_impl = @http.DefaultHttpClient::new()
+    let http_client = http_impl as &@http.HttpClient
+    // 3. List files (HTTP + JSON decode in one call).
+    let file_list = drive.files_list(http_client, page_size=Some(10))
+    // 4. Print file names and ids (`files` may be absent in the payload).
     println("Files:")
     match file_list.files {
       None => println("  (no files in response)")

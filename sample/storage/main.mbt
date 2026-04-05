@@ -25,33 +25,13 @@ async fn main {
   }
   try {
     let storage = @gcs.StorageService::new(token)
-    let req = storage.buckets_list(project=Some(project), max_results=Some(20))
-    let client = @http.DefaultHttpClient::new()
-    let resp = client.request(req)
-    if resp.status_code != 200 {
-      println(
-        "HTTP error: status=" +
-        resp.status_code.to_string() +
-        " body=" +
-        resp.body,
-      )
-      @sys.exit(1)
-      panic()
-    }
-    let json = @json.parse(resp.body) catch {
-      e => {
-        println("JSON parse error: " + e.to_string())
-        @sys.exit(1)
-        panic()
-      }
-    }
-    let buckets : @gcs.Buckets = @json.from_json(json) catch {
-      e => {
-        println("JSON decode error: " + e.to_string())
-        @sys.exit(1)
-        panic()
-      }
-    }
+    let http_impl = @http.DefaultHttpClient::new()
+    let http_client = http_impl as &@http.HttpClient
+    let buckets = storage.buckets_list(
+      http_client,
+      project=Some(project),
+      max_results=Some(20),
+    )
     println("Buckets:")
     match buckets.items {
       None => println("  (no buckets)")

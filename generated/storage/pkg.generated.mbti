@@ -357,89 +357,89 @@ pub(all) struct StorageService {
   base_url : String
   access_token : String
 }
-pub fn StorageService::anywhere_caches_disable(Self, String, String) -> @http.HttpRequest
-pub fn StorageService::anywhere_caches_get(Self, String, String) -> @http.HttpRequest
-pub fn StorageService::anywhere_caches_insert(Self, String) -> @http.HttpRequest
-pub fn StorageService::anywhere_caches_list(Self, String, page_size? : Int?, page_token? : String?) -> @http.HttpRequest
-pub fn StorageService::anywhere_caches_pause(Self, String, String) -> @http.HttpRequest
-pub fn StorageService::anywhere_caches_resume(Self, String, String) -> @http.HttpRequest
-pub fn StorageService::anywhere_caches_update(Self, String, String) -> @http.HttpRequest
-pub fn StorageService::bucket_access_controls_delete(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::bucket_access_controls_get(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::bucket_access_controls_insert(Self, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::bucket_access_controls_list(Self, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::bucket_access_controls_patch(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::bucket_access_controls_update(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_delete(Self, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_get(Self, String, generation? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, projection? : String?, soft_deleted? : Bool?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_get_iam_policy(Self, String, options_requested_policy_version? : Int?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_get_storage_layout(Self, String, prefix? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_insert(Self, enable_object_retention? : Bool?, predefined_acl? : String?, predefined_default_object_acl? : String?, project? : String?, projection? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_list(Self, max_results? : Int?, page_token? : String?, prefix? : String?, project? : String?, projection? : String?, return_partial_success? : Bool?, soft_deleted? : Bool?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_lock_retention_policy(Self, String, if_metageneration_match? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_patch(Self, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?, predefined_acl? : String?, predefined_default_object_acl? : String?, projection? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_relocate(Self, String) -> @http.HttpRequest
-pub fn StorageService::buckets_restore(Self, String, generation? : String?, projection? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_set_iam_policy(Self, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_test_iam_permissions(Self, String, permissions? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::buckets_update(Self, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?, predefined_acl? : String?, predefined_default_object_acl? : String?, projection? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::channels_stop(Self) -> @http.HttpRequest
-pub fn StorageService::default_object_access_controls_delete(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::default_object_access_controls_get(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::default_object_access_controls_insert(Self, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::default_object_access_controls_list(Self, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::default_object_access_controls_patch(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::default_object_access_controls_update(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::folders_delete(Self, String, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> @http.HttpRequest
-pub fn StorageService::folders_delete_recursive(Self, String, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> @http.HttpRequest
-pub fn StorageService::folders_get(Self, String, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> @http.HttpRequest
-pub fn StorageService::folders_insert(Self, String, recursive? : Bool?) -> @http.HttpRequest
-pub fn StorageService::folders_list(Self, String, delimiter? : String?, end_offset? : String?, page_size? : Int?, page_token? : String?, prefix? : String?, start_offset? : String?) -> @http.HttpRequest
-pub fn StorageService::folders_rename(Self, String, String, String, if_source_metageneration_match? : String?, if_source_metageneration_not_match? : String?) -> @http.HttpRequest
-pub fn StorageService::managed_folders_delete(Self, String, String, allow_non_empty? : Bool?, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> @http.HttpRequest
-pub fn StorageService::managed_folders_get(Self, String, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> @http.HttpRequest
-pub fn StorageService::managed_folders_get_iam_policy(Self, String, String, options_requested_policy_version? : Int?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::managed_folders_insert(Self, String) -> @http.HttpRequest
-pub fn StorageService::managed_folders_list(Self, String, page_size? : Int?, page_token? : String?, prefix? : String?) -> @http.HttpRequest
-pub fn StorageService::managed_folders_set_iam_policy(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::managed_folders_test_iam_permissions(Self, String, String, permissions? : String?, user_project? : String?) -> @http.HttpRequest
+pub async fn StorageService::anywhere_caches_disable(Self, &@http.HttpClient, String, String) -> AnywhereCache raise @http.HttpError
+pub async fn StorageService::anywhere_caches_get(Self, &@http.HttpClient, String, String) -> AnywhereCache raise @http.HttpError
+pub async fn StorageService::anywhere_caches_insert(Self, &@http.HttpClient, String) -> GoogleLongrunningOperation raise @http.HttpError
+pub async fn StorageService::anywhere_caches_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> AnywhereCaches raise @http.HttpError
+pub async fn StorageService::anywhere_caches_pause(Self, &@http.HttpClient, String, String) -> AnywhereCache raise @http.HttpError
+pub async fn StorageService::anywhere_caches_resume(Self, &@http.HttpClient, String, String) -> AnywhereCache raise @http.HttpError
+pub async fn StorageService::anywhere_caches_update(Self, &@http.HttpClient, String, String) -> GoogleLongrunningOperation raise @http.HttpError
+pub async fn StorageService::bucket_access_controls_delete(Self, &@http.HttpClient, String, String, user_project? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::bucket_access_controls_get(Self, &@http.HttpClient, String, String, user_project? : String?) -> BucketAccessControl raise @http.HttpError
+pub async fn StorageService::bucket_access_controls_insert(Self, &@http.HttpClient, String, user_project? : String?) -> BucketAccessControl raise @http.HttpError
+pub async fn StorageService::bucket_access_controls_list(Self, &@http.HttpClient, String, user_project? : String?) -> BucketAccessControls raise @http.HttpError
+pub async fn StorageService::bucket_access_controls_patch(Self, &@http.HttpClient, String, String, user_project? : String?) -> BucketAccessControl raise @http.HttpError
+pub async fn StorageService::bucket_access_controls_update(Self, &@http.HttpClient, String, String, user_project? : String?) -> BucketAccessControl raise @http.HttpError
+pub async fn StorageService::buckets_delete(Self, &@http.HttpClient, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?, user_project? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::buckets_get(Self, &@http.HttpClient, String, generation? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, projection? : String?, soft_deleted? : Bool?, user_project? : String?) -> Bucket raise @http.HttpError
+pub async fn StorageService::buckets_get_iam_policy(Self, &@http.HttpClient, String, options_requested_policy_version? : Int?, user_project? : String?) -> Policy raise @http.HttpError
+pub async fn StorageService::buckets_get_storage_layout(Self, &@http.HttpClient, String, prefix? : String?) -> BucketStorageLayout raise @http.HttpError
+pub async fn StorageService::buckets_insert(Self, &@http.HttpClient, enable_object_retention? : Bool?, predefined_acl? : String?, predefined_default_object_acl? : String?, project? : String?, projection? : String?, user_project? : String?) -> Bucket raise @http.HttpError
+pub async fn StorageService::buckets_list(Self, &@http.HttpClient, max_results? : Int?, page_token? : String?, prefix? : String?, project? : String?, projection? : String?, return_partial_success? : Bool?, soft_deleted? : Bool?, user_project? : String?) -> Buckets raise @http.HttpError
+pub async fn StorageService::buckets_lock_retention_policy(Self, &@http.HttpClient, String, if_metageneration_match? : String?, user_project? : String?) -> Bucket raise @http.HttpError
+pub async fn StorageService::buckets_patch(Self, &@http.HttpClient, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?, predefined_acl? : String?, predefined_default_object_acl? : String?, projection? : String?, user_project? : String?) -> Bucket raise @http.HttpError
+pub async fn StorageService::buckets_relocate(Self, &@http.HttpClient, String) -> GoogleLongrunningOperation raise @http.HttpError
+pub async fn StorageService::buckets_restore(Self, &@http.HttpClient, String, generation? : String?, projection? : String?, user_project? : String?) -> Bucket raise @http.HttpError
+pub async fn StorageService::buckets_set_iam_policy(Self, &@http.HttpClient, String, user_project? : String?) -> Policy raise @http.HttpError
+pub async fn StorageService::buckets_test_iam_permissions(Self, &@http.HttpClient, String, permissions? : String?, user_project? : String?) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn StorageService::buckets_update(Self, &@http.HttpClient, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?, predefined_acl? : String?, predefined_default_object_acl? : String?, projection? : String?, user_project? : String?) -> Bucket raise @http.HttpError
+pub async fn StorageService::channels_stop(Self, &@http.HttpClient) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::default_object_access_controls_delete(Self, &@http.HttpClient, String, String, user_project? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::default_object_access_controls_get(Self, &@http.HttpClient, String, String, user_project? : String?) -> ObjectAccessControl raise @http.HttpError
+pub async fn StorageService::default_object_access_controls_insert(Self, &@http.HttpClient, String, user_project? : String?) -> ObjectAccessControl raise @http.HttpError
+pub async fn StorageService::default_object_access_controls_list(Self, &@http.HttpClient, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?, user_project? : String?) -> ObjectAccessControls raise @http.HttpError
+pub async fn StorageService::default_object_access_controls_patch(Self, &@http.HttpClient, String, String, user_project? : String?) -> ObjectAccessControl raise @http.HttpError
+pub async fn StorageService::default_object_access_controls_update(Self, &@http.HttpClient, String, String, user_project? : String?) -> ObjectAccessControl raise @http.HttpError
+pub async fn StorageService::folders_delete(Self, &@http.HttpClient, String, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::folders_delete_recursive(Self, &@http.HttpClient, String, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> GoogleLongrunningOperation raise @http.HttpError
+pub async fn StorageService::folders_get(Self, &@http.HttpClient, String, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> Folder raise @http.HttpError
+pub async fn StorageService::folders_insert(Self, &@http.HttpClient, String, recursive? : Bool?) -> Folder raise @http.HttpError
+pub async fn StorageService::folders_list(Self, &@http.HttpClient, String, delimiter? : String?, end_offset? : String?, page_size? : Int?, page_token? : String?, prefix? : String?, start_offset? : String?) -> Folders raise @http.HttpError
+pub async fn StorageService::folders_rename(Self, &@http.HttpClient, String, String, String, if_source_metageneration_match? : String?, if_source_metageneration_not_match? : String?) -> GoogleLongrunningOperation raise @http.HttpError
+pub async fn StorageService::managed_folders_delete(Self, &@http.HttpClient, String, String, allow_non_empty? : Bool?, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::managed_folders_get(Self, &@http.HttpClient, String, String, if_metageneration_match? : String?, if_metageneration_not_match? : String?) -> ManagedFolder raise @http.HttpError
+pub async fn StorageService::managed_folders_get_iam_policy(Self, &@http.HttpClient, String, String, options_requested_policy_version? : Int?, user_project? : String?) -> Policy raise @http.HttpError
+pub async fn StorageService::managed_folders_insert(Self, &@http.HttpClient, String) -> ManagedFolder raise @http.HttpError
+pub async fn StorageService::managed_folders_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, prefix? : String?) -> ManagedFolders raise @http.HttpError
+pub async fn StorageService::managed_folders_set_iam_policy(Self, &@http.HttpClient, String, String, user_project? : String?) -> Policy raise @http.HttpError
+pub async fn StorageService::managed_folders_test_iam_permissions(Self, &@http.HttpClient, String, String, permissions? : String?, user_project? : String?) -> TestIamPermissionsResponse raise @http.HttpError
 pub fn StorageService::new(String) -> Self
-pub fn StorageService::notifications_delete(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::notifications_get(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::notifications_insert(Self, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::notifications_list(Self, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::object_access_controls_delete(Self, String, String, String, generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::object_access_controls_get(Self, String, String, String, generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::object_access_controls_insert(Self, String, String, generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::object_access_controls_list(Self, String, String, generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::object_access_controls_patch(Self, String, String, String, generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::object_access_controls_update(Self, String, String, String, generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_bulk_restore(Self, String) -> @http.HttpRequest
-pub fn StorageService::objects_compose(Self, String, String, destination_predefined_acl? : String?, drop_context_groups? : String?, if_generation_match? : String?, if_metageneration_match? : String?, kms_key_name? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_copy(Self, String, String, String, String, destination_kms_key_name? : String?, destination_predefined_acl? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, if_source_generation_match? : String?, if_source_generation_not_match? : String?, if_source_metageneration_match? : String?, if_source_metageneration_not_match? : String?, projection? : String?, source_generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_delete(Self, String, String, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_get(Self, String, String, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, projection? : String?, restore_token? : String?, soft_deleted? : Bool?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_get_iam_policy(Self, String, String, generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_insert(Self, String, content_encoding? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, kms_key_name? : String?, name? : String?, predefined_acl? : String?, projection? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_list(Self, String, delimiter? : String?, end_offset? : String?, filter? : String?, include_folders_as_prefixes? : Bool?, include_trailing_delimiter? : Bool?, match_glob? : String?, max_results? : Int?, page_token? : String?, prefix? : String?, projection? : String?, soft_deleted? : Bool?, start_offset? : String?, user_project? : String?, versions? : Bool?) -> @http.HttpRequest
-pub fn StorageService::objects_move(Self, String, String, String, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, if_source_generation_match? : String?, if_source_generation_not_match? : String?, if_source_metageneration_match? : String?, if_source_metageneration_not_match? : String?, projection? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_patch(Self, String, String, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, override_unlocked_retention? : Bool?, predefined_acl? : String?, projection? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_restore(Self, String, String, copy_source_acl? : Bool?, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, projection? : String?, restore_token? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_rewrite(Self, String, String, String, String, destination_kms_key_name? : String?, destination_predefined_acl? : String?, drop_context_groups? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, if_source_generation_match? : String?, if_source_generation_not_match? : String?, if_source_metageneration_match? : String?, if_source_metageneration_not_match? : String?, max_bytes_rewritten_per_call? : String?, projection? : String?, rewrite_token? : String?, source_generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_set_iam_policy(Self, String, String, generation? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_test_iam_permissions(Self, String, String, generation? : String?, permissions? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_update(Self, String, String, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, override_unlocked_retention? : Bool?, predefined_acl? : String?, projection? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::objects_watch_all(Self, String, delimiter? : String?, end_offset? : String?, include_trailing_delimiter? : Bool?, max_results? : Int?, page_token? : String?, prefix? : String?, projection? : String?, start_offset? : String?, user_project? : String?, versions? : Bool?) -> @http.HttpRequest
-pub fn StorageService::operations_advance_relocate_bucket(Self, String, String) -> @http.HttpRequest
-pub fn StorageService::operations_cancel(Self, String, String) -> @http.HttpRequest
-pub fn StorageService::operations_get(Self, String, String) -> @http.HttpRequest
-pub fn StorageService::operations_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> @http.HttpRequest
-pub fn StorageService::projects_hmac_keys_create(Self, String, service_account_email? : String?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::projects_hmac_keys_delete(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::projects_hmac_keys_get(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::projects_hmac_keys_list(Self, String, max_results? : Int?, page_token? : String?, service_account_email? : String?, show_deleted_keys? : Bool?, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::projects_hmac_keys_update(Self, String, String, user_project? : String?) -> @http.HttpRequest
-pub fn StorageService::projects_service_account_get(Self, String, user_project? : String?) -> @http.HttpRequest
+pub async fn StorageService::notifications_delete(Self, &@http.HttpClient, String, String, user_project? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::notifications_get(Self, &@http.HttpClient, String, String, user_project? : String?) -> Notification raise @http.HttpError
+pub async fn StorageService::notifications_insert(Self, &@http.HttpClient, String, user_project? : String?) -> Notification raise @http.HttpError
+pub async fn StorageService::notifications_list(Self, &@http.HttpClient, String, user_project? : String?) -> Notifications raise @http.HttpError
+pub async fn StorageService::object_access_controls_delete(Self, &@http.HttpClient, String, String, String, generation? : String?, user_project? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::object_access_controls_get(Self, &@http.HttpClient, String, String, String, generation? : String?, user_project? : String?) -> ObjectAccessControl raise @http.HttpError
+pub async fn StorageService::object_access_controls_insert(Self, &@http.HttpClient, String, String, generation? : String?, user_project? : String?) -> ObjectAccessControl raise @http.HttpError
+pub async fn StorageService::object_access_controls_list(Self, &@http.HttpClient, String, String, generation? : String?, user_project? : String?) -> ObjectAccessControls raise @http.HttpError
+pub async fn StorageService::object_access_controls_patch(Self, &@http.HttpClient, String, String, String, generation? : String?, user_project? : String?) -> ObjectAccessControl raise @http.HttpError
+pub async fn StorageService::object_access_controls_update(Self, &@http.HttpClient, String, String, String, generation? : String?, user_project? : String?) -> ObjectAccessControl raise @http.HttpError
+pub async fn StorageService::objects_bulk_restore(Self, &@http.HttpClient, String) -> GoogleLongrunningOperation raise @http.HttpError
+pub async fn StorageService::objects_compose(Self, &@http.HttpClient, String, String, destination_predefined_acl? : String?, drop_context_groups? : String?, if_generation_match? : String?, if_metageneration_match? : String?, kms_key_name? : String?, user_project? : String?) -> Object raise @http.HttpError
+pub async fn StorageService::objects_copy(Self, &@http.HttpClient, String, String, String, String, destination_kms_key_name? : String?, destination_predefined_acl? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, if_source_generation_match? : String?, if_source_generation_not_match? : String?, if_source_metageneration_match? : String?, if_source_metageneration_not_match? : String?, projection? : String?, source_generation? : String?, user_project? : String?) -> Object raise @http.HttpError
+pub async fn StorageService::objects_delete(Self, &@http.HttpClient, String, String, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, user_project? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::objects_get(Self, &@http.HttpClient, String, String, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, projection? : String?, restore_token? : String?, soft_deleted? : Bool?, user_project? : String?) -> Object raise @http.HttpError
+pub async fn StorageService::objects_get_iam_policy(Self, &@http.HttpClient, String, String, generation? : String?, user_project? : String?) -> Policy raise @http.HttpError
+pub async fn StorageService::objects_insert(Self, &@http.HttpClient, String, content_encoding? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, kms_key_name? : String?, name? : String?, predefined_acl? : String?, projection? : String?, user_project? : String?) -> Object raise @http.HttpError
+pub async fn StorageService::objects_list(Self, &@http.HttpClient, String, delimiter? : String?, end_offset? : String?, filter? : String?, include_folders_as_prefixes? : Bool?, include_trailing_delimiter? : Bool?, match_glob? : String?, max_results? : Int?, page_token? : String?, prefix? : String?, projection? : String?, soft_deleted? : Bool?, start_offset? : String?, user_project? : String?, versions? : Bool?) -> Objects raise @http.HttpError
+pub async fn StorageService::objects_move(Self, &@http.HttpClient, String, String, String, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, if_source_generation_match? : String?, if_source_generation_not_match? : String?, if_source_metageneration_match? : String?, if_source_metageneration_not_match? : String?, projection? : String?, user_project? : String?) -> Object raise @http.HttpError
+pub async fn StorageService::objects_patch(Self, &@http.HttpClient, String, String, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, override_unlocked_retention? : Bool?, predefined_acl? : String?, projection? : String?, user_project? : String?) -> Object raise @http.HttpError
+pub async fn StorageService::objects_restore(Self, &@http.HttpClient, String, String, copy_source_acl? : Bool?, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, projection? : String?, restore_token? : String?, user_project? : String?) -> Object raise @http.HttpError
+pub async fn StorageService::objects_rewrite(Self, &@http.HttpClient, String, String, String, String, destination_kms_key_name? : String?, destination_predefined_acl? : String?, drop_context_groups? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, if_source_generation_match? : String?, if_source_generation_not_match? : String?, if_source_metageneration_match? : String?, if_source_metageneration_not_match? : String?, max_bytes_rewritten_per_call? : String?, projection? : String?, rewrite_token? : String?, source_generation? : String?, user_project? : String?) -> RewriteResponse raise @http.HttpError
+pub async fn StorageService::objects_set_iam_policy(Self, &@http.HttpClient, String, String, generation? : String?, user_project? : String?) -> Policy raise @http.HttpError
+pub async fn StorageService::objects_test_iam_permissions(Self, &@http.HttpClient, String, String, generation? : String?, permissions? : String?, user_project? : String?) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn StorageService::objects_update(Self, &@http.HttpClient, String, String, generation? : String?, if_generation_match? : String?, if_generation_not_match? : String?, if_metageneration_match? : String?, if_metageneration_not_match? : String?, override_unlocked_retention? : Bool?, predefined_acl? : String?, projection? : String?, user_project? : String?) -> Object raise @http.HttpError
+pub async fn StorageService::objects_watch_all(Self, &@http.HttpClient, String, delimiter? : String?, end_offset? : String?, include_trailing_delimiter? : Bool?, max_results? : Int?, page_token? : String?, prefix? : String?, projection? : String?, start_offset? : String?, user_project? : String?, versions? : Bool?) -> Channel raise @http.HttpError
+pub async fn StorageService::operations_advance_relocate_bucket(Self, &@http.HttpClient, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::operations_cancel(Self, &@http.HttpClient, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::operations_get(Self, &@http.HttpClient, String, String) -> GoogleLongrunningOperation raise @http.HttpError
+pub async fn StorageService::operations_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> GoogleLongrunningListOperationsResponse raise @http.HttpError
+pub async fn StorageService::projects_hmac_keys_create(Self, &@http.HttpClient, String, service_account_email? : String?, user_project? : String?) -> HmacKey raise @http.HttpError
+pub async fn StorageService::projects_hmac_keys_delete(Self, &@http.HttpClient, String, String, user_project? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn StorageService::projects_hmac_keys_get(Self, &@http.HttpClient, String, String, user_project? : String?) -> HmacKeyMetadata raise @http.HttpError
+pub async fn StorageService::projects_hmac_keys_list(Self, &@http.HttpClient, String, max_results? : Int?, page_token? : String?, service_account_email? : String?, show_deleted_keys? : Bool?, user_project? : String?) -> HmacKeysMetadata raise @http.HttpError
+pub async fn StorageService::projects_hmac_keys_update(Self, &@http.HttpClient, String, String, user_project? : String?) -> HmacKeyMetadata raise @http.HttpError
+pub async fn StorageService::projects_service_account_get(Self, &@http.HttpClient, String, user_project? : String?) -> ServiceAccount raise @http.HttpError
 
 pub(all) struct TestIamPermissionsResponse {
   kind : String?

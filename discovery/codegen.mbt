@@ -498,6 +498,19 @@ fn write_body_field_required(
 }
 
 ///|
+/// Returns `(moonbit_return_type, parse_json_body)`.
+fn method_return_type(rest_m : RestMethod) -> (String, Bool) {
+  match rest_m.response {
+    Some(media) =>
+      match media.ref_ {
+        Some(r) => (ref_to_type_name(r), true)
+        None => ("@http.HttpResponse", false)
+      }
+    None => ("@http.HttpResponse", false)
+  }
+}
+
+///|
 fn write_rest_method(
   b : StringBuilder,
   service_ty : String,
@@ -523,12 +536,15 @@ fn write_rest_method(
   }
   let body_req = sorted_body_required_pairs(body_req)
   let body_opt = sorted_param_pairs(body_opt)
+  let (ret_ty, parse_json) = method_return_type(rest_m)
   b.write_string("///| \{rest_m.id}\n")
   match rest_m.description {
     Some(d) => b.write_string("///| \{d}\n")
     None => ()
   }
-  b.write_string("pub fn \{service_ty}::\{fn_name}(\n  self : \{service_ty},\n")
+  b.write_string(
+    "pub async fn \{service_ty}::\{fn_name}(\n  self : \{service_ty},\n  client : &@http.HttpClient,\n",
+  )
   for pb in path_bindings {
     let arg = safe_field_name(pb.0)
     let ty = param_type_to_moonbit(pb.1.type_)
@@ -549,7 +565,7 @@ fn write_rest_method(
     let ty = param_type_to_moonbit(bp.1.type_)
     b.write_string("  \{arg}? : \{ty}? = None,\n")
   }
-  b.write_string(") -> @http.HttpRequest {\n")
+  b.write_string(") -> \{ret_ty} raise @http.HttpError {\n")
   let path_expr = path_expr_from_template(rest_m.path)
   let use_query = query_pairs.length() > 0
   let use_body = is_mutating_http(http_u)
@@ -592,17 +608,36 @@ fn write_rest_method(
   }
   if use_body {
     b.write_string(
-      "  @http.HttpRequest::new(url, \{meth}, h, body=Some(body))\n}\n\n",
+      "  let req = @http.HttpRequest::new(url, \{meth}, h, body=Some(body))\n",
     )
   } else if use_query {
     b.write_string(
-      "  @http.HttpRequest::new(url, \{meth}, self.auth_headers())\n}\n\n",
+      "  let req = @http.HttpRequest::new(url, \{meth}, self.auth_headers())\n",
     )
   } else {
     b.write_string(
-      "  @http.HttpRequest::new(url, \{meth}, self.auth_headers())\n}\n\n",
+      "  let req = @http.HttpRequest::new(url, \{meth}, self.auth_headers())\n",
     )
   }
+  b.write_string(
+    "  let resp = client.request(req) catch {\n    e => raise e\n  }\n",
+  )
+  b.write_string(
+    "  if resp.status_code >= 400 {\n    raise @http.HttpError::network_message(\n      \"HTTP \" + resp.status_code.to_string() + \": \" + resp.body,\n    )\n  }\n",
+  )
+  if parse_json {
+    b.write_string("  let json = @json.parse(resp.body) catch {\n")
+    b.write_string(
+      "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
+    )
+    b.write_string("  @json.from_json(json) catch {\n")
+    b.write_string(
+      "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
+    )
+  } else {
+    b.write_string("  resp\n")
+  }
+  b.write_string("}\n\n")
 }
 
 ///|
