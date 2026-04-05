@@ -7,7 +7,6 @@
   "keywords": ["google", "googleapis", "rest", "api"],
   "description": "MoonBit client library for Google REST APIs",
   "deps": {
-    "mizchi/jsonschema": { "path": "vendor/mizchi-jsonschema" },
     "mizchi/x": "0.1.3",
     "moonbitlang/async": "0.16.6"
   }

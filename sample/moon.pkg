@@ -3,7 +3,7 @@ import {
   "moonbitlang/core/json" @json,
   "mizchi/x/sys" @sys,
   "ryota0624/googleapis/http" @http,
-  "ryota0624/googleapis/services/drive" @drive,
+  "ryota0624/googleapis/generated/drive" @drive,
 }
 
 warnings = "-0029"
