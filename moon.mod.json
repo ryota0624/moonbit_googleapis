@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "preferred-target": "native",
   "readme": "README.mbt.md",
-  "repository": "",
+  "repository": "https://github.com/ryota0624/moonbit_googleapis",
   "license": "Apache-2.0",
   "keywords": ["google", "googleapis", "rest", "api"],
   "description": "MoonBit client library for Google REST APIs",
