@@ -10,6 +10,7 @@ test "generate_moon_pkg" {
     #|import {
     #|  "moonbitlang/core/buffer" @buffer,
     #|  "moonbitlang/core/json" @json,
+    #|  "ryota0624/googleapis/core" @core,
     #|  "ryota0624/googleapis/http" @http,
     #|}
     #|
@@ -149,27 +150,14 @@ test "generate_types and generate_client snapshot" {
       #|///|
       #|pub struct DriveService {
       #|  base_url : String
-      #|  get_token : async () -> String
-      #|  client : &@http.HttpClient
+      #|  client : @core.GoogleClient
       #|}
       #|
       #|///|
-      #|pub fn DriveService::new(client : &@http.HttpClient, get_token : async () -> String) -> DriveService {
+      #|pub fn DriveService::new(client : @core.GoogleClient) -> DriveService {
       #|  DriveService::{
       #|    base_url: "https://www.googleapis.com",
-      #|    get_token,
       #|    client,
-      #|  }
-      #|}
-      #|
-      #|///|
-      #|async fn DriveService::auth_headers(self : DriveService) -> Map[String, String] raise @http.HttpError {
-      #|  let token = (self.get_token)() catch {
-      #|    e => raise @http.HttpError::NetworkError(e.to_string())
-      #|  }
-      #|  {
-      #|    "Authorization": "Bearer " + token,
-      #|    "Accept": "application/json",
       #|  }
       #|}
       #|
@@ -195,7 +183,7 @@ test "generate_types and generate_client snapshot" {
       #|    None => ()
       #|  }
       #|  let body = Json::object(meta).stringify()
-      #|  let h = self.auth_headers()
+      #|  let h : Map[String, String] = {}
       #|  h.set("Content-Type", "application/json")
       #|  let path = "/" + "files"
       #|  let url = self.base_url + path
@@ -235,7 +223,7 @@ test "generate_types and generate_client snapshot" {
       #|  } else {
       #|    self.base_url + path + "?" + qs
       #|  }
-      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
       #|  let resp = self.client.request(req) catch {
       #|    e => raise e
       #|  }
@@ -280,7 +268,7 @@ test "generate_types and generate_client snapshot" {
       #|  } else {
       #|    self.base_url + path + "?" + qs
       #|  }
-      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
+      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
       #|  let resp = self.client.request(req) catch {
       #|    e => raise e
       #|  }
@@ -298,7 +286,6 @@ test "generate_types and generate_client snapshot" {
       #|}
       #|
       #|
-
     ),
   )
 }

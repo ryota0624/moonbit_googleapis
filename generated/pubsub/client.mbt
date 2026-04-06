@@ -5,30 +5,12 @@
 ///|
 pub struct PubsubService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 
 ///|
-pub fn PubsubService::new(
-  client : &@http.HttpClient,
-  get_token : async () -> String,
-) -> PubsubService {
-  PubsubService::{
-    base_url: "https://pubsub.googleapis.com",
-    get_token,
-    client,
-  }
-}
-
-///|
-async fn PubsubService::auth_headers(
-  self : PubsubService,
-) -> Map[String, String] raise @http.HttpError {
-  let token = (self.get_token)() catch {
-    e => raise @http.HttpError::NetworkError(e.to_string())
-  }
-  { "Authorization": "Bearer " + token, "Accept": "application/json" }
+pub fn PubsubService::new(client : @core.GoogleClient) -> PubsubService {
+  PubsubService::{ base_url: "https://pubsub.googleapis.com", client }
 }
 
 ///| pubsub.projects.schemas.commit
@@ -41,7 +23,7 @@ pub async fn PubsubService::projects_schemas_commit(
 ) -> Schema raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":commit"
   let url = self.base_url + path
@@ -82,7 +64,7 @@ pub async fn PubsubService::projects_schemas_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "schemas"
   let url = if qs.is_empty() {
@@ -120,11 +102,7 @@ pub async fn PubsubService::projects_schemas_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -160,11 +138,7 @@ pub async fn PubsubService::projects_schemas_delete_revision(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -200,11 +174,7 @@ pub async fn PubsubService::projects_schemas_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -240,11 +210,7 @@ pub async fn PubsubService::projects_schemas_get_iam_policy(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -290,11 +256,7 @@ pub async fn PubsubService::projects_schemas_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -340,11 +302,7 @@ pub async fn PubsubService::projects_schemas_list_revisions(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -369,7 +327,7 @@ pub async fn PubsubService::projects_schemas_rollback(
 ) -> Schema raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":rollback"
   let url = self.base_url + path
@@ -403,7 +361,7 @@ pub async fn PubsubService::projects_schemas_set_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -437,7 +395,7 @@ pub async fn PubsubService::projects_schemas_test_iam_permissions(
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -471,7 +429,7 @@ pub async fn PubsubService::projects_schemas_validate(
 ) -> ValidateSchemaResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "schemas:validate"
   let url = self.base_url + path
@@ -505,7 +463,7 @@ pub async fn PubsubService::projects_schemas_validate_message(
 ) -> ValidateMessageResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "schemas:validateMessage"
   let url = self.base_url + path
@@ -539,7 +497,7 @@ pub async fn PubsubService::projects_snapshots_create(
 ) -> Snapshot raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
@@ -573,11 +531,7 @@ pub async fn PubsubService::projects_snapshots_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + snapshot
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -602,11 +556,7 @@ pub async fn PubsubService::projects_snapshots_get(
 ) -> Snapshot raise @http.HttpError {
   let path = "/" + "v1" + "/" + snapshot
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -642,11 +592,7 @@ pub async fn PubsubService::projects_snapshots_get_iam_policy(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -687,11 +633,7 @@ pub async fn PubsubService::projects_snapshots_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -716,7 +658,7 @@ pub async fn PubsubService::projects_snapshots_patch(
 ) -> Snapshot raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
@@ -750,7 +692,7 @@ pub async fn PubsubService::projects_snapshots_set_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -784,7 +726,7 @@ pub async fn PubsubService::projects_snapshots_test_iam_permissions(
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -818,7 +760,7 @@ pub async fn PubsubService::projects_subscriptions_acknowledge(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":acknowledge"
   let url = self.base_url + path
@@ -852,7 +794,7 @@ pub async fn PubsubService::projects_subscriptions_create(
 ) -> Subscription raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
@@ -886,11 +828,7 @@ pub async fn PubsubService::projects_subscriptions_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + subscription
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -915,7 +853,7 @@ pub async fn PubsubService::projects_subscriptions_detach(
 ) -> DetachSubscriptionResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":detach"
   let url = self.base_url + path
@@ -949,11 +887,7 @@ pub async fn PubsubService::projects_subscriptions_get(
 ) -> Subscription raise @http.HttpError {
   let path = "/" + "v1" + "/" + subscription
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -989,11 +923,7 @@ pub async fn PubsubService::projects_subscriptions_get_iam_policy(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1034,11 +964,7 @@ pub async fn PubsubService::projects_subscriptions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1063,7 +989,7 @@ pub async fn PubsubService::projects_subscriptions_modify_ack_deadline(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":modifyAckDeadline"
   let url = self.base_url + path
@@ -1097,7 +1023,7 @@ pub async fn PubsubService::projects_subscriptions_modify_push_config(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":modifyPushConfig"
   let url = self.base_url + path
@@ -1131,7 +1057,7 @@ pub async fn PubsubService::projects_subscriptions_patch(
 ) -> Subscription raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
@@ -1165,7 +1091,7 @@ pub async fn PubsubService::projects_subscriptions_pull(
 ) -> PullResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":pull"
   let url = self.base_url + path
@@ -1199,7 +1125,7 @@ pub async fn PubsubService::projects_subscriptions_seek(
 ) -> SeekResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":seek"
   let url = self.base_url + path
@@ -1233,7 +1159,7 @@ pub async fn PubsubService::projects_subscriptions_set_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -1267,7 +1193,7 @@ pub async fn PubsubService::projects_subscriptions_test_iam_permissions(
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -1301,7 +1227,7 @@ pub async fn PubsubService::projects_topics_create(
 ) -> Topic raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
@@ -1335,11 +1261,7 @@ pub async fn PubsubService::projects_topics_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + topic
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1364,11 +1286,7 @@ pub async fn PubsubService::projects_topics_get(
 ) -> Topic raise @http.HttpError {
   let path = "/" + "v1" + "/" + topic
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1404,11 +1322,7 @@ pub async fn PubsubService::projects_topics_get_iam_policy(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1449,11 +1363,7 @@ pub async fn PubsubService::projects_topics_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1478,7 +1388,7 @@ pub async fn PubsubService::projects_topics_patch(
 ) -> Topic raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
@@ -1512,7 +1422,7 @@ pub async fn PubsubService::projects_topics_publish(
 ) -> PublishResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + topic + "/" + ":publish"
   let url = self.base_url + path
@@ -1546,7 +1456,7 @@ pub async fn PubsubService::projects_topics_set_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -1580,7 +1490,7 @@ pub async fn PubsubService::projects_topics_test_iam_permissions(
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -1630,11 +1540,7 @@ pub async fn PubsubService::projects_topics_snapshots_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1675,11 +1581,7 @@ pub async fn PubsubService::projects_topics_subscriptions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(

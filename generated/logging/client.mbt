@@ -5,30 +5,12 @@
 ///|
 pub struct LoggingService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 
 ///|
-pub fn LoggingService::new(
-  client : &@http.HttpClient,
-  get_token : async () -> String,
-) -> LoggingService {
-  LoggingService::{
-    base_url: "https://logging.googleapis.com",
-    get_token,
-    client,
-  }
-}
-
-///|
-async fn LoggingService::auth_headers(
-  self : LoggingService,
-) -> Map[String, String] raise @http.HttpError {
-  let token = (self.get_token)() catch {
-    e => raise @http.HttpError::NetworkError(e.to_string())
-  }
-  { "Authorization": "Bearer " + token, "Accept": "application/json" }
+pub fn LoggingService::new(client : @core.GoogleClient) -> LoggingService {
+  LoggingService::{ base_url: "https://logging.googleapis.com", client }
 }
 
 ///| logging.billingAccounts.getCmekSettings
@@ -41,11 +23,7 @@ pub async fn LoggingService::billing_accounts_get_cmek_settings(
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -70,11 +48,7 @@ pub async fn LoggingService::billing_accounts_get_settings(
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -99,7 +73,7 @@ pub async fn LoggingService::billing_accounts_exclusions_create(
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
   let url = self.base_url + path
@@ -133,11 +107,7 @@ pub async fn LoggingService::billing_accounts_exclusions_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -162,11 +132,7 @@ pub async fn LoggingService::billing_accounts_exclusions_get(
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -207,11 +173,7 @@ pub async fn LoggingService::billing_accounts_exclusions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -243,7 +205,7 @@ pub async fn LoggingService::billing_accounts_exclusions_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -281,11 +243,7 @@ pub async fn LoggingService::billing_accounts_locations_get(
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -336,11 +294,7 @@ pub async fn LoggingService::billing_accounts_locations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -372,7 +326,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
   let url = if qs.is_empty() {
@@ -417,7 +371,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
   let url = if qs.is_empty() {
@@ -455,11 +409,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -484,11 +434,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_get(
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -529,11 +475,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -565,7 +507,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -603,7 +545,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_undelete(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
   let url = self.base_url + path
@@ -644,7 +586,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_update_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
   let url = if qs.is_empty() {
@@ -689,7 +631,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
   let url = if qs.is_empty() {
@@ -727,11 +669,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_delete(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -756,11 +694,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_get(
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -801,11 +735,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -837,7 +767,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
   let url = if qs.is_empty() {
@@ -875,11 +805,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -904,11 +830,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_get(
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -949,11 +871,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -985,7 +903,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -1044,11 +962,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1073,7 +987,7 @@ pub async fn LoggingService::billing_accounts_locations_operations_cancel(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
   let url = self.base_url + path
@@ -1107,11 +1021,7 @@ pub async fn LoggingService::billing_accounts_locations_operations_get(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1163,11 +1073,7 @@ pub async fn LoggingService::billing_accounts_locations_operations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1213,11 +1119,7 @@ pub async fn LoggingService::billing_accounts_locations_recent_queries_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1249,7 +1151,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "savedQueries"
   let url = if qs.is_empty() {
@@ -1287,11 +1189,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1316,11 +1214,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_get(
 ) -> SavedQuery raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1366,11 +1260,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1402,7 +1292,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -1440,11 +1330,7 @@ pub async fn LoggingService::billing_accounts_logs_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1490,11 +1376,7 @@ pub async fn LoggingService::billing_accounts_logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1532,7 +1414,7 @@ pub async fn LoggingService::billing_accounts_sinks_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
   let url = if qs.is_empty() {
@@ -1570,11 +1452,7 @@ pub async fn LoggingService::billing_accounts_sinks_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1599,11 +1477,7 @@ pub async fn LoggingService::billing_accounts_sinks_get(
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1649,11 +1523,7 @@ pub async fn LoggingService::billing_accounts_sinks_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1696,7 +1566,7 @@ pub async fn LoggingService::billing_accounts_sinks_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -1752,7 +1622,7 @@ pub async fn LoggingService::billing_accounts_sinks_update(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -1789,7 +1659,7 @@ pub async fn LoggingService::entries_copy(
 ) -> Operation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + "entries:copy"
   let url = self.base_url + path
@@ -1822,7 +1692,7 @@ pub async fn LoggingService::entries_list(
 ) -> ListLogEntriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + "entries:list"
   let url = self.base_url + path
@@ -1855,7 +1725,7 @@ pub async fn LoggingService::entries_tail(
 ) -> TailLogEntriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + "entries:tail"
   let url = self.base_url + path
@@ -1888,7 +1758,7 @@ pub async fn LoggingService::entries_write(
 ) -> WriteLogEntriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + "entries:write"
   let url = self.base_url + path
@@ -1922,7 +1792,7 @@ pub async fn LoggingService::exclusions_create(
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
   let url = self.base_url + path
@@ -1956,11 +1826,7 @@ pub async fn LoggingService::exclusions_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1985,11 +1851,7 @@ pub async fn LoggingService::exclusions_get(
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2030,11 +1892,7 @@ pub async fn LoggingService::exclusions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2066,7 +1924,7 @@ pub async fn LoggingService::exclusions_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -2104,11 +1962,7 @@ pub async fn LoggingService::folders_get_cmek_settings(
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2133,11 +1987,7 @@ pub async fn LoggingService::folders_get_settings(
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2169,7 +2019,7 @@ pub async fn LoggingService::folders_update_settings(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "settings"
   let url = if qs.is_empty() {
@@ -2207,7 +2057,7 @@ pub async fn LoggingService::folders_exclusions_create(
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
   let url = self.base_url + path
@@ -2241,11 +2091,7 @@ pub async fn LoggingService::folders_exclusions_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2270,11 +2116,7 @@ pub async fn LoggingService::folders_exclusions_get(
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2315,11 +2157,7 @@ pub async fn LoggingService::folders_exclusions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2351,7 +2189,7 @@ pub async fn LoggingService::folders_exclusions_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -2389,11 +2227,7 @@ pub async fn LoggingService::folders_locations_get(
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2444,11 +2278,7 @@ pub async fn LoggingService::folders_locations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2480,7 +2310,7 @@ pub async fn LoggingService::folders_locations_buckets_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
   let url = if qs.is_empty() {
@@ -2525,7 +2355,7 @@ pub async fn LoggingService::folders_locations_buckets_create_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
   let url = if qs.is_empty() {
@@ -2563,11 +2393,7 @@ pub async fn LoggingService::folders_locations_buckets_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2592,11 +2418,7 @@ pub async fn LoggingService::folders_locations_buckets_get(
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2637,11 +2459,7 @@ pub async fn LoggingService::folders_locations_buckets_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2673,7 +2491,7 @@ pub async fn LoggingService::folders_locations_buckets_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -2711,7 +2529,7 @@ pub async fn LoggingService::folders_locations_buckets_undelete(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
   let url = self.base_url + path
@@ -2752,7 +2570,7 @@ pub async fn LoggingService::folders_locations_buckets_update_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
   let url = if qs.is_empty() {
@@ -2797,7 +2615,7 @@ pub async fn LoggingService::folders_locations_buckets_links_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
   let url = if qs.is_empty() {
@@ -2835,11 +2653,7 @@ pub async fn LoggingService::folders_locations_buckets_links_delete(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2864,11 +2678,7 @@ pub async fn LoggingService::folders_locations_buckets_links_get(
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2909,11 +2719,7 @@ pub async fn LoggingService::folders_locations_buckets_links_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2945,7 +2751,7 @@ pub async fn LoggingService::folders_locations_buckets_views_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
   let url = if qs.is_empty() {
@@ -2983,11 +2789,7 @@ pub async fn LoggingService::folders_locations_buckets_views_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3012,11 +2814,7 @@ pub async fn LoggingService::folders_locations_buckets_views_get(
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3041,7 +2839,7 @@ pub async fn LoggingService::folders_locations_buckets_views_get_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
   let url = self.base_url + path
@@ -3091,11 +2889,7 @@ pub async fn LoggingService::folders_locations_buckets_views_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3127,7 +2921,7 @@ pub async fn LoggingService::folders_locations_buckets_views_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -3165,7 +2959,7 @@ pub async fn LoggingService::folders_locations_buckets_views_set_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -3199,7 +2993,7 @@ pub async fn LoggingService::folders_locations_buckets_views_test_iam_permission
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -3254,11 +3048,7 @@ pub async fn LoggingService::folders_locations_buckets_views_logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3290,7 +3080,7 @@ pub async fn LoggingService::folders_locations_log_scopes_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "logScopes"
   let url = if qs.is_empty() {
@@ -3328,11 +3118,7 @@ pub async fn LoggingService::folders_locations_log_scopes_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3357,11 +3143,7 @@ pub async fn LoggingService::folders_locations_log_scopes_get(
 ) -> LogScope raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3402,11 +3184,7 @@ pub async fn LoggingService::folders_locations_log_scopes_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3438,7 +3216,7 @@ pub async fn LoggingService::folders_locations_log_scopes_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -3476,7 +3254,7 @@ pub async fn LoggingService::folders_locations_operations_cancel(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
   let url = self.base_url + path
@@ -3510,11 +3288,7 @@ pub async fn LoggingService::folders_locations_operations_get(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3566,11 +3340,7 @@ pub async fn LoggingService::folders_locations_operations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3616,11 +3386,7 @@ pub async fn LoggingService::folders_locations_recent_queries_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3652,7 +3418,7 @@ pub async fn LoggingService::folders_locations_saved_queries_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "savedQueries"
   let url = if qs.is_empty() {
@@ -3690,11 +3456,7 @@ pub async fn LoggingService::folders_locations_saved_queries_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3719,11 +3481,7 @@ pub async fn LoggingService::folders_locations_saved_queries_get(
 ) -> SavedQuery raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3769,11 +3527,7 @@ pub async fn LoggingService::folders_locations_saved_queries_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3805,7 +3559,7 @@ pub async fn LoggingService::folders_locations_saved_queries_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -3843,11 +3597,7 @@ pub async fn LoggingService::folders_logs_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3893,11 +3643,7 @@ pub async fn LoggingService::folders_logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -3935,7 +3681,7 @@ pub async fn LoggingService::folders_sinks_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
   let url = if qs.is_empty() {
@@ -3973,11 +3719,7 @@ pub async fn LoggingService::folders_sinks_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4002,11 +3744,7 @@ pub async fn LoggingService::folders_sinks_get(
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4052,11 +3790,7 @@ pub async fn LoggingService::folders_sinks_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4099,7 +3833,7 @@ pub async fn LoggingService::folders_sinks_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -4155,7 +3889,7 @@ pub async fn LoggingService::folders_sinks_update(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -4193,11 +3927,7 @@ pub async fn LoggingService::locations_get(
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4248,11 +3978,7 @@ pub async fn LoggingService::locations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4284,7 +4010,7 @@ pub async fn LoggingService::locations_buckets_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
   let url = if qs.is_empty() {
@@ -4329,7 +4055,7 @@ pub async fn LoggingService::locations_buckets_create_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
   let url = if qs.is_empty() {
@@ -4367,11 +4093,7 @@ pub async fn LoggingService::locations_buckets_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4396,11 +4118,7 @@ pub async fn LoggingService::locations_buckets_get(
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4441,11 +4159,7 @@ pub async fn LoggingService::locations_buckets_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4477,7 +4191,7 @@ pub async fn LoggingService::locations_buckets_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -4515,7 +4229,7 @@ pub async fn LoggingService::locations_buckets_undelete(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
   let url = self.base_url + path
@@ -4556,7 +4270,7 @@ pub async fn LoggingService::locations_buckets_update_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
   let url = if qs.is_empty() {
@@ -4601,7 +4315,7 @@ pub async fn LoggingService::locations_buckets_links_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
   let url = if qs.is_empty() {
@@ -4639,11 +4353,7 @@ pub async fn LoggingService::locations_buckets_links_delete(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4668,11 +4378,7 @@ pub async fn LoggingService::locations_buckets_links_get(
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4713,11 +4419,7 @@ pub async fn LoggingService::locations_buckets_links_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4749,7 +4451,7 @@ pub async fn LoggingService::locations_buckets_views_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
   let url = if qs.is_empty() {
@@ -4787,11 +4489,7 @@ pub async fn LoggingService::locations_buckets_views_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4816,11 +4514,7 @@ pub async fn LoggingService::locations_buckets_views_get(
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4845,7 +4539,7 @@ pub async fn LoggingService::locations_buckets_views_get_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
   let url = self.base_url + path
@@ -4895,11 +4589,7 @@ pub async fn LoggingService::locations_buckets_views_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -4931,7 +4621,7 @@ pub async fn LoggingService::locations_buckets_views_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -4969,7 +4659,7 @@ pub async fn LoggingService::locations_buckets_views_set_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -5003,7 +4693,7 @@ pub async fn LoggingService::locations_buckets_views_test_iam_permissions(
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -5037,7 +4727,7 @@ pub async fn LoggingService::locations_operations_cancel(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
   let url = self.base_url + path
@@ -5071,11 +4761,7 @@ pub async fn LoggingService::locations_operations_get(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5127,11 +4813,7 @@ pub async fn LoggingService::locations_operations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5156,11 +4838,7 @@ pub async fn LoggingService::logs_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5206,11 +4884,7 @@ pub async fn LoggingService::logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5250,11 +4924,7 @@ pub async fn LoggingService::monitored_resource_descriptors_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5279,11 +4949,7 @@ pub async fn LoggingService::organizations_get_cmek_settings(
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5308,11 +4974,7 @@ pub async fn LoggingService::organizations_get_settings(
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5344,7 +5006,7 @@ pub async fn LoggingService::organizations_update_cmek_settings(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
   let url = if qs.is_empty() {
@@ -5389,7 +5051,7 @@ pub async fn LoggingService::organizations_update_settings(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "settings"
   let url = if qs.is_empty() {
@@ -5427,7 +5089,7 @@ pub async fn LoggingService::organizations_exclusions_create(
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
   let url = self.base_url + path
@@ -5461,11 +5123,7 @@ pub async fn LoggingService::organizations_exclusions_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5490,11 +5148,7 @@ pub async fn LoggingService::organizations_exclusions_get(
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5535,11 +5189,7 @@ pub async fn LoggingService::organizations_exclusions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5571,7 +5221,7 @@ pub async fn LoggingService::organizations_exclusions_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -5609,11 +5259,7 @@ pub async fn LoggingService::organizations_locations_get(
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5664,11 +5310,7 @@ pub async fn LoggingService::organizations_locations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5700,7 +5342,7 @@ pub async fn LoggingService::organizations_locations_buckets_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
   let url = if qs.is_empty() {
@@ -5745,7 +5387,7 @@ pub async fn LoggingService::organizations_locations_buckets_create_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
   let url = if qs.is_empty() {
@@ -5783,11 +5425,7 @@ pub async fn LoggingService::organizations_locations_buckets_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5812,11 +5450,7 @@ pub async fn LoggingService::organizations_locations_buckets_get(
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5857,11 +5491,7 @@ pub async fn LoggingService::organizations_locations_buckets_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -5893,7 +5523,7 @@ pub async fn LoggingService::organizations_locations_buckets_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -5931,7 +5561,7 @@ pub async fn LoggingService::organizations_locations_buckets_undelete(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
   let url = self.base_url + path
@@ -5972,7 +5602,7 @@ pub async fn LoggingService::organizations_locations_buckets_update_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
   let url = if qs.is_empty() {
@@ -6017,7 +5647,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
   let url = if qs.is_empty() {
@@ -6055,11 +5685,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_delete(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6084,11 +5710,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_get(
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6129,11 +5751,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6165,7 +5783,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
   let url = if qs.is_empty() {
@@ -6203,11 +5821,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6232,11 +5846,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_get(
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6261,7 +5871,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_get_iam_polic
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
   let url = self.base_url + path
@@ -6311,11 +5921,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6347,7 +5953,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -6385,7 +5991,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_set_iam_polic
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -6419,7 +6025,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_test_iam_perm
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -6474,11 +6080,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6510,7 +6112,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "logScopes"
   let url = if qs.is_empty() {
@@ -6548,11 +6150,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6577,11 +6175,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_get(
 ) -> LogScope raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6622,11 +6216,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6658,7 +6248,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -6696,7 +6286,7 @@ pub async fn LoggingService::organizations_locations_operations_cancel(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
   let url = self.base_url + path
@@ -6730,11 +6320,7 @@ pub async fn LoggingService::organizations_locations_operations_get(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6786,11 +6372,7 @@ pub async fn LoggingService::organizations_locations_operations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6836,11 +6418,7 @@ pub async fn LoggingService::organizations_locations_recent_queries_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6872,7 +6450,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "savedQueries"
   let url = if qs.is_empty() {
@@ -6910,11 +6488,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6939,11 +6513,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_get(
 ) -> SavedQuery raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -6989,11 +6559,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7025,7 +6591,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -7063,11 +6629,7 @@ pub async fn LoggingService::organizations_logs_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7113,11 +6675,7 @@ pub async fn LoggingService::organizations_logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7155,7 +6713,7 @@ pub async fn LoggingService::organizations_sinks_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
   let url = if qs.is_empty() {
@@ -7193,11 +6751,7 @@ pub async fn LoggingService::organizations_sinks_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7222,11 +6776,7 @@ pub async fn LoggingService::organizations_sinks_get(
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7272,11 +6822,7 @@ pub async fn LoggingService::organizations_sinks_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7319,7 +6865,7 @@ pub async fn LoggingService::organizations_sinks_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -7375,7 +6921,7 @@ pub async fn LoggingService::organizations_sinks_update(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -7413,11 +6959,7 @@ pub async fn LoggingService::projects_get_cmek_settings(
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7442,11 +6984,7 @@ pub async fn LoggingService::projects_get_settings(
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7471,7 +7009,7 @@ pub async fn LoggingService::projects_exclusions_create(
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
   let url = self.base_url + path
@@ -7505,11 +7043,7 @@ pub async fn LoggingService::projects_exclusions_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7534,11 +7068,7 @@ pub async fn LoggingService::projects_exclusions_get(
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7579,11 +7109,7 @@ pub async fn LoggingService::projects_exclusions_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7615,7 +7141,7 @@ pub async fn LoggingService::projects_exclusions_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -7653,11 +7179,7 @@ pub async fn LoggingService::projects_locations_get(
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7708,11 +7230,7 @@ pub async fn LoggingService::projects_locations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7744,7 +7262,7 @@ pub async fn LoggingService::projects_locations_buckets_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
   let url = if qs.is_empty() {
@@ -7789,7 +7307,7 @@ pub async fn LoggingService::projects_locations_buckets_create_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
   let url = if qs.is_empty() {
@@ -7827,11 +7345,7 @@ pub async fn LoggingService::projects_locations_buckets_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7856,11 +7370,7 @@ pub async fn LoggingService::projects_locations_buckets_get(
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7901,11 +7411,7 @@ pub async fn LoggingService::projects_locations_buckets_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -7937,7 +7443,7 @@ pub async fn LoggingService::projects_locations_buckets_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -7975,7 +7481,7 @@ pub async fn LoggingService::projects_locations_buckets_undelete(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
   let url = self.base_url + path
@@ -8016,7 +7522,7 @@ pub async fn LoggingService::projects_locations_buckets_update_async(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
   let url = if qs.is_empty() {
@@ -8061,7 +7567,7 @@ pub async fn LoggingService::projects_locations_buckets_links_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
   let url = if qs.is_empty() {
@@ -8099,11 +7605,7 @@ pub async fn LoggingService::projects_locations_buckets_links_delete(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8128,11 +7630,7 @@ pub async fn LoggingService::projects_locations_buckets_links_get(
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8173,11 +7671,7 @@ pub async fn LoggingService::projects_locations_buckets_links_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8209,7 +7703,7 @@ pub async fn LoggingService::projects_locations_buckets_views_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
   let url = if qs.is_empty() {
@@ -8247,11 +7741,7 @@ pub async fn LoggingService::projects_locations_buckets_views_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8276,11 +7766,7 @@ pub async fn LoggingService::projects_locations_buckets_views_get(
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8305,7 +7791,7 @@ pub async fn LoggingService::projects_locations_buckets_views_get_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
   let url = self.base_url + path
@@ -8355,11 +7841,7 @@ pub async fn LoggingService::projects_locations_buckets_views_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8391,7 +7873,7 @@ pub async fn LoggingService::projects_locations_buckets_views_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -8429,7 +7911,7 @@ pub async fn LoggingService::projects_locations_buckets_views_set_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -8463,7 +7945,7 @@ pub async fn LoggingService::projects_locations_buckets_views_test_iam_permissio
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -8518,11 +8000,7 @@ pub async fn LoggingService::projects_locations_buckets_views_logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8554,7 +8032,7 @@ pub async fn LoggingService::projects_locations_log_scopes_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "logScopes"
   let url = if qs.is_empty() {
@@ -8592,11 +8070,7 @@ pub async fn LoggingService::projects_locations_log_scopes_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8621,11 +8095,7 @@ pub async fn LoggingService::projects_locations_log_scopes_get(
 ) -> LogScope raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8666,11 +8136,7 @@ pub async fn LoggingService::projects_locations_log_scopes_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8702,7 +8168,7 @@ pub async fn LoggingService::projects_locations_log_scopes_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -8740,7 +8206,7 @@ pub async fn LoggingService::projects_locations_operations_cancel(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
   let url = self.base_url + path
@@ -8774,11 +8240,7 @@ pub async fn LoggingService::projects_locations_operations_get(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8830,11 +8292,7 @@ pub async fn LoggingService::projects_locations_operations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8880,11 +8338,7 @@ pub async fn LoggingService::projects_locations_recent_queries_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8916,7 +8370,7 @@ pub async fn LoggingService::projects_locations_saved_queries_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "savedQueries"
   let url = if qs.is_empty() {
@@ -8954,11 +8408,7 @@ pub async fn LoggingService::projects_locations_saved_queries_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -8983,11 +8433,7 @@ pub async fn LoggingService::projects_locations_saved_queries_get(
 ) -> SavedQuery raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9033,11 +8479,7 @@ pub async fn LoggingService::projects_locations_saved_queries_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9069,7 +8511,7 @@ pub async fn LoggingService::projects_locations_saved_queries_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -9107,11 +8549,7 @@ pub async fn LoggingService::projects_logs_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9157,11 +8595,7 @@ pub async fn LoggingService::projects_logs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9186,7 +8620,7 @@ pub async fn LoggingService::projects_metrics_create(
 ) -> LogMetric raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "metrics"
   let url = self.base_url + path
@@ -9220,11 +8654,7 @@ pub async fn LoggingService::projects_metrics_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + metric_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9249,11 +8679,7 @@ pub async fn LoggingService::projects_metrics_get(
 ) -> LogMetric raise @http.HttpError {
   let path = "/" + "v2" + "/" + metric_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9294,11 +8720,7 @@ pub async fn LoggingService::projects_metrics_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9323,7 +8745,7 @@ pub async fn LoggingService::projects_metrics_update(
 ) -> LogMetric raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + metric_name
   let url = self.base_url + path
@@ -9370,7 +8792,7 @@ pub async fn LoggingService::projects_sinks_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
   let url = if qs.is_empty() {
@@ -9408,11 +8830,7 @@ pub async fn LoggingService::projects_sinks_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9437,11 +8855,7 @@ pub async fn LoggingService::projects_sinks_get(
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9487,11 +8901,7 @@ pub async fn LoggingService::projects_sinks_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9534,7 +8944,7 @@ pub async fn LoggingService::projects_sinks_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -9590,7 +9000,7 @@ pub async fn LoggingService::projects_sinks_update(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -9641,7 +9051,7 @@ pub async fn LoggingService::sinks_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
   let url = if qs.is_empty() {
@@ -9679,11 +9089,7 @@ pub async fn LoggingService::sinks_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9708,11 +9114,7 @@ pub async fn LoggingService::sinks_get(
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9758,11 +9160,7 @@ pub async fn LoggingService::sinks_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9805,7 +9203,7 @@ pub async fn LoggingService::sinks_update(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
   let url = if qs.is_empty() {
@@ -9843,11 +9241,7 @@ pub async fn LoggingService::v2_get_cmek_settings(
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9872,11 +9266,7 @@ pub async fn LoggingService::v2_get_settings(
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -9908,7 +9298,7 @@ pub async fn LoggingService::v2_update_cmek_settings(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
   let url = if qs.is_empty() {
@@ -9953,7 +9343,7 @@ pub async fn LoggingService::v2_update_settings(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "settings"
   let url = if qs.is_empty() {

@@ -3,6 +3,7 @@ package "ryota0624/googleapis/generated/clouderrorreporting"
 
 import {
   "moonbitlang/core/json",
+  "ryota0624/googleapis/core",
   "ryota0624/googleapis/http",
 }
 
@@ -13,10 +14,9 @@ import {
 // Types and methods
 pub struct ClouderrorreportingService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
-pub fn ClouderrorreportingService::new(&@http.HttpClient, async () -> String) -> Self
+pub fn ClouderrorreportingService::new(@core.GoogleClient) -> Self
 pub async fn ClouderrorreportingService::projects_delete_events(Self, String) -> DeleteEventsResponse raise @http.HttpError
 pub async fn ClouderrorreportingService::projects_events_list(Self, String, group_id? : String?, page_size? : Int?, page_token? : String?, service_filter_resource_type? : String?, service_filter_service? : String?, service_filter_version? : String?, time_range_period? : String?) -> ListEventsResponse raise @http.HttpError
 pub async fn ClouderrorreportingService::projects_events_report(Self, String) -> ReportErrorEventResponse raise @http.HttpError

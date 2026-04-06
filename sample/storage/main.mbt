@@ -24,8 +24,8 @@ async fn main {
     Some(p) => p
   }
   try {
-    let http_client = @http.DefaultHttpClient::new() as &@http.HttpClient
-    let storage = @gcs.StorageService::new(http_client, fn() { token })
+    let client = @core.GoogleClient::new(fn() { token })
+    let storage = @gcs.StorageService::new(client)
     let buckets = storage.buckets_list(
       project=Some(project),
       max_results=Some(20),

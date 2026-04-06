@@ -5,30 +5,12 @@
 ///|
 pub struct MonitoringService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 
 ///|
-pub fn MonitoringService::new(
-  client : &@http.HttpClient,
-  get_token : async () -> String,
-) -> MonitoringService {
-  MonitoringService::{
-    base_url: "https://monitoring.googleapis.com",
-    get_token,
-    client,
-  }
-}
-
-///|
-async fn MonitoringService::auth_headers(
-  self : MonitoringService,
-) -> Map[String, String] raise @http.HttpError {
-  let token = (self.get_token)() catch {
-    e => raise @http.HttpError::NetworkError(e.to_string())
-  }
-  { "Authorization": "Bearer " + token, "Accept": "application/json" }
+pub fn MonitoringService::new(client : @core.GoogleClient) -> MonitoringService {
+  MonitoringService::{ base_url: "https://monitoring.googleapis.com", client }
 }
 
 ///| monitoring.folders.timeSeries.list
@@ -123,11 +105,7 @@ pub async fn MonitoringService::folders_time_series_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -234,11 +212,7 @@ pub async fn MonitoringService::organizations_time_series_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -263,7 +237,7 @@ pub async fn MonitoringService::projects_alert_policies_create(
 ) -> AlertPolicy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "alertPolicies"
   let url = self.base_url + path
@@ -297,11 +271,7 @@ pub async fn MonitoringService::projects_alert_policies_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -326,11 +296,7 @@ pub async fn MonitoringService::projects_alert_policies_get(
 ) -> AlertPolicy raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -381,11 +347,7 @@ pub async fn MonitoringService::projects_alert_policies_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -417,7 +379,7 @@ pub async fn MonitoringService::projects_alert_policies_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
   let url = if qs.is_empty() {
@@ -455,11 +417,7 @@ pub async fn MonitoringService::projects_alerts_get(
 ) -> Alert raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -510,11 +468,7 @@ pub async fn MonitoringService::projects_alerts_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -539,7 +493,7 @@ pub async fn MonitoringService::projects_collectd_time_series_create(
 ) -> CreateCollectdTimeSeriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "collectdTimeSeries"
   let url = self.base_url + path
@@ -580,7 +534,7 @@ pub async fn MonitoringService::projects_groups_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "groups"
   let url = if qs.is_empty() {
@@ -629,11 +583,7 @@ pub async fn MonitoringService::projects_groups_delete(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -658,11 +608,7 @@ pub async fn MonitoringService::projects_groups_get(
 ) -> Group raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -718,11 +664,7 @@ pub async fn MonitoringService::projects_groups_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -754,7 +696,7 @@ pub async fn MonitoringService::projects_groups_update(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
   let url = if qs.is_empty() {
@@ -823,11 +765,7 @@ pub async fn MonitoringService::projects_groups_members_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -852,7 +790,7 @@ pub async fn MonitoringService::projects_metric_descriptors_create(
 ) -> MetricDescriptor raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "metricDescriptors"
   let url = self.base_url + path
@@ -886,11 +824,7 @@ pub async fn MonitoringService::projects_metric_descriptors_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -915,11 +849,7 @@ pub async fn MonitoringService::projects_metric_descriptors_get(
 ) -> MetricDescriptor raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -970,11 +900,7 @@ pub async fn MonitoringService::projects_metric_descriptors_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -999,11 +925,7 @@ pub async fn MonitoringService::projects_monitored_resource_descriptors_get(
 ) -> MonitoredResourceDescriptor raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1049,11 +971,7 @@ pub async fn MonitoringService::projects_monitored_resource_descriptors_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1078,11 +996,7 @@ pub async fn MonitoringService::projects_notification_channel_descriptors_get(
 ) -> NotificationChannelDescriptor raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1123,11 +1037,7 @@ pub async fn MonitoringService::projects_notification_channel_descriptors_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1152,7 +1062,7 @@ pub async fn MonitoringService::projects_notification_channels_create(
 ) -> NotificationChannel raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "notificationChannels"
   let url = self.base_url + path
@@ -1197,11 +1107,7 @@ pub async fn MonitoringService::projects_notification_channels_delete(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1226,11 +1132,7 @@ pub async fn MonitoringService::projects_notification_channels_get(
 ) -> NotificationChannel raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1255,7 +1157,7 @@ pub async fn MonitoringService::projects_notification_channels_get_verification_
 ) -> GetNotificationChannelVerificationCodeResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + ":getVerificationCode"
   let url = self.base_url + path
@@ -1315,11 +1217,7 @@ pub async fn MonitoringService::projects_notification_channels_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1351,7 +1249,7 @@ pub async fn MonitoringService::projects_notification_channels_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
   let url = if qs.is_empty() {
@@ -1389,7 +1287,7 @@ pub async fn MonitoringService::projects_notification_channels_send_verification
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + ":sendVerificationCode"
   let url = self.base_url + path
@@ -1423,7 +1321,7 @@ pub async fn MonitoringService::projects_notification_channels_verify(
 ) -> NotificationChannel raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + ":verify"
   let url = self.base_url + path
@@ -1457,7 +1355,7 @@ pub async fn MonitoringService::projects_snoozes_create(
 ) -> Snooze raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + parent + "/" + "snoozes"
   let url = self.base_url + path
@@ -1491,11 +1389,7 @@ pub async fn MonitoringService::projects_snoozes_get(
 ) -> Snooze raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1541,11 +1435,7 @@ pub async fn MonitoringService::projects_snoozes_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1577,7 +1467,7 @@ pub async fn MonitoringService::projects_snoozes_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
   let url = if qs.is_empty() {
@@ -1615,7 +1505,7 @@ pub async fn MonitoringService::projects_time_series_create(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "timeSeries"
   let url = self.base_url + path
@@ -1649,7 +1539,7 @@ pub async fn MonitoringService::projects_time_series_create_service(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "timeSeries:createService"
   let url = self.base_url + path
@@ -1765,11 +1655,7 @@ pub async fn MonitoringService::projects_time_series_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1794,7 +1680,7 @@ pub async fn MonitoringService::projects_time_series_query(
 ) -> QueryTimeSeriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "timeSeries:query"
   let url = self.base_url + path
@@ -1828,7 +1714,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_create(
 ) -> UptimeCheckConfig raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + parent + "/" + "uptimeCheckConfigs"
   let url = self.base_url + path
@@ -1862,11 +1748,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1891,11 +1773,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_get(
 ) -> UptimeCheckConfig raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1941,11 +1819,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1977,7 +1851,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
   let url = if qs.is_empty() {
@@ -2022,7 +1896,7 @@ pub async fn MonitoringService::services_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + parent + "/" + "services"
   let url = if qs.is_empty() {
@@ -2060,11 +1934,7 @@ pub async fn MonitoringService::services_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2089,11 +1959,7 @@ pub async fn MonitoringService::services_get(
 ) -> Service raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2139,11 +2005,7 @@ pub async fn MonitoringService::services_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2175,7 +2037,7 @@ pub async fn MonitoringService::services_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
   let url = if qs.is_empty() {
@@ -2220,7 +2082,7 @@ pub async fn MonitoringService::services_service_level_objectives_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + parent + "/" + "serviceLevelObjectives"
   let url = if qs.is_empty() {
@@ -2258,11 +2120,7 @@ pub async fn MonitoringService::services_service_level_objectives_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2298,11 +2156,7 @@ pub async fn MonitoringService::services_service_level_objectives_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2353,11 +2207,7 @@ pub async fn MonitoringService::services_service_level_objectives_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2389,7 +2239,7 @@ pub async fn MonitoringService::services_service_level_objectives_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
   let url = if qs.is_empty() {
@@ -2442,11 +2292,7 @@ pub async fn MonitoringService::uptime_check_ips_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(

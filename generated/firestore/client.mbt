@@ -5,30 +5,12 @@
 ///|
 pub struct FirestoreService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 
 ///|
-pub fn FirestoreService::new(
-  client : &@http.HttpClient,
-  get_token : async () -> String,
-) -> FirestoreService {
-  FirestoreService::{
-    base_url: "https://firestore.googleapis.com",
-    get_token,
-    client,
-  }
-}
-
-///|
-async fn FirestoreService::auth_headers(
-  self : FirestoreService,
-) -> Map[String, String] raise @http.HttpError {
-  let token = (self.get_token)() catch {
-    e => raise @http.HttpError::NetworkError(e.to_string())
-  }
-  { "Authorization": "Bearer " + token, "Accept": "application/json" }
+pub fn FirestoreService::new(client : @core.GoogleClient) -> FirestoreService {
+  FirestoreService::{ base_url: "https://firestore.googleapis.com", client }
 }
 
 ///| firestore.projects.databases.bulkDeleteDocuments
@@ -41,7 +23,7 @@ pub async fn FirestoreService::projects_databases_bulk_delete_documents(
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":bulkDeleteDocuments"
   let url = self.base_url + path
@@ -75,7 +57,7 @@ pub async fn FirestoreService::projects_databases_clone(
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "databases:clone"
   let url = self.base_url + path
@@ -116,7 +98,7 @@ pub async fn FirestoreService::projects_databases_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "databases"
   let url = if qs.is_empty() {
@@ -165,11 +147,7 @@ pub async fn FirestoreService::projects_databases_delete(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -194,7 +172,7 @@ pub async fn FirestoreService::projects_databases_export_documents(
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":exportDocuments"
   let url = self.base_url + path
@@ -228,11 +206,7 @@ pub async fn FirestoreService::projects_databases_get(
 ) -> GoogleFirestoreAdminV1Database raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -257,7 +231,7 @@ pub async fn FirestoreService::projects_databases_import_documents(
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":importDocuments"
   let url = self.base_url + path
@@ -302,11 +276,7 @@ pub async fn FirestoreService::projects_databases_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -338,7 +308,7 @@ pub async fn FirestoreService::projects_databases_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = if qs.is_empty() {
@@ -376,7 +346,7 @@ pub async fn FirestoreService::projects_databases_restore(
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "databases:restore"
   let url = self.base_url + path
@@ -410,7 +380,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_create(
 ) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "backupSchedules"
   let url = self.base_url + path
@@ -444,11 +414,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -473,11 +439,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_get(
 ) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -502,11 +464,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_list(
 ) -> GoogleFirestoreAdminV1ListBackupSchedulesResponse raise @http.HttpError {
   let path = "/" + "v1" + "/" + parent + "/" + "backupSchedules"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -538,7 +496,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = if qs.is_empty() {
@@ -576,11 +534,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_get(
 ) -> GoogleFirestoreAdminV1Field raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -626,11 +580,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -662,7 +612,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_patch
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = if qs.is_empty() {
@@ -700,7 +650,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_crea
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "indexes"
   let url = self.base_url + path
@@ -734,11 +684,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_dele
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -763,11 +709,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_get(
 ) -> GoogleFirestoreAdminV1Index raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -813,11 +755,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_list
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -842,7 +780,7 @@ pub async fn FirestoreService::projects_databases_documents_batch_get(
 ) -> BatchGetDocumentsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:batchGet"
   let url = self.base_url + path
@@ -876,7 +814,7 @@ pub async fn FirestoreService::projects_databases_documents_batch_write(
 ) -> BatchWriteResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:batchWrite"
   let url = self.base_url + path
@@ -910,7 +848,7 @@ pub async fn FirestoreService::projects_databases_documents_begin_transaction(
 ) -> BeginTransactionResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:beginTransaction"
   let url = self.base_url + path
@@ -944,7 +882,7 @@ pub async fn FirestoreService::projects_databases_documents_commit(
 ) -> CommitResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:commit"
   let url = self.base_url + path
@@ -991,7 +929,7 @@ pub async fn FirestoreService::projects_databases_documents_create_document(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + collection_id
   let url = if qs.is_empty() {
@@ -1046,11 +984,7 @@ pub async fn FirestoreService::projects_databases_documents_delete(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1075,7 +1009,7 @@ pub async fn FirestoreService::projects_databases_documents_execute_pipeline(
 ) -> ExecutePipelineResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:executePipeline"
   let url = self.base_url + path
@@ -1130,11 +1064,7 @@ pub async fn FirestoreService::projects_databases_documents_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1201,11 +1131,7 @@ pub async fn FirestoreService::projects_databases_documents_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1230,7 +1156,7 @@ pub async fn FirestoreService::projects_databases_documents_list_collection_ids(
 ) -> ListCollectionIdsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + ":listCollectionIds"
   let url = self.base_url + path
@@ -1306,11 +1232,7 @@ pub async fn FirestoreService::projects_databases_documents_list_documents(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1335,7 +1257,7 @@ pub async fn FirestoreService::projects_databases_documents_listen(
 ) -> ListenResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:listen"
   let url = self.base_url + path
@@ -1369,7 +1291,7 @@ pub async fn FirestoreService::projects_databases_documents_partition_query(
 ) -> PartitionQueryResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + ":partitionQuery"
   let url = self.base_url + path
@@ -1426,7 +1348,7 @@ pub async fn FirestoreService::projects_databases_documents_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = if qs.is_empty() {
@@ -1464,7 +1386,7 @@ pub async fn FirestoreService::projects_databases_documents_rollback(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:rollback"
   let url = self.base_url + path
@@ -1498,7 +1420,7 @@ pub async fn FirestoreService::projects_databases_documents_run_aggregation_quer
 ) -> RunAggregationQueryResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + ":runAggregationQuery"
   let url = self.base_url + path
@@ -1532,7 +1454,7 @@ pub async fn FirestoreService::projects_databases_documents_run_query(
 ) -> RunQueryResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + ":runQuery"
   let url = self.base_url + path
@@ -1566,7 +1488,7 @@ pub async fn FirestoreService::projects_databases_documents_write(
 ) -> WriteResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:write"
   let url = self.base_url + path
@@ -1600,7 +1522,7 @@ pub async fn FirestoreService::projects_databases_operations_cancel(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":cancel"
   let url = self.base_url + path
@@ -1634,11 +1556,7 @@ pub async fn FirestoreService::projects_databases_operations_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1663,11 +1581,7 @@ pub async fn FirestoreService::projects_databases_operations_get(
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1719,11 +1633,7 @@ pub async fn FirestoreService::projects_databases_operations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1755,7 +1665,7 @@ pub async fn FirestoreService::projects_databases_user_creds_create(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "userCreds"
   let url = if qs.is_empty() {
@@ -1793,11 +1703,7 @@ pub async fn FirestoreService::projects_databases_user_creds_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1822,7 +1728,7 @@ pub async fn FirestoreService::projects_databases_user_creds_disable(
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":disable"
   let url = self.base_url + path
@@ -1856,7 +1762,7 @@ pub async fn FirestoreService::projects_databases_user_creds_enable(
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":enable"
   let url = self.base_url + path
@@ -1890,11 +1796,7 @@ pub async fn FirestoreService::projects_databases_user_creds_get(
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1919,11 +1821,7 @@ pub async fn FirestoreService::projects_databases_user_creds_list(
 ) -> GoogleFirestoreAdminV1ListUserCredsResponse raise @http.HttpError {
   let path = "/" + "v1" + "/" + parent + "/" + "userCreds"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -1948,7 +1846,7 @@ pub async fn FirestoreService::projects_databases_user_creds_reset_password(
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":resetPassword"
   let url = self.base_url + path
@@ -1982,11 +1880,7 @@ pub async fn FirestoreService::projects_locations_get(
 ) -> Location raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2037,11 +1931,7 @@ pub async fn FirestoreService::projects_locations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2066,11 +1956,7 @@ pub async fn FirestoreService::projects_locations_backups_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2095,11 +1981,7 @@ pub async fn FirestoreService::projects_locations_backups_get(
 ) -> GoogleFirestoreAdminV1Backup raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -2135,11 +2017,7 @@ pub async fn FirestoreService::projects_locations_backups_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(

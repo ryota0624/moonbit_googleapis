@@ -29,6 +29,13 @@ pub(all) struct GoogleApiErrorDetail {
   status : String?
 } derive(@json.FromJson)
 
+pub struct GoogleClient {
+  http : &@http.HttpClient
+  get_token : async () -> String
+}
+pub fn GoogleClient::new(async () -> String, http? : &@http.HttpClient?) -> Self
+pub async fn GoogleClient::request(Self, @http.HttpRequest) -> @http.HttpResponse raise @http.HttpError
+
 pub struct GoogleService {
   base_url : String
   access_token : String

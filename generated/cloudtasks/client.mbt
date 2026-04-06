@@ -5,30 +5,12 @@
 ///|
 pub struct CloudtasksService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 
 ///|
-pub fn CloudtasksService::new(
-  client : &@http.HttpClient,
-  get_token : async () -> String,
-) -> CloudtasksService {
-  CloudtasksService::{
-    base_url: "https://cloudtasks.googleapis.com",
-    get_token,
-    client,
-  }
-}
-
-///|
-async fn CloudtasksService::auth_headers(
-  self : CloudtasksService,
-) -> Map[String, String] raise @http.HttpError {
-  let token = (self.get_token)() catch {
-    e => raise @http.HttpError::NetworkError(e.to_string())
-  }
-  { "Authorization": "Bearer " + token, "Accept": "application/json" }
+pub fn CloudtasksService::new(client : @core.GoogleClient) -> CloudtasksService {
+  CloudtasksService::{ base_url: "https://cloudtasks.googleapis.com", client }
 }
 
 ///| cloudtasks.projects.locations.get
@@ -41,11 +23,7 @@ pub async fn CloudtasksService::projects_locations_get(
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -70,11 +48,7 @@ pub async fn CloudtasksService::projects_locations_get_cmek_config(
 ) -> CmekConfig raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -125,11 +99,7 @@ pub async fn CloudtasksService::projects_locations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -161,7 +131,7 @@ pub async fn CloudtasksService::projects_locations_update_cmek_config(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -199,7 +169,7 @@ pub async fn CloudtasksService::projects_locations_queues_create(
 ) -> Queue raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "queues"
   let url = self.base_url + path
@@ -233,11 +203,7 @@ pub async fn CloudtasksService::projects_locations_queues_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -262,11 +228,7 @@ pub async fn CloudtasksService::projects_locations_queues_get(
 ) -> Queue raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -291,7 +253,7 @@ pub async fn CloudtasksService::projects_locations_queues_get_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
   let url = self.base_url + path
@@ -346,11 +308,7 @@ pub async fn CloudtasksService::projects_locations_queues_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -382,7 +340,7 @@ pub async fn CloudtasksService::projects_locations_queues_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = if qs.is_empty() {
@@ -420,7 +378,7 @@ pub async fn CloudtasksService::projects_locations_queues_pause(
 ) -> Queue raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":pause"
   let url = self.base_url + path
@@ -454,7 +412,7 @@ pub async fn CloudtasksService::projects_locations_queues_purge(
 ) -> Queue raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":purge"
   let url = self.base_url + path
@@ -488,7 +446,7 @@ pub async fn CloudtasksService::projects_locations_queues_resume(
 ) -> Queue raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":resume"
   let url = self.base_url + path
@@ -522,7 +480,7 @@ pub async fn CloudtasksService::projects_locations_queues_set_iam_policy(
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
   let url = self.base_url + path
@@ -556,7 +514,7 @@ pub async fn CloudtasksService::projects_locations_queues_test_iam_permissions(
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
   let url = self.base_url + path
@@ -591,7 +549,7 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_buffer(
 ) -> BufferTaskResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
     "v2" +
@@ -634,7 +592,7 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_create(
 ) -> Task raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "tasks"
   let url = self.base_url + path
@@ -668,11 +626,7 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -708,11 +662,7 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_get(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -758,11 +708,7 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -787,7 +733,7 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_run(
 ) -> Task raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":run"
   let url = self.base_url + path

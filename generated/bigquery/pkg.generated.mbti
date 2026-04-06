@@ -3,6 +3,7 @@ package "ryota0624/googleapis/generated/bigquery"
 
 import {
   "moonbitlang/core/json",
+  "ryota0624/googleapis/core",
   "ryota0624/googleapis/http",
 }
 
@@ -135,8 +136,7 @@ pub(all) struct BigQueryModelTraining {
 
 pub struct BigqueryService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 pub async fn BigqueryService::datasets_delete(Self, String, String, delete_contents? : Bool?) -> @http.HttpResponse raise @http.HttpError
 pub async fn BigqueryService::datasets_get(Self, String, String, access_policy_version? : Int?, dataset_view? : String?) -> Dataset raise @http.HttpError
@@ -156,7 +156,7 @@ pub async fn BigqueryService::models_delete(Self, String, String, String) -> @ht
 pub async fn BigqueryService::models_get(Self, String, String, String) -> Model raise @http.HttpError
 pub async fn BigqueryService::models_list(Self, String, String, max_results? : Int?, page_token? : String?) -> ListModelsResponse raise @http.HttpError
 pub async fn BigqueryService::models_patch(Self, String, String, String) -> Model raise @http.HttpError
-pub fn BigqueryService::new(&@http.HttpClient, async () -> String) -> Self
+pub fn BigqueryService::new(@core.GoogleClient) -> Self
 pub async fn BigqueryService::projects_get_service_account(Self, String) -> GetServiceAccountResponse raise @http.HttpError
 pub async fn BigqueryService::projects_list(Self, max_results? : Int?, page_token? : String?) -> ProjectList raise @http.HttpError
 pub async fn BigqueryService::routines_delete(Self, String, String, String) -> @http.HttpResponse raise @http.HttpError

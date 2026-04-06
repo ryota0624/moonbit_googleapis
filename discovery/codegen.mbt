@@ -615,7 +615,7 @@ fn write_rest_method(
       write_body_field_match(b, bp.0, bp.1, arg)
     }
     b.write_string("  let body = Json::object(meta).stringify()\n")
-    b.write_string("  let h = self.auth_headers()\n")
+    b.write_string("  let h : Map[String, String] = {}\n")
     b.write_string("  h.set(\"Content-Type\", \"application/json\")\n")
   }
   b.write_string("  let path = \{path_expr}\n")
@@ -637,14 +637,8 @@ fn write_rest_method(
     b.write_string(
       "  let req = @http.HttpRequest::new(url, \{meth}, h, body=Some(body))\n",
     )
-  } else if use_query {
-    b.write_string(
-      "  let req = @http.HttpRequest::new(url, \{meth}, self.auth_headers())\n",
-    )
   } else {
-    b.write_string(
-      "  let req = @http.HttpRequest::new(url, \{meth}, self.auth_headers())\n",
-    )
+    b.write_string("  let req = @http.HttpRequest::new(url, \{meth}, {})\n")
   }
   b.write_string(
     "  let resp = self.client.request(req) catch {\n    e => raise e\n  }\n",
@@ -921,31 +915,15 @@ pub fn generate_client(desc : RestDescription) -> String {
   b.write_string("///|\n")
   b.write_string("pub struct \{service_ty} {\n")
   b.write_string("  base_url : String\n")
-  b.write_string("  get_token : async () -> String\n")
-  b.write_string("  client : &@http.HttpClient\n")
+  b.write_string("  client : @core.GoogleClient\n")
   b.write_string("}\n\n")
   b.write_string("///|\n")
   b.write_string(
-    "pub fn \{service_ty}::new(client : &@http.HttpClient, get_token : async () -> String) -> \{service_ty} {\n",
+    "pub fn \{service_ty}::new(client : @core.GoogleClient) -> \{service_ty} {\n",
   )
   b.write_string("  " + service_ty + "::{\n")
   b.write_string("    base_url: \"\{base_lit}\",\n")
-  b.write_string("    get_token,\n")
   b.write_string("    client,\n")
-  b.write_string("  }\n")
-  b.write_string("}\n\n")
-  b.write_string("///|\n")
-  b.write_string(
-    "async fn \{service_ty}::auth_headers(self : \{service_ty}) -> Map[String, String] raise @http.HttpError {\n",
-  )
-  b.write_string("  let token = (self.get_token)() catch {\n")
-  b.write_string(
-    "    e => raise @http.HttpError::NetworkError(e.to_string())\n",
-  )
-  b.write_string("  }\n")
-  b.write_string("  {\n")
-  b.write_string("    \"Authorization\": \"Bearer \" + token,\n")
-  b.write_string("    \"Accept\": \"application/json\",\n")
   b.write_string("  }\n")
   b.write_string("}\n\n")
   walk_resources_for_client(
@@ -1027,6 +1005,7 @@ pub fn generate_moon_pkg(module_name : String, api_name : String) -> String {
   b.write_string("import {\n")
   b.write_string("  \"moonbitlang/core/buffer\" @buffer,\n")
   b.write_string("  \"moonbitlang/core/json\" @json,\n")
+  b.write_string("  \"\{module_name}/core\" @core,\n")
   b.write_string("  \"\{module_name}/http\" @http,\n")
   b.write_string("}\n\n")
   b.write_string("warnings = \"-0001\"\n")

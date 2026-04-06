@@ -3,6 +3,7 @@ package "ryota0624/googleapis/generated/cloudtrace"
 
 import {
   "moonbitlang/core/json",
+  "ryota0624/googleapis/core",
   "ryota0624/googleapis/http",
 }
 
@@ -33,10 +34,9 @@ pub(all) struct BatchWriteSpansRequest {
 
 pub struct CloudtraceService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
-pub fn CloudtraceService::new(&@http.HttpClient, async () -> String) -> Self
+pub fn CloudtraceService::new(@core.GoogleClient) -> Self
 pub async fn CloudtraceService::projects_traces_batch_write(Self, String) -> Empty raise @http.HttpError
 pub async fn CloudtraceService::projects_traces_spans_create_span(Self, String) -> Span raise @http.HttpError
 

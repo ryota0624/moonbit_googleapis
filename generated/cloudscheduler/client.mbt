@@ -5,30 +5,17 @@
 ///|
 pub struct CloudschedulerService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 
 ///|
 pub fn CloudschedulerService::new(
-  client : &@http.HttpClient,
-  get_token : async () -> String,
+  client : @core.GoogleClient,
 ) -> CloudschedulerService {
   CloudschedulerService::{
     base_url: "https://cloudscheduler.googleapis.com",
-    get_token,
     client,
   }
-}
-
-///|
-async fn CloudschedulerService::auth_headers(
-  self : CloudschedulerService,
-) -> Map[String, String] raise @http.HttpError {
-  let token = (self.get_token)() catch {
-    e => raise @http.HttpError::NetworkError(e.to_string())
-  }
-  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| cloudscheduler.projects.locations.get
@@ -41,11 +28,7 @@ pub async fn CloudschedulerService::projects_locations_get(
 ) -> Location raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -70,11 +53,7 @@ pub async fn CloudschedulerService::projects_locations_get_cmek_config(
 ) -> CmekConfig raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -125,11 +104,7 @@ pub async fn CloudschedulerService::projects_locations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -161,7 +136,7 @@ pub async fn CloudschedulerService::projects_locations_update_cmek_config(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = if qs.is_empty() {
@@ -199,7 +174,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_create(
 ) -> Job raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "jobs"
   let url = self.base_url + path
@@ -233,11 +208,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -262,11 +233,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_get(
 ) -> Job raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -307,11 +274,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -343,7 +306,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_patch(
   let qs = build_query_string(qp)
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
   let url = if qs.is_empty() {
@@ -381,7 +344,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_pause(
 ) -> Job raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":pause"
   let url = self.base_url + path
@@ -415,7 +378,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_resume(
 ) -> Job raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":resume"
   let url = self.base_url + path
@@ -449,7 +412,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_run(
 ) -> Job raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":run"
   let url = self.base_url + path
@@ -483,7 +446,7 @@ pub async fn CloudschedulerService::projects_locations_operations_cancel(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":cancel"
   let url = self.base_url + path
@@ -517,11 +480,7 @@ pub async fn CloudschedulerService::projects_locations_operations_delete(
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -546,11 +505,7 @@ pub async fn CloudschedulerService::projects_locations_operations_get(
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -602,11 +557,7 @@ pub async fn CloudschedulerService::projects_locations_operations_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(

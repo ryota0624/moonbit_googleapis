@@ -5,30 +5,12 @@
 ///|
 pub struct CloudtraceService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 
 ///|
-pub fn CloudtraceService::new(
-  client : &@http.HttpClient,
-  get_token : async () -> String,
-) -> CloudtraceService {
-  CloudtraceService::{
-    base_url: "https://cloudtrace.googleapis.com",
-    get_token,
-    client,
-  }
-}
-
-///|
-async fn CloudtraceService::auth_headers(
-  self : CloudtraceService,
-) -> Map[String, String] raise @http.HttpError {
-  let token = (self.get_token)() catch {
-    e => raise @http.HttpError::NetworkError(e.to_string())
-  }
-  { "Authorization": "Bearer " + token, "Accept": "application/json" }
+pub fn CloudtraceService::new(client : @core.GoogleClient) -> CloudtraceService {
+  CloudtraceService::{ base_url: "https://cloudtrace.googleapis.com", client }
 }
 
 ///| cloudtrace.projects.traces.batchWrite
@@ -41,7 +23,7 @@ pub async fn CloudtraceService::projects_traces_batch_write(
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "traces:batchWrite"
   let url = self.base_url + path
@@ -75,7 +57,7 @@ pub async fn CloudtraceService::projects_traces_spans_create_span(
 ) -> Span raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
   let url = self.base_url + path

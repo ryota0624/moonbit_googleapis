@@ -51,17 +51,15 @@ pub async fn GoogleService::execute(
   body? : String? = None,
   extra_headers? : Map[String, String]? = None,
 ) -> @http.HttpResponse raise GoogleApiError {
+  let token = self.access_token
+  let gc = GoogleClient::new(fn() { token })
   let url = join_base_url_path(self.base_url, path)
-  let auth = build_auth_headers(self.access_token)
   let headers = match extra_headers {
-    Some(eh) => merge_headers(auth, eh)
-    None => auth
+    Some(eh) => eh
+    None => {}
   }
   let req = @http.HttpRequest::new(url, method_, headers, body~)
-  let client = @http.DefaultHttpClient::new()
-  let resp = client.request(req) catch {
-    e => raise GoogleApiError::HttpError(e)
-  }
+  let resp = gc.request(req) catch { e => raise GoogleApiError::HttpError(e) }
   if resp.status_code >= 400 {
     match parse_error_response(resp.body) {
       Some(d) => raise GoogleApiError::ApiError(d)

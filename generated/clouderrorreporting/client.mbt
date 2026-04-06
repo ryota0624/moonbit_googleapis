@@ -5,30 +5,17 @@
 ///|
 pub struct ClouderrorreportingService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 
 ///|
 pub fn ClouderrorreportingService::new(
-  client : &@http.HttpClient,
-  get_token : async () -> String,
+  client : @core.GoogleClient,
 ) -> ClouderrorreportingService {
   ClouderrorreportingService::{
     base_url: "https://clouderrorreporting.googleapis.com",
-    get_token,
     client,
   }
-}
-
-///|
-async fn ClouderrorreportingService::auth_headers(
-  self : ClouderrorreportingService,
-) -> Map[String, String] raise @http.HttpError {
-  let token = (self.get_token)() catch {
-    e => raise @http.HttpError::NetworkError(e.to_string())
-  }
-  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| clouderrorreporting.projects.deleteEvents
@@ -41,11 +28,7 @@ pub async fn ClouderrorreportingService::projects_delete_events(
 ) -> DeleteEventsResponse raise @http.HttpError {
   let path = "/" + "v1beta1" + "/" + project_name + "/" + "events"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -111,11 +94,7 @@ pub async fn ClouderrorreportingService::projects_events_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -140,7 +119,7 @@ pub async fn ClouderrorreportingService::projects_events_report(
 ) -> ReportErrorEventResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1beta1" + "/" + project_name + "/" + "events:report"
   let url = self.base_url + path
@@ -235,11 +214,7 @@ pub async fn ClouderrorreportingService::projects_group_stats_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -264,11 +239,7 @@ pub async fn ClouderrorreportingService::projects_groups_get(
 ) -> ErrorGroup raise @http.HttpError {
   let path = "/" + "v1beta1" + "/" + group_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -293,7 +264,7 @@ pub async fn ClouderrorreportingService::projects_groups_update(
 ) -> ErrorGroup raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1beta1" + "/" + name
   let url = self.base_url + path
@@ -327,11 +298,7 @@ pub async fn ClouderrorreportingService::projects_locations_delete_events(
 ) -> DeleteEventsResponse raise @http.HttpError {
   let path = "/" + "v1beta1" + "/" + project_name + "/" + "events"
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::DELETE,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -397,11 +364,7 @@ pub async fn ClouderrorreportingService::projects_locations_events_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -487,11 +450,7 @@ pub async fn ClouderrorreportingService::projects_locations_group_stats_list(
   } else {
     self.base_url + path + "?" + qs
   }
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -516,11 +475,7 @@ pub async fn ClouderrorreportingService::projects_locations_groups_get(
 ) -> ErrorGroup raise @http.HttpError {
   let path = "/" + "v1beta1" + "/" + group_name
   let url = self.base_url + path
-  let req = @http.HttpRequest::new(
-    url,
-    @http.HttpMethod::GET,
-    self.auth_headers(),
-  )
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
   let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
@@ -545,7 +500,7 @@ pub async fn ClouderrorreportingService::projects_locations_groups_update(
 ) -> ErrorGroup raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
-  let h = self.auth_headers()
+  let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1beta1" + "/" + name
   let url = self.base_url + path

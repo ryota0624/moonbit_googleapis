@@ -2,6 +2,7 @@ import {
   "moonbitlang/async",
   "moonbitlang/core/json" @json,
   "mizchi/x/sys" @sys,
+  "ryota0624/googleapis/core" @core,
   "ryota0624/googleapis/http" @http,
   "ryota0624/googleapis/generated/storage" @gcs,
 }

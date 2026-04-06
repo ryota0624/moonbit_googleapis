@@ -3,6 +3,7 @@ package "ryota0624/googleapis/generated/drive"
 
 import {
   "moonbitlang/core/json",
+  "ryota0624/googleapis/core",
   "ryota0624/googleapis/http",
 }
 
@@ -201,8 +202,7 @@ pub(all) struct DriveList {
 
 pub struct DriveService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
 pub async fn DriveService::about_get(Self) -> About raise @http.HttpError
 pub async fn DriveService::accessproposals_get(Self, String, String) -> AccessProposal raise @http.HttpError
@@ -241,7 +241,7 @@ pub async fn DriveService::files_list_labels(Self, String, max_results? : Int?, 
 pub async fn DriveService::files_modify_labels(Self, String) -> ModifyLabelsResponse raise @http.HttpError
 pub async fn DriveService::files_update(Self, String, add_parents? : String?, enforce_single_parent? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, remove_parents? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
 pub async fn DriveService::files_watch(Self, String, acknowledge_abuse? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> Channel raise @http.HttpError
-pub fn DriveService::new(&@http.HttpClient, async () -> String) -> Self
+pub fn DriveService::new(@core.GoogleClient) -> Self
 pub async fn DriveService::operations_get(Self, String) -> Operation raise @http.HttpError
 pub async fn DriveService::permissions_create(Self, String, email_message? : String?, enforce_expansive_access? : Bool?, enforce_single_parent? : Bool?, move_to_new_owners_root? : Bool?, send_notification_email? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
 pub async fn DriveService::permissions_delete(Self, String, String, enforce_expansive_access? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> @http.HttpResponse raise @http.HttpError

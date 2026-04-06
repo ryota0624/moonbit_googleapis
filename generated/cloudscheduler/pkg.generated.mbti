@@ -3,6 +3,7 @@ package "ryota0624/googleapis/generated/cloudscheduler"
 
 import {
   "moonbitlang/core/json",
+  "ryota0624/googleapis/core",
   "ryota0624/googleapis/http",
 }
 
@@ -31,10 +32,9 @@ pub(all) struct CancelOperationRequest {
 
 pub struct CloudschedulerService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
-pub fn CloudschedulerService::new(&@http.HttpClient, async () -> String) -> Self
+pub fn CloudschedulerService::new(@core.GoogleClient) -> Self
 pub async fn CloudschedulerService::projects_locations_get(Self, String) -> Location raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_get_cmek_config(Self, String) -> CmekConfig raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_jobs_create(Self, String) -> Job raise @http.HttpError

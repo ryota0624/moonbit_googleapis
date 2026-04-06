@@ -3,6 +3,7 @@ package "ryota0624/googleapis/generated/cloudtasks"
 
 import {
   "moonbitlang/core/json",
+  "ryota0624/googleapis/core",
   "ryota0624/googleapis/http",
 }
 
@@ -49,10 +50,9 @@ pub(all) struct BufferTaskResponse {
 
 pub struct CloudtasksService {
   base_url : String
-  get_token : async () -> String
-  client : &@http.HttpClient
+  client : @core.GoogleClient
 }
-pub fn CloudtasksService::new(&@http.HttpClient, async () -> String) -> Self
+pub fn CloudtasksService::new(@core.GoogleClient) -> Self
 pub async fn CloudtasksService::projects_locations_get(Self, String) -> Location raise @http.HttpError
 pub async fn CloudtasksService::projects_locations_get_cmek_config(Self, String) -> CmekConfig raise @http.HttpError
 pub async fn CloudtasksService::projects_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
