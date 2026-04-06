@@ -3,18 +3,21 @@
 ///| Base URL: https://cloudscheduler.googleapis.com/
 
 ///|
-pub(all) struct CloudschedulerService {
+pub struct CloudschedulerService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
 
 ///|
 pub fn CloudschedulerService::new(
+  client : &@http.HttpClient,
   access_token : String,
 ) -> CloudschedulerService {
   CloudschedulerService::{
     base_url: "https://cloudscheduler.googleapis.com",
     access_token,
+    client,
   }
 }
 
@@ -34,7 +37,6 @@ fn CloudschedulerService::auth_headers(
 /// Gets information about a location.
 pub async fn CloudschedulerService::projects_locations_get(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Location raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -44,7 +46,7 @@ pub async fn CloudschedulerService::projects_locations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -64,7 +66,6 @@ pub async fn CloudschedulerService::projects_locations_get(
 /// Gets the Scheduler config in the project/region.
 pub async fn CloudschedulerService::projects_locations_get_cmek_config(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> CmekConfig raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -74,7 +75,7 @@ pub async fn CloudschedulerService::projects_locations_get_cmek_config(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -94,7 +95,6 @@ pub async fn CloudschedulerService::projects_locations_get_cmek_config(
 /// Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
 pub async fn CloudschedulerService::projects_locations_list(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
   extra_location_types? : String? = None,
   filter? : String? = None,
@@ -130,7 +130,7 @@ pub async fn CloudschedulerService::projects_locations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -150,7 +150,6 @@ pub async fn CloudschedulerService::projects_locations_list(
 /// Initializes or Updates the a scheduler config.
 pub async fn CloudschedulerService::projects_locations_update_cmek_config(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -176,7 +175,7 @@ pub async fn CloudschedulerService::projects_locations_update_cmek_config(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -196,7 +195,6 @@ pub async fn CloudschedulerService::projects_locations_update_cmek_config(
 /// Creates a job.
 pub async fn CloudschedulerService::projects_locations_jobs_create(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> Job raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -211,7 +209,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -231,7 +229,6 @@ pub async fn CloudschedulerService::projects_locations_jobs_create(
 /// Deletes a job.
 pub async fn CloudschedulerService::projects_locations_jobs_delete(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -241,7 +238,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -261,7 +258,6 @@ pub async fn CloudschedulerService::projects_locations_jobs_delete(
 /// Gets a job.
 pub async fn CloudschedulerService::projects_locations_jobs_get(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Job raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -271,7 +267,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -291,7 +287,6 @@ pub async fn CloudschedulerService::projects_locations_jobs_get(
 /// Lists jobs.
 pub async fn CloudschedulerService::projects_locations_jobs_list(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -317,7 +312,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -337,7 +332,6 @@ pub async fn CloudschedulerService::projects_locations_jobs_list(
 /// Updates a job. If successful, the updated Job is returned. If the job does not exist, `NOT_FOUND` is returned. If UpdateJob does not successfully return, it is possible for the job to be in an Job.State.UPDATE_FAILED state. A job in this state may not be executed. If this happens, retry the UpdateJob request until a successful response is received.
 pub async fn CloudschedulerService::projects_locations_jobs_patch(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Job raise @http.HttpError {
@@ -363,7 +357,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -383,7 +377,6 @@ pub async fn CloudschedulerService::projects_locations_jobs_patch(
 /// Pauses a job. If a job is paused then the system will stop executing the job until it is re-enabled via ResumeJob. The state of the job is stored in state; if paused it will be set to Job.State.PAUSED. A job must be in Job.State.ENABLED to be paused.
 pub async fn CloudschedulerService::projects_locations_jobs_pause(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Job raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -398,7 +391,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_pause(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -418,7 +411,6 @@ pub async fn CloudschedulerService::projects_locations_jobs_pause(
 /// Resume a job. This method reenables a job after it has been Job.State.PAUSED. The state of a job is stored in Job.state; after calling this method it will be set to Job.State.ENABLED. A job must be in Job.State.PAUSED to be resumed.
 pub async fn CloudschedulerService::projects_locations_jobs_resume(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Job raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -433,7 +425,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_resume(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -453,7 +445,6 @@ pub async fn CloudschedulerService::projects_locations_jobs_resume(
 /// Forces a job to run now. When this method is called, Cloud Scheduler will dispatch the job, even if the job is already running.
 pub async fn CloudschedulerService::projects_locations_jobs_run(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Job raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -468,7 +459,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_run(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -488,7 +479,6 @@ pub async fn CloudschedulerService::projects_locations_jobs_run(
 /// Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of `1`, corresponding to `Code.CANCELLED`.
 pub async fn CloudschedulerService::projects_locations_operations_cancel(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -503,7 +493,7 @@ pub async fn CloudschedulerService::projects_locations_operations_cancel(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -523,7 +513,6 @@ pub async fn CloudschedulerService::projects_locations_operations_cancel(
 /// Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`.
 pub async fn CloudschedulerService::projects_locations_operations_delete(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -533,7 +522,7 @@ pub async fn CloudschedulerService::projects_locations_operations_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -553,7 +542,6 @@ pub async fn CloudschedulerService::projects_locations_operations_delete(
 /// Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.
 pub async fn CloudschedulerService::projects_locations_operations_get(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -563,7 +551,7 @@ pub async fn CloudschedulerService::projects_locations_operations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -583,7 +571,6 @@ pub async fn CloudschedulerService::projects_locations_operations_get(
 /// Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`.
 pub async fn CloudschedulerService::projects_locations_operations_list(
   self : CloudschedulerService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -620,7 +607,7 @@ pub async fn CloudschedulerService::projects_locations_operations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,

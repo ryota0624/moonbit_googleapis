@@ -3,18 +3,21 @@
 ///| Base URL: https://clouderrorreporting.googleapis.com/
 
 ///|
-pub(all) struct ClouderrorreportingService {
+pub struct ClouderrorreportingService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
 
 ///|
 pub fn ClouderrorreportingService::new(
+  client : &@http.HttpClient,
   access_token : String,
 ) -> ClouderrorreportingService {
   ClouderrorreportingService::{
     base_url: "https://clouderrorreporting.googleapis.com",
     access_token,
+    client,
   }
 }
 
@@ -34,7 +37,6 @@ fn ClouderrorreportingService::auth_headers(
 /// Deletes all error events of a given project.
 pub async fn ClouderrorreportingService::projects_delete_events(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   project_name : String,
 ) -> DeleteEventsResponse raise @http.HttpError {
   let path = "/" + "v1beta1" + "/" + project_name + "/" + "events"
@@ -44,7 +46,7 @@ pub async fn ClouderrorreportingService::projects_delete_events(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -64,7 +66,6 @@ pub async fn ClouderrorreportingService::projects_delete_events(
 /// Lists the specified events.
 pub async fn ClouderrorreportingService::projects_events_list(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   project_name : String,
   group_id? : String? = None,
   page_size? : Int? = None,
@@ -115,7 +116,7 @@ pub async fn ClouderrorreportingService::projects_events_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -135,7 +136,6 @@ pub async fn ClouderrorreportingService::projects_events_list(
 /// Report an individual error event and record the event to a log. This endpoint accepts **either** an OAuth token, **or** an [API key](https://support.google.com/cloud/answer/6158862) for authentication. To use an API key, append it to the URL as the value of a `key` parameter. For example: `POST https://clouderrorreporting.googleapis.com/v1beta1/{projectName}/events:report?key=123ABC456` **Note:** [Error Reporting] (https://cloud.google.com/error-reporting) is a service built on Cloud Logging and can analyze log entries when all of the following are true: * Customer-managed encryption keys (CMEK) are disabled on the log bucket. * The log bucket satisfies one of the following: * The log bucket is stored in the same project where the logs originated. * The logs were routed to a project, and then that project stored those logs in a log bucket that it owns.
 pub async fn ClouderrorreportingService::projects_events_report(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   project_name : String,
 ) -> ReportErrorEventResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -150,7 +150,7 @@ pub async fn ClouderrorreportingService::projects_events_report(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -170,7 +170,6 @@ pub async fn ClouderrorreportingService::projects_events_report(
 /// Lists the specified groups.
 pub async fn ClouderrorreportingService::projects_group_stats_list(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   project_name : String,
   alignment? : String? = None,
   alignment_time? : String? = None,
@@ -241,7 +240,7 @@ pub async fn ClouderrorreportingService::projects_group_stats_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -261,7 +260,6 @@ pub async fn ClouderrorreportingService::projects_group_stats_list(
 /// Get the specified group.
 pub async fn ClouderrorreportingService::projects_groups_get(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   group_name : String,
 ) -> ErrorGroup raise @http.HttpError {
   let path = "/" + "v1beta1" + "/" + group_name
@@ -271,7 +269,7 @@ pub async fn ClouderrorreportingService::projects_groups_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -291,7 +289,6 @@ pub async fn ClouderrorreportingService::projects_groups_get(
 /// Replace the data for the specified group. Fails if the group does not exist.
 pub async fn ClouderrorreportingService::projects_groups_update(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> ErrorGroup raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -306,7 +303,7 @@ pub async fn ClouderrorreportingService::projects_groups_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -326,7 +323,6 @@ pub async fn ClouderrorreportingService::projects_groups_update(
 /// Deletes all error events of a given project.
 pub async fn ClouderrorreportingService::projects_locations_delete_events(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   project_name : String,
 ) -> DeleteEventsResponse raise @http.HttpError {
   let path = "/" + "v1beta1" + "/" + project_name + "/" + "events"
@@ -336,7 +332,7 @@ pub async fn ClouderrorreportingService::projects_locations_delete_events(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -356,7 +352,6 @@ pub async fn ClouderrorreportingService::projects_locations_delete_events(
 /// Lists the specified events.
 pub async fn ClouderrorreportingService::projects_locations_events_list(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   project_name : String,
   group_id? : String? = None,
   page_size? : Int? = None,
@@ -407,7 +402,7 @@ pub async fn ClouderrorreportingService::projects_locations_events_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -427,7 +422,6 @@ pub async fn ClouderrorreportingService::projects_locations_events_list(
 /// Lists the specified groups.
 pub async fn ClouderrorreportingService::projects_locations_group_stats_list(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   project_name : String,
   alignment? : String? = None,
   alignment_time? : String? = None,
@@ -498,7 +492,7 @@ pub async fn ClouderrorreportingService::projects_locations_group_stats_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -518,7 +512,6 @@ pub async fn ClouderrorreportingService::projects_locations_group_stats_list(
 /// Get the specified group.
 pub async fn ClouderrorreportingService::projects_locations_groups_get(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   group_name : String,
 ) -> ErrorGroup raise @http.HttpError {
   let path = "/" + "v1beta1" + "/" + group_name
@@ -528,7 +521,7 @@ pub async fn ClouderrorreportingService::projects_locations_groups_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -548,7 +541,6 @@ pub async fn ClouderrorreportingService::projects_locations_groups_get(
 /// Replace the data for the specified group. Fails if the group does not exist.
 pub async fn ClouderrorreportingService::projects_locations_groups_update(
   self : ClouderrorreportingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> ErrorGroup raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -563,7 +555,7 @@ pub async fn ClouderrorreportingService::projects_locations_groups_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,

@@ -3,16 +3,21 @@
 ///| Base URL: https://storage.googleapis.com/storage/v1/
 
 ///|
-pub(all) struct StorageService {
+pub struct StorageService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
 
 ///|
-pub fn StorageService::new(access_token : String) -> StorageService {
+pub fn StorageService::new(
+  client : &@http.HttpClient,
+  access_token : String,
+) -> StorageService {
   StorageService::{
     base_url: "https://storage.googleapis.com/storage/v1",
     access_token,
+    client,
   }
 }
 
@@ -30,7 +35,6 @@ fn StorageService::auth_headers(self : StorageService) -> Map[String, String] {
 /// Disables an Anywhere Cache instance.
 pub async fn StorageService::anywhere_caches_disable(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   anywhere_cache_id : String,
 ) -> AnywhereCache raise @http.HttpError {
@@ -55,7 +59,7 @@ pub async fn StorageService::anywhere_caches_disable(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -75,7 +79,6 @@ pub async fn StorageService::anywhere_caches_disable(
 /// Returns the metadata of an Anywhere Cache instance.
 pub async fn StorageService::anywhere_caches_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   anywhere_cache_id : String,
 ) -> AnywhereCache raise @http.HttpError {
@@ -93,7 +96,7 @@ pub async fn StorageService::anywhere_caches_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -113,7 +116,6 @@ pub async fn StorageService::anywhere_caches_get(
 /// Creates an Anywhere Cache instance.
 pub async fn StorageService::anywhere_caches_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -128,7 +130,7 @@ pub async fn StorageService::anywhere_caches_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -148,7 +150,6 @@ pub async fn StorageService::anywhere_caches_insert(
 /// Returns a list of Anywhere Cache instances of the bucket matching the criteria.
 pub async fn StorageService::anywhere_caches_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -174,7 +175,7 @@ pub async fn StorageService::anywhere_caches_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -194,7 +195,6 @@ pub async fn StorageService::anywhere_caches_list(
 /// Pauses an Anywhere Cache instance.
 pub async fn StorageService::anywhere_caches_pause(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   anywhere_cache_id : String,
 ) -> AnywhereCache raise @http.HttpError {
@@ -219,7 +219,7 @@ pub async fn StorageService::anywhere_caches_pause(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -239,7 +239,6 @@ pub async fn StorageService::anywhere_caches_pause(
 /// Resumes a paused or disabled Anywhere Cache instance.
 pub async fn StorageService::anywhere_caches_resume(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   anywhere_cache_id : String,
 ) -> AnywhereCache raise @http.HttpError {
@@ -264,7 +263,7 @@ pub async fn StorageService::anywhere_caches_resume(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -284,7 +283,6 @@ pub async fn StorageService::anywhere_caches_resume(
 /// Updates the config(ttl and admissionPolicy) of an Anywhere Cache instance.
 pub async fn StorageService::anywhere_caches_update(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   anywhere_cache_id : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
@@ -307,7 +305,7 @@ pub async fn StorageService::anywhere_caches_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -327,7 +325,6 @@ pub async fn StorageService::anywhere_caches_update(
 /// Permanently deletes the ACL entry for the specified entity on the specified bucket.
 pub async fn StorageService::bucket_access_controls_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   entity : String,
   user_project? : String? = None,
@@ -349,7 +346,7 @@ pub async fn StorageService::bucket_access_controls_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -364,7 +361,6 @@ pub async fn StorageService::bucket_access_controls_delete(
 /// Returns the ACL entry for the specified entity on the specified bucket.
 pub async fn StorageService::bucket_access_controls_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   entity : String,
   user_project? : String? = None,
@@ -386,7 +382,7 @@ pub async fn StorageService::bucket_access_controls_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -406,7 +402,6 @@ pub async fn StorageService::bucket_access_controls_get(
 /// Creates a new ACL entry on the specified bucket.
 pub async fn StorageService::bucket_access_controls_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   user_project? : String? = None,
 ) -> BucketAccessControl raise @http.HttpError {
@@ -432,7 +427,7 @@ pub async fn StorageService::bucket_access_controls_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -452,7 +447,6 @@ pub async fn StorageService::bucket_access_controls_insert(
 /// Retrieves ACL entries on the specified bucket.
 pub async fn StorageService::bucket_access_controls_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   user_project? : String? = None,
 ) -> BucketAccessControls raise @http.HttpError {
@@ -473,7 +467,7 @@ pub async fn StorageService::bucket_access_controls_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -493,7 +487,6 @@ pub async fn StorageService::bucket_access_controls_list(
 /// Patches an ACL entry on the specified bucket.
 pub async fn StorageService::bucket_access_controls_patch(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   entity : String,
   user_project? : String? = None,
@@ -520,7 +513,7 @@ pub async fn StorageService::bucket_access_controls_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -540,7 +533,6 @@ pub async fn StorageService::bucket_access_controls_patch(
 /// Updates an ACL entry on the specified bucket.
 pub async fn StorageService::bucket_access_controls_update(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   entity : String,
   user_project? : String? = None,
@@ -567,7 +559,7 @@ pub async fn StorageService::bucket_access_controls_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -587,7 +579,6 @@ pub async fn StorageService::bucket_access_controls_update(
 /// Deletes an empty bucket. Deletions are permanent unless soft delete is enabled on the bucket.
 pub async fn StorageService::buckets_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
@@ -618,7 +609,7 @@ pub async fn StorageService::buckets_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -633,7 +624,6 @@ pub async fn StorageService::buckets_delete(
 /// Returns metadata for the specified bucket.
 pub async fn StorageService::buckets_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   generation? : String? = None,
   if_metageneration_match? : String? = None,
@@ -679,7 +669,7 @@ pub async fn StorageService::buckets_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -699,7 +689,6 @@ pub async fn StorageService::buckets_get(
 /// Returns an IAM policy for the specified bucket.
 pub async fn StorageService::buckets_get_iam_policy(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   options_requested_policy_version? : Int? = None,
   user_project? : String? = None,
@@ -725,7 +714,7 @@ pub async fn StorageService::buckets_get_iam_policy(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -745,7 +734,6 @@ pub async fn StorageService::buckets_get_iam_policy(
 /// Returns the storage layout configuration for the specified bucket. Note that this operation requires storage.objects.list permission.
 pub async fn StorageService::buckets_get_storage_layout(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   prefix? : String? = None,
 ) -> BucketStorageLayout raise @http.HttpError {
@@ -766,7 +754,7 @@ pub async fn StorageService::buckets_get_storage_layout(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -786,7 +774,6 @@ pub async fn StorageService::buckets_get_storage_layout(
 /// Creates a new bucket.
 pub async fn StorageService::buckets_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   enable_object_retention? : Bool? = None,
   predefined_acl? : String? = None,
   predefined_default_object_acl? : String? = None,
@@ -837,7 +824,7 @@ pub async fn StorageService::buckets_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -857,7 +844,6 @@ pub async fn StorageService::buckets_insert(
 /// Retrieves a list of buckets for a given project.
 pub async fn StorageService::buckets_list(
   self : StorageService,
-  client : &@http.HttpClient,
   max_results? : Int? = None,
   page_token? : String? = None,
   prefix? : String? = None,
@@ -913,7 +899,7 @@ pub async fn StorageService::buckets_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -933,7 +919,6 @@ pub async fn StorageService::buckets_list(
 /// Locks retention policy on a bucket.
 pub async fn StorageService::buckets_lock_retention_policy(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   if_metageneration_match? : String? = None,
   user_project? : String? = None,
@@ -964,7 +949,7 @@ pub async fn StorageService::buckets_lock_retention_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -984,7 +969,6 @@ pub async fn StorageService::buckets_lock_retention_policy(
 /// Patches a bucket. Changes to the bucket will be readable immediately after writing, but configuration changes may take time to propagate.
 pub async fn StorageService::buckets_patch(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
@@ -1035,7 +1019,7 @@ pub async fn StorageService::buckets_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1055,7 +1039,6 @@ pub async fn StorageService::buckets_patch(
 /// Initiates a long-running Relocate Bucket operation on the specified bucket.
 pub async fn StorageService::buckets_relocate(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1070,7 +1053,7 @@ pub async fn StorageService::buckets_relocate(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1090,7 +1073,6 @@ pub async fn StorageService::buckets_relocate(
 /// Restores a soft-deleted bucket.
 pub async fn StorageService::buckets_restore(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   generation? : String? = None,
   projection? : String? = None,
@@ -1126,7 +1108,7 @@ pub async fn StorageService::buckets_restore(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1146,7 +1128,6 @@ pub async fn StorageService::buckets_restore(
 /// Updates an IAM policy for the specified bucket.
 pub async fn StorageService::buckets_set_iam_policy(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   user_project? : String? = None,
 ) -> Policy raise @http.HttpError {
@@ -1172,7 +1153,7 @@ pub async fn StorageService::buckets_set_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1192,7 +1173,6 @@ pub async fn StorageService::buckets_set_iam_policy(
 /// Tests a set of permissions on the given bucket to see which, if any, are held by the caller.
 pub async fn StorageService::buckets_test_iam_permissions(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   permissions? : String? = None,
   user_project? : String? = None,
@@ -1218,7 +1198,7 @@ pub async fn StorageService::buckets_test_iam_permissions(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1238,7 +1218,6 @@ pub async fn StorageService::buckets_test_iam_permissions(
 /// Updates a bucket. Changes to the bucket will be readable immediately after writing, but configuration changes may take time to propagate.
 pub async fn StorageService::buckets_update(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
@@ -1289,7 +1268,7 @@ pub async fn StorageService::buckets_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1309,7 +1288,6 @@ pub async fn StorageService::buckets_update(
 /// Stop watching resources through this channel
 pub async fn StorageService::channels_stop(
   self : StorageService,
-  client : &@http.HttpClient,
 ) -> @http.HttpResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
@@ -1323,7 +1301,7 @@ pub async fn StorageService::channels_stop(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1338,7 +1316,6 @@ pub async fn StorageService::channels_stop(
 /// Permanently deletes the default object ACL entry for the specified entity on the specified bucket.
 pub async fn StorageService::default_object_access_controls_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   entity : String,
   user_project? : String? = None,
@@ -1360,7 +1337,7 @@ pub async fn StorageService::default_object_access_controls_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1375,7 +1352,6 @@ pub async fn StorageService::default_object_access_controls_delete(
 /// Returns the default object ACL entry for the specified entity on the specified bucket.
 pub async fn StorageService::default_object_access_controls_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   entity : String,
   user_project? : String? = None,
@@ -1397,7 +1373,7 @@ pub async fn StorageService::default_object_access_controls_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1417,7 +1393,6 @@ pub async fn StorageService::default_object_access_controls_get(
 /// Creates a new default object ACL entry on the specified bucket.
 pub async fn StorageService::default_object_access_controls_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   user_project? : String? = None,
 ) -> ObjectAccessControl raise @http.HttpError {
@@ -1443,7 +1418,7 @@ pub async fn StorageService::default_object_access_controls_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1463,7 +1438,6 @@ pub async fn StorageService::default_object_access_controls_insert(
 /// Retrieves default object ACL entries on the specified bucket.
 pub async fn StorageService::default_object_access_controls_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
@@ -1494,7 +1468,7 @@ pub async fn StorageService::default_object_access_controls_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1514,7 +1488,6 @@ pub async fn StorageService::default_object_access_controls_list(
 /// Patches a default object ACL entry on the specified bucket.
 pub async fn StorageService::default_object_access_controls_patch(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   entity : String,
   user_project? : String? = None,
@@ -1541,7 +1514,7 @@ pub async fn StorageService::default_object_access_controls_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1561,7 +1534,6 @@ pub async fn StorageService::default_object_access_controls_patch(
 /// Updates a default object ACL entry on the specified bucket.
 pub async fn StorageService::default_object_access_controls_update(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   entity : String,
   user_project? : String? = None,
@@ -1588,7 +1560,7 @@ pub async fn StorageService::default_object_access_controls_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1608,7 +1580,6 @@ pub async fn StorageService::default_object_access_controls_update(
 /// Permanently deletes a folder. Only applicable to buckets with hierarchical namespace enabled.
 pub async fn StorageService::folders_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   folder : String,
   if_metageneration_match? : String? = None,
@@ -1635,7 +1606,7 @@ pub async fn StorageService::folders_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1650,7 +1621,6 @@ pub async fn StorageService::folders_delete(
 /// Deletes a folder recursively. Only applicable to buckets with hierarchical namespace enabled.
 pub async fn StorageService::folders_delete_recursive(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   folder : String,
   if_metageneration_match? : String? = None,
@@ -1691,7 +1661,7 @@ pub async fn StorageService::folders_delete_recursive(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1711,7 +1681,6 @@ pub async fn StorageService::folders_delete_recursive(
 /// Returns metadata for the specified folder. Only applicable to buckets with hierarchical namespace enabled.
 pub async fn StorageService::folders_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   folder : String,
   if_metageneration_match? : String? = None,
@@ -1738,7 +1707,7 @@ pub async fn StorageService::folders_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1758,7 +1727,6 @@ pub async fn StorageService::folders_get(
 /// Creates a new folder. Only applicable to buckets with hierarchical namespace enabled.
 pub async fn StorageService::folders_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   recursive? : Bool? = None,
 ) -> Folder raise @http.HttpError {
@@ -1784,7 +1752,7 @@ pub async fn StorageService::folders_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1804,7 +1772,6 @@ pub async fn StorageService::folders_insert(
 /// Retrieves a list of folders matching the criteria. Only applicable to buckets with hierarchical namespace enabled.
 pub async fn StorageService::folders_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   delimiter? : String? = None,
   end_offset? : String? = None,
@@ -1850,7 +1817,7 @@ pub async fn StorageService::folders_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1870,7 +1837,6 @@ pub async fn StorageService::folders_list(
 /// Renames a source folder to a destination folder. Only applicable to buckets with hierarchical namespace enabled.
 pub async fn StorageService::folders_rename(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   source_folder : String,
   destination_folder : String,
@@ -1916,7 +1882,7 @@ pub async fn StorageService::folders_rename(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1936,7 +1902,6 @@ pub async fn StorageService::folders_rename(
 /// Permanently deletes a managed folder.
 pub async fn StorageService::managed_folders_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   managed_folder : String,
   allow_non_empty? : Bool? = None,
@@ -1975,7 +1940,7 @@ pub async fn StorageService::managed_folders_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1990,7 +1955,6 @@ pub async fn StorageService::managed_folders_delete(
 /// Returns metadata of the specified managed folder.
 pub async fn StorageService::managed_folders_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   managed_folder : String,
   if_metageneration_match? : String? = None,
@@ -2024,7 +1988,7 @@ pub async fn StorageService::managed_folders_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2044,7 +2008,6 @@ pub async fn StorageService::managed_folders_get(
 /// Returns an IAM policy for the specified managed folder.
 pub async fn StorageService::managed_folders_get_iam_policy(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   managed_folder : String,
   options_requested_policy_version? : Int? = None,
@@ -2080,7 +2043,7 @@ pub async fn StorageService::managed_folders_get_iam_policy(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2100,7 +2063,6 @@ pub async fn StorageService::managed_folders_get_iam_policy(
 /// Creates a new managed folder.
 pub async fn StorageService::managed_folders_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
 ) -> ManagedFolder raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -2115,7 +2077,7 @@ pub async fn StorageService::managed_folders_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2135,7 +2097,6 @@ pub async fn StorageService::managed_folders_insert(
 /// Lists managed folders in the given bucket.
 pub async fn StorageService::managed_folders_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -2166,7 +2127,7 @@ pub async fn StorageService::managed_folders_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2186,7 +2147,6 @@ pub async fn StorageService::managed_folders_list(
 /// Updates an IAM policy for the specified managed folder.
 pub async fn StorageService::managed_folders_set_iam_policy(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   managed_folder : String,
   user_project? : String? = None,
@@ -2222,7 +2182,7 @@ pub async fn StorageService::managed_folders_set_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2242,7 +2202,6 @@ pub async fn StorageService::managed_folders_set_iam_policy(
 /// Tests a set of permissions on the given managed folder to see which, if any, are held by the caller.
 pub async fn StorageService::managed_folders_test_iam_permissions(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   managed_folder : String,
   permissions? : String? = None,
@@ -2280,7 +2239,7 @@ pub async fn StorageService::managed_folders_test_iam_permissions(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2300,7 +2259,6 @@ pub async fn StorageService::managed_folders_test_iam_permissions(
 /// Permanently deletes a notification subscription.
 pub async fn StorageService::notifications_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   notification : String,
   user_project? : String? = None,
@@ -2329,7 +2287,7 @@ pub async fn StorageService::notifications_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2344,7 +2302,6 @@ pub async fn StorageService::notifications_delete(
 /// View a notification configuration.
 pub async fn StorageService::notifications_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   notification : String,
   user_project? : String? = None,
@@ -2373,7 +2330,7 @@ pub async fn StorageService::notifications_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2393,7 +2350,6 @@ pub async fn StorageService::notifications_get(
 /// Creates a notification subscription for a given bucket.
 pub async fn StorageService::notifications_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   user_project? : String? = None,
 ) -> Notification raise @http.HttpError {
@@ -2419,7 +2375,7 @@ pub async fn StorageService::notifications_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2439,7 +2395,6 @@ pub async fn StorageService::notifications_insert(
 /// Retrieves a list of notification subscriptions for a given bucket.
 pub async fn StorageService::notifications_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   user_project? : String? = None,
 ) -> Notifications raise @http.HttpError {
@@ -2460,7 +2415,7 @@ pub async fn StorageService::notifications_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2480,7 +2435,6 @@ pub async fn StorageService::notifications_list(
 /// Permanently deletes the ACL entry for the specified entity on the specified object.
 pub async fn StorageService::object_access_controls_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   entity : String,
@@ -2519,7 +2473,7 @@ pub async fn StorageService::object_access_controls_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2534,7 +2488,6 @@ pub async fn StorageService::object_access_controls_delete(
 /// Returns the ACL entry for the specified entity on the specified object.
 pub async fn StorageService::object_access_controls_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   entity : String,
@@ -2573,7 +2526,7 @@ pub async fn StorageService::object_access_controls_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2593,7 +2546,6 @@ pub async fn StorageService::object_access_controls_get(
 /// Creates a new ACL entry on the specified object.
 pub async fn StorageService::object_access_controls_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -2625,7 +2577,7 @@ pub async fn StorageService::object_access_controls_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2645,7 +2597,6 @@ pub async fn StorageService::object_access_controls_insert(
 /// Retrieves ACL entries on the specified object.
 pub async fn StorageService::object_access_controls_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -2672,7 +2623,7 @@ pub async fn StorageService::object_access_controls_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2692,7 +2643,6 @@ pub async fn StorageService::object_access_controls_list(
 /// Patches an ACL entry on the specified object.
 pub async fn StorageService::object_access_controls_patch(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   entity : String,
@@ -2736,7 +2686,7 @@ pub async fn StorageService::object_access_controls_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2756,7 +2706,6 @@ pub async fn StorageService::object_access_controls_patch(
 /// Updates an ACL entry on the specified object.
 pub async fn StorageService::object_access_controls_update(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   entity : String,
@@ -2800,7 +2749,7 @@ pub async fn StorageService::object_access_controls_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2820,7 +2769,6 @@ pub async fn StorageService::object_access_controls_update(
 /// Initiates a long-running bulk restore operation on the specified bucket.
 pub async fn StorageService::objects_bulk_restore(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -2835,7 +2783,7 @@ pub async fn StorageService::objects_bulk_restore(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2855,7 +2803,6 @@ pub async fn StorageService::objects_bulk_restore(
 /// Concatenates a list of existing objects into a new object in the same bucket.
 pub async fn StorageService::objects_compose(
   self : StorageService,
-  client : &@http.HttpClient,
   destination_bucket : String,
   destination_object : String,
   destination_predefined_acl? : String? = None,
@@ -2916,7 +2863,7 @@ pub async fn StorageService::objects_compose(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2936,7 +2883,6 @@ pub async fn StorageService::objects_compose(
 /// Copies a source object to a destination object. Optionally overrides metadata.
 pub async fn StorageService::objects_copy(
   self : StorageService,
-  client : &@http.HttpClient,
   source_bucket : String,
   source_object : String,
   destination_bucket : String,
@@ -3042,7 +2988,7 @@ pub async fn StorageService::objects_copy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3062,7 +3008,6 @@ pub async fn StorageService::objects_copy(
 /// Deletes an object and its metadata. Deletions are permanent if versioning is not enabled for the bucket, or if the generation parameter is used.
 pub async fn StorageService::objects_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -3109,7 +3054,7 @@ pub async fn StorageService::objects_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3124,7 +3069,6 @@ pub async fn StorageService::objects_delete(
 /// Retrieves an object or its metadata.
 pub async fn StorageService::objects_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -3186,7 +3130,7 @@ pub async fn StorageService::objects_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3206,7 +3150,6 @@ pub async fn StorageService::objects_get(
 /// Returns an IAM policy for the specified object.
 pub async fn StorageService::objects_get_iam_policy(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -3233,7 +3176,7 @@ pub async fn StorageService::objects_get_iam_policy(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3253,7 +3196,6 @@ pub async fn StorageService::objects_get_iam_policy(
 /// Stores a new object and metadata.
 pub async fn StorageService::objects_insert(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   content_encoding? : String? = None,
   if_generation_match? : String? = None,
@@ -3324,7 +3266,7 @@ pub async fn StorageService::objects_insert(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3344,7 +3286,6 @@ pub async fn StorageService::objects_insert(
 /// Retrieves a list of objects matching the criteria.
 pub async fn StorageService::objects_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   delimiter? : String? = None,
   end_offset? : String? = None,
@@ -3432,7 +3373,7 @@ pub async fn StorageService::objects_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3452,7 +3393,6 @@ pub async fn StorageService::objects_list(
 /// Moves the source object to the destination object in the same bucket.
 pub async fn StorageService::objects_move(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   source_object : String,
   destination_object : String,
@@ -3538,7 +3478,7 @@ pub async fn StorageService::objects_move(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3558,7 +3498,6 @@ pub async fn StorageService::objects_move(
 /// Patches an object's metadata.
 pub async fn StorageService::objects_patch(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -3626,7 +3565,7 @@ pub async fn StorageService::objects_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3646,7 +3585,6 @@ pub async fn StorageService::objects_patch(
 /// Restores a soft-deleted object.
 pub async fn StorageService::objects_restore(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   copy_source_acl? : Bool? = None,
@@ -3722,7 +3660,7 @@ pub async fn StorageService::objects_restore(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3742,7 +3680,6 @@ pub async fn StorageService::objects_restore(
 /// Rewrites a source object to a destination object. Optionally overrides metadata.
 pub async fn StorageService::objects_rewrite(
   self : StorageService,
-  client : &@http.HttpClient,
   source_bucket : String,
   source_object : String,
   destination_bucket : String,
@@ -3863,7 +3800,7 @@ pub async fn StorageService::objects_rewrite(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3883,7 +3820,6 @@ pub async fn StorageService::objects_rewrite(
 /// Updates an IAM policy for the specified object.
 pub async fn StorageService::objects_set_iam_policy(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -3915,7 +3851,7 @@ pub async fn StorageService::objects_set_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3935,7 +3871,6 @@ pub async fn StorageService::objects_set_iam_policy(
 /// Tests a set of permissions on the given object to see which, if any, are held by the caller.
 pub async fn StorageService::objects_test_iam_permissions(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -3978,7 +3913,7 @@ pub async fn StorageService::objects_test_iam_permissions(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3998,7 +3933,6 @@ pub async fn StorageService::objects_test_iam_permissions(
 /// Updates an object's metadata.
 pub async fn StorageService::objects_update(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   object : String,
   generation? : String? = None,
@@ -4066,7 +4000,7 @@ pub async fn StorageService::objects_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4086,7 +4020,6 @@ pub async fn StorageService::objects_update(
 /// Watch for changes on all objects in a bucket.
 pub async fn StorageService::objects_watch_all(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   delimiter? : String? = None,
   end_offset? : String? = None,
@@ -4158,7 +4091,7 @@ pub async fn StorageService::objects_watch_all(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4178,7 +4111,6 @@ pub async fn StorageService::objects_watch_all(
 /// Starts asynchronous advancement of the relocate bucket operation in the case of required write downtime, to allow it to lock the bucket at the source location, and proceed with the bucket location swap. The server makes a best effort to advance the relocate bucket operation, but success is not guaranteed.
 pub async fn StorageService::operations_advance_relocate_bucket(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   operation_id : String,
 ) -> @http.HttpResponse raise @http.HttpError {
@@ -4203,7 +4135,7 @@ pub async fn StorageService::operations_advance_relocate_bucket(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4218,7 +4150,6 @@ pub async fn StorageService::operations_advance_relocate_bucket(
 /// Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed.
 pub async fn StorageService::operations_cancel(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   operation_id : String,
 ) -> @http.HttpResponse raise @http.HttpError {
@@ -4243,7 +4174,7 @@ pub async fn StorageService::operations_cancel(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4258,7 +4189,6 @@ pub async fn StorageService::operations_cancel(
 /// Gets the latest state of a long-running operation.
 pub async fn StorageService::operations_get(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   operation_id : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
@@ -4269,7 +4199,7 @@ pub async fn StorageService::operations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4289,7 +4219,6 @@ pub async fn StorageService::operations_get(
 /// Lists operations that match the specified filter in the request.
 pub async fn StorageService::operations_list(
   self : StorageService,
-  client : &@http.HttpClient,
   bucket : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -4320,7 +4249,7 @@ pub async fn StorageService::operations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4340,7 +4269,6 @@ pub async fn StorageService::operations_list(
 /// Creates a new HMAC key for the specified service account.
 pub async fn StorageService::projects_hmac_keys_create(
   self : StorageService,
-  client : &@http.HttpClient,
   project_id : String,
   service_account_email? : String? = None,
   user_project? : String? = None,
@@ -4371,7 +4299,7 @@ pub async fn StorageService::projects_hmac_keys_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4391,7 +4319,6 @@ pub async fn StorageService::projects_hmac_keys_create(
 /// Deletes an HMAC key.
 pub async fn StorageService::projects_hmac_keys_delete(
   self : StorageService,
-  client : &@http.HttpClient,
   project_id : String,
   access_id : String,
   user_project? : String? = None,
@@ -4420,7 +4347,7 @@ pub async fn StorageService::projects_hmac_keys_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4435,7 +4362,6 @@ pub async fn StorageService::projects_hmac_keys_delete(
 /// Retrieves an HMAC key's metadata
 pub async fn StorageService::projects_hmac_keys_get(
   self : StorageService,
-  client : &@http.HttpClient,
   project_id : String,
   access_id : String,
   user_project? : String? = None,
@@ -4464,7 +4390,7 @@ pub async fn StorageService::projects_hmac_keys_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4484,7 +4410,6 @@ pub async fn StorageService::projects_hmac_keys_get(
 /// Retrieves a list of HMAC keys matching the criteria.
 pub async fn StorageService::projects_hmac_keys_list(
   self : StorageService,
-  client : &@http.HttpClient,
   project_id : String,
   max_results? : Int? = None,
   page_token? : String? = None,
@@ -4525,7 +4450,7 @@ pub async fn StorageService::projects_hmac_keys_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4545,7 +4470,6 @@ pub async fn StorageService::projects_hmac_keys_list(
 /// Updates the state of an HMAC key. See the [HMAC Key resource descriptor](https://cloud.google.com/storage/docs/json_api/v1/projects/hmacKeys/update#request-body) for valid states.
 pub async fn StorageService::projects_hmac_keys_update(
   self : StorageService,
-  client : &@http.HttpClient,
   project_id : String,
   access_id : String,
   user_project? : String? = None,
@@ -4579,7 +4503,7 @@ pub async fn StorageService::projects_hmac_keys_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4599,7 +4523,6 @@ pub async fn StorageService::projects_hmac_keys_update(
 /// Get the email address of this project's Google Cloud Storage service account.
 pub async fn StorageService::projects_service_account_get(
   self : StorageService,
-  client : &@http.HttpClient,
   project_id : String,
   user_project? : String? = None,
 ) -> ServiceAccount raise @http.HttpError {
@@ -4620,7 +4543,7 @@ pub async fn StorageService::projects_service_account_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,

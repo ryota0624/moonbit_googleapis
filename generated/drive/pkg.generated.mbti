@@ -199,68 +199,69 @@ pub(all) struct DriveList {
   drives : Array[Drive]?
 } derive(Eq, Show, @json.FromJson)
 
-pub(all) struct DriveService {
+pub struct DriveService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
-pub async fn DriveService::about_get(Self, &@http.HttpClient) -> About raise @http.HttpError
-pub async fn DriveService::accessproposals_get(Self, &@http.HttpClient, String, String) -> AccessProposal raise @http.HttpError
-pub async fn DriveService::accessproposals_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListAccessProposalsResponse raise @http.HttpError
-pub async fn DriveService::accessproposals_resolve(Self, &@http.HttpClient, String, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::approvals_get(Self, &@http.HttpClient, String, String) -> Approval raise @http.HttpError
-pub async fn DriveService::approvals_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ApprovalList raise @http.HttpError
-pub async fn DriveService::apps_get(Self, &@http.HttpClient, String) -> App raise @http.HttpError
-pub async fn DriveService::apps_list(Self, &@http.HttpClient, app_filter_extensions? : String?, app_filter_mime_types? : String?, language_code? : String?) -> AppList raise @http.HttpError
-pub async fn DriveService::changes_get_start_page_token(Self, &@http.HttpClient, drive_id? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> StartPageToken raise @http.HttpError
-pub async fn DriveService::changes_list(Self, &@http.HttpClient, drive_id? : String?, include_corpus_removals? : Bool?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_removed? : Bool?, include_team_drive_items? : Bool?, page_size? : Int?, page_token? : String?, restrict_to_my_drive? : Bool?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> ChangeList raise @http.HttpError
-pub async fn DriveService::changes_watch(Self, &@http.HttpClient, drive_id? : String?, include_corpus_removals? : Bool?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_removed? : Bool?, include_team_drive_items? : Bool?, page_size? : Int?, page_token? : String?, restrict_to_my_drive? : Bool?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> Channel raise @http.HttpError
-pub async fn DriveService::channels_stop(Self, &@http.HttpClient) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::comments_create(Self, &@http.HttpClient, String) -> Comment raise @http.HttpError
-pub async fn DriveService::comments_delete(Self, &@http.HttpClient, String, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::comments_get(Self, &@http.HttpClient, String, String, include_deleted? : Bool?) -> Comment raise @http.HttpError
-pub async fn DriveService::comments_list(Self, &@http.HttpClient, String, include_deleted? : Bool?, page_size? : Int?, page_token? : String?, start_modified_time? : String?) -> CommentList raise @http.HttpError
-pub async fn DriveService::comments_update(Self, &@http.HttpClient, String, String) -> Comment raise @http.HttpError
-pub async fn DriveService::drives_create(Self, &@http.HttpClient, request_id? : String?) -> Drive raise @http.HttpError
-pub async fn DriveService::drives_delete(Self, &@http.HttpClient, String, allow_item_deletion? : Bool?, use_domain_admin_access? : Bool?) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::drives_get(Self, &@http.HttpClient, String, use_domain_admin_access? : Bool?) -> Drive raise @http.HttpError
-pub async fn DriveService::drives_hide(Self, &@http.HttpClient, String) -> Drive raise @http.HttpError
-pub async fn DriveService::drives_list(Self, &@http.HttpClient, page_size? : Int?, page_token? : String?, q? : String?, use_domain_admin_access? : Bool?) -> DriveList raise @http.HttpError
-pub async fn DriveService::drives_unhide(Self, &@http.HttpClient, String) -> Drive raise @http.HttpError
-pub async fn DriveService::drives_update(Self, &@http.HttpClient, String, use_domain_admin_access? : Bool?) -> Drive raise @http.HttpError
-pub async fn DriveService::files_copy(Self, &@http.HttpClient, String, enforce_single_parent? : Bool?, ignore_default_visibility? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> File raise @http.HttpError
-pub async fn DriveService::files_create(Self, &@http.HttpClient, enforce_single_parent? : Bool?, ignore_default_visibility? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
-pub async fn DriveService::files_delete(Self, &@http.HttpClient, String, enforce_single_parent? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::files_download(Self, &@http.HttpClient, String, mime_type? : String?, revision_id? : String?) -> Operation raise @http.HttpError
-pub async fn DriveService::files_empty_trash(Self, &@http.HttpClient, drive_id? : String?, enforce_single_parent? : Bool?) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::files_export(Self, &@http.HttpClient, String, mime_type? : String?) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::files_generate_ids(Self, &@http.HttpClient, count? : Int?, space? : String?, type_? : String?) -> GeneratedIds raise @http.HttpError
-pub async fn DriveService::files_get(Self, &@http.HttpClient, String, acknowledge_abuse? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> File raise @http.HttpError
-pub async fn DriveService::files_list(Self, &@http.HttpClient, corpora? : String?, corpus? : String?, drive_id? : String?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_team_drive_items? : Bool?, order_by? : String?, page_size? : Int?, page_token? : String?, q? : String?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> FileList raise @http.HttpError
-pub async fn DriveService::files_list_labels(Self, &@http.HttpClient, String, max_results? : Int?, page_token? : String?) -> LabelList raise @http.HttpError
-pub async fn DriveService::files_modify_labels(Self, &@http.HttpClient, String) -> ModifyLabelsResponse raise @http.HttpError
-pub async fn DriveService::files_update(Self, &@http.HttpClient, String, add_parents? : String?, enforce_single_parent? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, remove_parents? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
-pub async fn DriveService::files_watch(Self, &@http.HttpClient, String, acknowledge_abuse? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> Channel raise @http.HttpError
-pub fn DriveService::new(String) -> Self
-pub async fn DriveService::operations_get(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn DriveService::permissions_create(Self, &@http.HttpClient, String, email_message? : String?, enforce_expansive_access? : Bool?, enforce_single_parent? : Bool?, move_to_new_owners_root? : Bool?, send_notification_email? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
-pub async fn DriveService::permissions_delete(Self, &@http.HttpClient, String, String, enforce_expansive_access? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::permissions_get(Self, &@http.HttpClient, String, String, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
-pub async fn DriveService::permissions_list(Self, &@http.HttpClient, String, include_permissions_for_view? : String?, page_size? : Int?, page_token? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> PermissionList raise @http.HttpError
-pub async fn DriveService::permissions_update(Self, &@http.HttpClient, String, String, enforce_expansive_access? : Bool?, remove_expiration? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
-pub async fn DriveService::replies_create(Self, &@http.HttpClient, String, String) -> Reply raise @http.HttpError
-pub async fn DriveService::replies_delete(Self, &@http.HttpClient, String, String, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::replies_get(Self, &@http.HttpClient, String, String, String, include_deleted? : Bool?) -> Reply raise @http.HttpError
-pub async fn DriveService::replies_list(Self, &@http.HttpClient, String, String, include_deleted? : Bool?, page_size? : Int?, page_token? : String?) -> ReplyList raise @http.HttpError
-pub async fn DriveService::replies_update(Self, &@http.HttpClient, String, String, String) -> Reply raise @http.HttpError
-pub async fn DriveService::revisions_delete(Self, &@http.HttpClient, String, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::revisions_get(Self, &@http.HttpClient, String, String, acknowledge_abuse? : Bool?) -> Revision raise @http.HttpError
-pub async fn DriveService::revisions_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> RevisionList raise @http.HttpError
-pub async fn DriveService::revisions_update(Self, &@http.HttpClient, String, String) -> Revision raise @http.HttpError
-pub async fn DriveService::teamdrives_create(Self, &@http.HttpClient, request_id? : String?) -> TeamDrive raise @http.HttpError
-pub async fn DriveService::teamdrives_delete(Self, &@http.HttpClient, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::teamdrives_get(Self, &@http.HttpClient, String, use_domain_admin_access? : Bool?) -> TeamDrive raise @http.HttpError
-pub async fn DriveService::teamdrives_list(Self, &@http.HttpClient, page_size? : Int?, page_token? : String?, q? : String?, use_domain_admin_access? : Bool?) -> TeamDriveList raise @http.HttpError
-pub async fn DriveService::teamdrives_update(Self, &@http.HttpClient, String, use_domain_admin_access? : Bool?) -> TeamDrive raise @http.HttpError
+pub async fn DriveService::about_get(Self) -> About raise @http.HttpError
+pub async fn DriveService::accessproposals_get(Self, String, String) -> AccessProposal raise @http.HttpError
+pub async fn DriveService::accessproposals_list(Self, String, page_size? : Int?, page_token? : String?) -> ListAccessProposalsResponse raise @http.HttpError
+pub async fn DriveService::accessproposals_resolve(Self, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::approvals_get(Self, String, String) -> Approval raise @http.HttpError
+pub async fn DriveService::approvals_list(Self, String, page_size? : Int?, page_token? : String?) -> ApprovalList raise @http.HttpError
+pub async fn DriveService::apps_get(Self, String) -> App raise @http.HttpError
+pub async fn DriveService::apps_list(Self, app_filter_extensions? : String?, app_filter_mime_types? : String?, language_code? : String?) -> AppList raise @http.HttpError
+pub async fn DriveService::changes_get_start_page_token(Self, drive_id? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> StartPageToken raise @http.HttpError
+pub async fn DriveService::changes_list(Self, drive_id? : String?, include_corpus_removals? : Bool?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_removed? : Bool?, include_team_drive_items? : Bool?, page_size? : Int?, page_token? : String?, restrict_to_my_drive? : Bool?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> ChangeList raise @http.HttpError
+pub async fn DriveService::changes_watch(Self, drive_id? : String?, include_corpus_removals? : Bool?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_removed? : Bool?, include_team_drive_items? : Bool?, page_size? : Int?, page_token? : String?, restrict_to_my_drive? : Bool?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> Channel raise @http.HttpError
+pub async fn DriveService::channels_stop(Self) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::comments_create(Self, String) -> Comment raise @http.HttpError
+pub async fn DriveService::comments_delete(Self, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::comments_get(Self, String, String, include_deleted? : Bool?) -> Comment raise @http.HttpError
+pub async fn DriveService::comments_list(Self, String, include_deleted? : Bool?, page_size? : Int?, page_token? : String?, start_modified_time? : String?) -> CommentList raise @http.HttpError
+pub async fn DriveService::comments_update(Self, String, String) -> Comment raise @http.HttpError
+pub async fn DriveService::drives_create(Self, request_id? : String?) -> Drive raise @http.HttpError
+pub async fn DriveService::drives_delete(Self, String, allow_item_deletion? : Bool?, use_domain_admin_access? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::drives_get(Self, String, use_domain_admin_access? : Bool?) -> Drive raise @http.HttpError
+pub async fn DriveService::drives_hide(Self, String) -> Drive raise @http.HttpError
+pub async fn DriveService::drives_list(Self, page_size? : Int?, page_token? : String?, q? : String?, use_domain_admin_access? : Bool?) -> DriveList raise @http.HttpError
+pub async fn DriveService::drives_unhide(Self, String) -> Drive raise @http.HttpError
+pub async fn DriveService::drives_update(Self, String, use_domain_admin_access? : Bool?) -> Drive raise @http.HttpError
+pub async fn DriveService::files_copy(Self, String, enforce_single_parent? : Bool?, ignore_default_visibility? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> File raise @http.HttpError
+pub async fn DriveService::files_create(Self, enforce_single_parent? : Bool?, ignore_default_visibility? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
+pub async fn DriveService::files_delete(Self, String, enforce_single_parent? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::files_download(Self, String, mime_type? : String?, revision_id? : String?) -> Operation raise @http.HttpError
+pub async fn DriveService::files_empty_trash(Self, drive_id? : String?, enforce_single_parent? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::files_export(Self, String, mime_type? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::files_generate_ids(Self, count? : Int?, space? : String?, type_? : String?) -> GeneratedIds raise @http.HttpError
+pub async fn DriveService::files_get(Self, String, acknowledge_abuse? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> File raise @http.HttpError
+pub async fn DriveService::files_list(Self, corpora? : String?, corpus? : String?, drive_id? : String?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_team_drive_items? : Bool?, order_by? : String?, page_size? : Int?, page_token? : String?, q? : String?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> FileList raise @http.HttpError
+pub async fn DriveService::files_list_labels(Self, String, max_results? : Int?, page_token? : String?) -> LabelList raise @http.HttpError
+pub async fn DriveService::files_modify_labels(Self, String) -> ModifyLabelsResponse raise @http.HttpError
+pub async fn DriveService::files_update(Self, String, add_parents? : String?, enforce_single_parent? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, remove_parents? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
+pub async fn DriveService::files_watch(Self, String, acknowledge_abuse? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> Channel raise @http.HttpError
+pub fn DriveService::new(&@http.HttpClient, String) -> Self
+pub async fn DriveService::operations_get(Self, String) -> Operation raise @http.HttpError
+pub async fn DriveService::permissions_create(Self, String, email_message? : String?, enforce_expansive_access? : Bool?, enforce_single_parent? : Bool?, move_to_new_owners_root? : Bool?, send_notification_email? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
+pub async fn DriveService::permissions_delete(Self, String, String, enforce_expansive_access? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::permissions_get(Self, String, String, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
+pub async fn DriveService::permissions_list(Self, String, include_permissions_for_view? : String?, page_size? : Int?, page_token? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> PermissionList raise @http.HttpError
+pub async fn DriveService::permissions_update(Self, String, String, enforce_expansive_access? : Bool?, remove_expiration? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
+pub async fn DriveService::replies_create(Self, String, String) -> Reply raise @http.HttpError
+pub async fn DriveService::replies_delete(Self, String, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::replies_get(Self, String, String, String, include_deleted? : Bool?) -> Reply raise @http.HttpError
+pub async fn DriveService::replies_list(Self, String, String, include_deleted? : Bool?, page_size? : Int?, page_token? : String?) -> ReplyList raise @http.HttpError
+pub async fn DriveService::replies_update(Self, String, String, String) -> Reply raise @http.HttpError
+pub async fn DriveService::revisions_delete(Self, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::revisions_get(Self, String, String, acknowledge_abuse? : Bool?) -> Revision raise @http.HttpError
+pub async fn DriveService::revisions_list(Self, String, page_size? : Int?, page_token? : String?) -> RevisionList raise @http.HttpError
+pub async fn DriveService::revisions_update(Self, String, String) -> Revision raise @http.HttpError
+pub async fn DriveService::teamdrives_create(Self, request_id? : String?) -> TeamDrive raise @http.HttpError
+pub async fn DriveService::teamdrives_delete(Self, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::teamdrives_get(Self, String, use_domain_admin_access? : Bool?) -> TeamDrive raise @http.HttpError
+pub async fn DriveService::teamdrives_list(Self, page_size? : Int?, page_token? : String?, q? : String?, use_domain_admin_access? : Bool?) -> TeamDriveList raise @http.HttpError
+pub async fn DriveService::teamdrives_update(Self, String, use_domain_admin_access? : Bool?) -> TeamDrive raise @http.HttpError
 
 pub(all) struct File {
   version : String?

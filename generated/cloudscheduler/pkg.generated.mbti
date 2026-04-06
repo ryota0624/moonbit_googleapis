@@ -29,27 +29,28 @@ pub(all) struct AppEngineRouting {
 pub(all) struct CancelOperationRequest {
 } derive(Eq, Show, @json.FromJson)
 
-pub(all) struct CloudschedulerService {
+pub struct CloudschedulerService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
-pub fn CloudschedulerService::new(String) -> Self
-pub async fn CloudschedulerService::projects_locations_get(Self, &@http.HttpClient, String) -> Location raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_get_cmek_config(Self, &@http.HttpClient, String) -> CmekConfig raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_create(Self, &@http.HttpClient, String) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_get(Self, &@http.HttpClient, String) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListJobsResponse raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_pause(Self, &@http.HttpClient, String) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_resume(Self, &@http.HttpClient, String) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_run(Self, &@http.HttpClient, String) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_list(Self, &@http.HttpClient, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_operations_cancel(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_operations_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_operations_get(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_operations_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_update_cmek_config(Self, &@http.HttpClient, String, update_mask? : String?) -> Operation raise @http.HttpError
+pub fn CloudschedulerService::new(&@http.HttpClient, String) -> Self
+pub async fn CloudschedulerService::projects_locations_get(Self, String) -> Location raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_get_cmek_config(Self, String) -> CmekConfig raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_create(Self, String) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_get(Self, String) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_list(Self, String, page_size? : Int?, page_token? : String?) -> ListJobsResponse raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_patch(Self, String, update_mask? : String?) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_pause(Self, String) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_resume(Self, String) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_run(Self, String) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_operations_cancel(Self, String) -> Empty raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_operations_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_operations_get(Self, String) -> Operation raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_operations_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_update_cmek_config(Self, String, update_mask? : String?) -> Operation raise @http.HttpError
 
 pub(all) struct CmekConfig {
   name : String?

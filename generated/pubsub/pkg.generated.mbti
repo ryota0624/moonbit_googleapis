@@ -258,57 +258,58 @@ pub(all) struct PubsubMessage {
   ordering_key : String?
 } derive(Eq, Show, @json.FromJson)
 
-pub(all) struct PubsubService {
+pub struct PubsubService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
-pub fn PubsubService::new(String) -> Self
-pub async fn PubsubService::projects_schemas_commit(Self, &@http.HttpClient, String) -> Schema raise @http.HttpError
-pub async fn PubsubService::projects_schemas_create(Self, &@http.HttpClient, String, schema_id? : String?) -> Schema raise @http.HttpError
-pub async fn PubsubService::projects_schemas_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn PubsubService::projects_schemas_delete_revision(Self, &@http.HttpClient, String, revision_id? : String?) -> Schema raise @http.HttpError
-pub async fn PubsubService::projects_schemas_get(Self, &@http.HttpClient, String, view? : String?) -> Schema raise @http.HttpError
-pub async fn PubsubService::projects_schemas_get_iam_policy(Self, &@http.HttpClient, String, options_requested_policy_version? : Int?) -> Policy raise @http.HttpError
-pub async fn PubsubService::projects_schemas_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, view? : String?) -> ListSchemasResponse raise @http.HttpError
-pub async fn PubsubService::projects_schemas_list_revisions(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, view? : String?) -> ListSchemaRevisionsResponse raise @http.HttpError
-pub async fn PubsubService::projects_schemas_rollback(Self, &@http.HttpClient, String) -> Schema raise @http.HttpError
-pub async fn PubsubService::projects_schemas_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn PubsubService::projects_schemas_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn PubsubService::projects_schemas_validate(Self, &@http.HttpClient, String) -> ValidateSchemaResponse raise @http.HttpError
-pub async fn PubsubService::projects_schemas_validate_message(Self, &@http.HttpClient, String) -> ValidateMessageResponse raise @http.HttpError
-pub async fn PubsubService::projects_snapshots_create(Self, &@http.HttpClient, String) -> Snapshot raise @http.HttpError
-pub async fn PubsubService::projects_snapshots_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn PubsubService::projects_snapshots_get(Self, &@http.HttpClient, String) -> Snapshot raise @http.HttpError
-pub async fn PubsubService::projects_snapshots_get_iam_policy(Self, &@http.HttpClient, String, options_requested_policy_version? : Int?) -> Policy raise @http.HttpError
-pub async fn PubsubService::projects_snapshots_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListSnapshotsResponse raise @http.HttpError
-pub async fn PubsubService::projects_snapshots_patch(Self, &@http.HttpClient, String) -> Snapshot raise @http.HttpError
-pub async fn PubsubService::projects_snapshots_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn PubsubService::projects_snapshots_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_acknowledge(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_create(Self, &@http.HttpClient, String) -> Subscription raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_detach(Self, &@http.HttpClient, String) -> DetachSubscriptionResponse raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_get(Self, &@http.HttpClient, String) -> Subscription raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_get_iam_policy(Self, &@http.HttpClient, String, options_requested_policy_version? : Int?) -> Policy raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListSubscriptionsResponse raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_modify_ack_deadline(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_modify_push_config(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_patch(Self, &@http.HttpClient, String) -> Subscription raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_pull(Self, &@http.HttpClient, String) -> PullResponse raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_seek(Self, &@http.HttpClient, String) -> SeekResponse raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn PubsubService::projects_subscriptions_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn PubsubService::projects_topics_create(Self, &@http.HttpClient, String) -> Topic raise @http.HttpError
-pub async fn PubsubService::projects_topics_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn PubsubService::projects_topics_get(Self, &@http.HttpClient, String) -> Topic raise @http.HttpError
-pub async fn PubsubService::projects_topics_get_iam_policy(Self, &@http.HttpClient, String, options_requested_policy_version? : Int?) -> Policy raise @http.HttpError
-pub async fn PubsubService::projects_topics_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListTopicsResponse raise @http.HttpError
-pub async fn PubsubService::projects_topics_patch(Self, &@http.HttpClient, String) -> Topic raise @http.HttpError
-pub async fn PubsubService::projects_topics_publish(Self, &@http.HttpClient, String) -> PublishResponse raise @http.HttpError
-pub async fn PubsubService::projects_topics_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn PubsubService::projects_topics_snapshots_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListTopicSnapshotsResponse raise @http.HttpError
-pub async fn PubsubService::projects_topics_subscriptions_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListTopicSubscriptionsResponse raise @http.HttpError
-pub async fn PubsubService::projects_topics_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub fn PubsubService::new(&@http.HttpClient, String) -> Self
+pub async fn PubsubService::projects_schemas_commit(Self, String) -> Schema raise @http.HttpError
+pub async fn PubsubService::projects_schemas_create(Self, String, schema_id? : String?) -> Schema raise @http.HttpError
+pub async fn PubsubService::projects_schemas_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn PubsubService::projects_schemas_delete_revision(Self, String, revision_id? : String?) -> Schema raise @http.HttpError
+pub async fn PubsubService::projects_schemas_get(Self, String, view? : String?) -> Schema raise @http.HttpError
+pub async fn PubsubService::projects_schemas_get_iam_policy(Self, String, options_requested_policy_version? : Int?) -> Policy raise @http.HttpError
+pub async fn PubsubService::projects_schemas_list(Self, String, page_size? : Int?, page_token? : String?, view? : String?) -> ListSchemasResponse raise @http.HttpError
+pub async fn PubsubService::projects_schemas_list_revisions(Self, String, page_size? : Int?, page_token? : String?, view? : String?) -> ListSchemaRevisionsResponse raise @http.HttpError
+pub async fn PubsubService::projects_schemas_rollback(Self, String) -> Schema raise @http.HttpError
+pub async fn PubsubService::projects_schemas_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn PubsubService::projects_schemas_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn PubsubService::projects_schemas_validate(Self, String) -> ValidateSchemaResponse raise @http.HttpError
+pub async fn PubsubService::projects_schemas_validate_message(Self, String) -> ValidateMessageResponse raise @http.HttpError
+pub async fn PubsubService::projects_snapshots_create(Self, String) -> Snapshot raise @http.HttpError
+pub async fn PubsubService::projects_snapshots_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn PubsubService::projects_snapshots_get(Self, String) -> Snapshot raise @http.HttpError
+pub async fn PubsubService::projects_snapshots_get_iam_policy(Self, String, options_requested_policy_version? : Int?) -> Policy raise @http.HttpError
+pub async fn PubsubService::projects_snapshots_list(Self, String, page_size? : Int?, page_token? : String?) -> ListSnapshotsResponse raise @http.HttpError
+pub async fn PubsubService::projects_snapshots_patch(Self, String) -> Snapshot raise @http.HttpError
+pub async fn PubsubService::projects_snapshots_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn PubsubService::projects_snapshots_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_acknowledge(Self, String) -> Empty raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_create(Self, String) -> Subscription raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_detach(Self, String) -> DetachSubscriptionResponse raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_get(Self, String) -> Subscription raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_get_iam_policy(Self, String, options_requested_policy_version? : Int?) -> Policy raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_list(Self, String, page_size? : Int?, page_token? : String?) -> ListSubscriptionsResponse raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_modify_ack_deadline(Self, String) -> Empty raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_modify_push_config(Self, String) -> Empty raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_patch(Self, String) -> Subscription raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_pull(Self, String) -> PullResponse raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_seek(Self, String) -> SeekResponse raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn PubsubService::projects_subscriptions_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn PubsubService::projects_topics_create(Self, String) -> Topic raise @http.HttpError
+pub async fn PubsubService::projects_topics_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn PubsubService::projects_topics_get(Self, String) -> Topic raise @http.HttpError
+pub async fn PubsubService::projects_topics_get_iam_policy(Self, String, options_requested_policy_version? : Int?) -> Policy raise @http.HttpError
+pub async fn PubsubService::projects_topics_list(Self, String, page_size? : Int?, page_token? : String?) -> ListTopicsResponse raise @http.HttpError
+pub async fn PubsubService::projects_topics_patch(Self, String) -> Topic raise @http.HttpError
+pub async fn PubsubService::projects_topics_publish(Self, String) -> PublishResponse raise @http.HttpError
+pub async fn PubsubService::projects_topics_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn PubsubService::projects_topics_snapshots_list(Self, String, page_size? : Int?, page_token? : String?) -> ListTopicSnapshotsResponse raise @http.HttpError
+pub async fn PubsubService::projects_topics_subscriptions_list(Self, String, page_size? : Int?, page_token? : String?) -> ListTopicSubscriptionsResponse raise @http.HttpError
+pub async fn PubsubService::projects_topics_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
 
 pub(all) struct PubsubWrapper {
 } derive(Eq, Show, @json.FromJson)

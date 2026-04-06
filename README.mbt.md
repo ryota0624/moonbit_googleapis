@@ -97,24 +97,32 @@ let resp = client.request(req)
 
 ```moonbit nocheck
 ///|
-let drive = DriveService::new(access_token)
-let http = DefaultHttpClient::new()
-let client = http as &HttpClient
+let client = DefaultHttpClient::new() as &HttpClient
+
+///|
+let drive = DriveService::new(client, access_token)
 
 // List files
 
 ///|
-let list = drive.files_list(client, page_size=Some(10), q=Some("mimeType='application/pdf'"))
+let list = drive.files_list(
+  page_size=Some(10),
+  q=Some("mimeType='application/pdf'"),
+)
 
 // Get file metadata
 
 ///|
-let file = drive.files_get(client, file_id)
+let file = drive.files_get(file_id)
 
 // Create file (metadata only)
 
 ///|
-let created = drive.files_create(client, "report.txt", "text/plain", parents=Some(["folder_id"]))
+let created = drive.files_create(
+  "report.txt",
+  "text/plain",
+  parents=Some(["folder_id"]),
+)
 ```
 
 ### Google Service (generic)

@@ -3,16 +3,21 @@
 ///| Base URL: https://monitoring.googleapis.com/
 
 ///|
-pub(all) struct MonitoringService {
+pub struct MonitoringService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
 
 ///|
-pub fn MonitoringService::new(access_token : String) -> MonitoringService {
+pub fn MonitoringService::new(
+  client : &@http.HttpClient,
+  access_token : String,
+) -> MonitoringService {
   MonitoringService::{
     base_url: "https://monitoring.googleapis.com",
     access_token,
+    client,
   }
 }
 
@@ -32,7 +37,6 @@ fn MonitoringService::auth_headers(
 /// Lists time series that match a filter.
 pub async fn MonitoringService::folders_time_series_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   aggregation_alignment_period? : String? = None,
   aggregation_cross_series_reducer? : String? = None,
@@ -124,7 +128,7 @@ pub async fn MonitoringService::folders_time_series_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -144,7 +148,6 @@ pub async fn MonitoringService::folders_time_series_list(
 /// Lists time series that match a filter.
 pub async fn MonitoringService::organizations_time_series_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   aggregation_alignment_period? : String? = None,
   aggregation_cross_series_reducer? : String? = None,
@@ -236,7 +239,7 @@ pub async fn MonitoringService::organizations_time_series_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -256,7 +259,6 @@ pub async fn MonitoringService::organizations_time_series_list(
 /// Creates a new alerting policy.Design your application to single-thread API calls that modify the state of alerting policies in a single project. This includes calls to CreateAlertPolicy, DeleteAlertPolicy and UpdateAlertPolicy.
 pub async fn MonitoringService::projects_alert_policies_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> AlertPolicy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -271,7 +273,7 @@ pub async fn MonitoringService::projects_alert_policies_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -291,7 +293,6 @@ pub async fn MonitoringService::projects_alert_policies_create(
 /// Deletes an alerting policy.Design your application to single-thread API calls that modify the state of alerting policies in a single project. This includes calls to CreateAlertPolicy, DeleteAlertPolicy and UpdateAlertPolicy.
 pub async fn MonitoringService::projects_alert_policies_delete(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -301,7 +302,7 @@ pub async fn MonitoringService::projects_alert_policies_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -321,7 +322,6 @@ pub async fn MonitoringService::projects_alert_policies_delete(
 /// Gets a single alerting policy.
 pub async fn MonitoringService::projects_alert_policies_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> AlertPolicy raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -331,7 +331,7 @@ pub async fn MonitoringService::projects_alert_policies_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -351,7 +351,6 @@ pub async fn MonitoringService::projects_alert_policies_get(
 /// Lists the existing alerting policies for the workspace.
 pub async fn MonitoringService::projects_alert_policies_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   order_by? : String? = None,
@@ -387,7 +386,7 @@ pub async fn MonitoringService::projects_alert_policies_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -407,7 +406,6 @@ pub async fn MonitoringService::projects_alert_policies_list(
 /// Updates an alerting policy. You can either replace the entire policy with a new one or replace only certain fields in the current alerting policy by specifying the fields to be updated via updateMask. Returns the updated alerting policy.Design your application to single-thread API calls that modify the state of alerting policies in a single project. This includes calls to CreateAlertPolicy, DeleteAlertPolicy and UpdateAlertPolicy.
 pub async fn MonitoringService::projects_alert_policies_patch(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> AlertPolicy raise @http.HttpError {
@@ -433,7 +431,7 @@ pub async fn MonitoringService::projects_alert_policies_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -453,7 +451,6 @@ pub async fn MonitoringService::projects_alert_policies_patch(
 /// Gets a single alert.
 pub async fn MonitoringService::projects_alerts_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Alert raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -463,7 +460,7 @@ pub async fn MonitoringService::projects_alerts_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -483,7 +480,6 @@ pub async fn MonitoringService::projects_alerts_get(
 /// Lists the existing alerts for the metrics scope of the project.
 pub async fn MonitoringService::projects_alerts_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   order_by? : String? = None,
@@ -519,7 +515,7 @@ pub async fn MonitoringService::projects_alerts_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -539,7 +535,6 @@ pub async fn MonitoringService::projects_alerts_list(
 /// Cloud Monitoring Agent only: Creates a new time series.This method is only for use by the Cloud Monitoring Agent. Use projects.timeSeries.create instead.
 pub async fn MonitoringService::projects_collectd_time_series_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> CreateCollectdTimeSeriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -554,7 +549,7 @@ pub async fn MonitoringService::projects_collectd_time_series_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -574,7 +569,6 @@ pub async fn MonitoringService::projects_collectd_time_series_create(
 /// Creates a new group.
 pub async fn MonitoringService::projects_groups_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   validate_only? : Bool? = None,
 ) -> Group raise @http.HttpError {
@@ -600,7 +594,7 @@ pub async fn MonitoringService::projects_groups_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -620,7 +614,6 @@ pub async fn MonitoringService::projects_groups_create(
 /// Deletes an existing group.
 pub async fn MonitoringService::projects_groups_delete(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   recursive? : Bool? = None,
 ) -> Empty raise @http.HttpError {
@@ -641,7 +634,7 @@ pub async fn MonitoringService::projects_groups_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -661,7 +654,6 @@ pub async fn MonitoringService::projects_groups_delete(
 /// Gets a single group.
 pub async fn MonitoringService::projects_groups_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Group raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -671,7 +663,7 @@ pub async fn MonitoringService::projects_groups_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -691,7 +683,6 @@ pub async fn MonitoringService::projects_groups_get(
 /// Lists the existing groups.
 pub async fn MonitoringService::projects_groups_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   ancestors_of_group? : String? = None,
   children_of_group? : String? = None,
@@ -732,7 +723,7 @@ pub async fn MonitoringService::projects_groups_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -752,7 +743,6 @@ pub async fn MonitoringService::projects_groups_list(
 /// Updates an existing group. You can change any group attributes except name.
 pub async fn MonitoringService::projects_groups_update(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   validate_only? : Bool? = None,
 ) -> Group raise @http.HttpError {
@@ -778,7 +768,7 @@ pub async fn MonitoringService::projects_groups_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -798,7 +788,6 @@ pub async fn MonitoringService::projects_groups_update(
 /// Lists the monitored resources that are members of a group.
 pub async fn MonitoringService::projects_groups_members_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   interval_end_time? : String? = None,
@@ -839,7 +828,7 @@ pub async fn MonitoringService::projects_groups_members_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -859,7 +848,6 @@ pub async fn MonitoringService::projects_groups_members_list(
 /// Creates a new metric descriptor. The creation is executed asynchronously. User-created metric descriptors define custom metrics (https://cloud.google.com/monitoring/custom-metrics). The metric descriptor is updated if it already exists, except that metric labels are never removed.
 pub async fn MonitoringService::projects_metric_descriptors_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> MetricDescriptor raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -874,7 +862,7 @@ pub async fn MonitoringService::projects_metric_descriptors_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -894,7 +882,6 @@ pub async fn MonitoringService::projects_metric_descriptors_create(
 /// Deletes a metric descriptor. Only user-created custom metrics (https://cloud.google.com/monitoring/custom-metrics) can be deleted.
 pub async fn MonitoringService::projects_metric_descriptors_delete(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -904,7 +891,7 @@ pub async fn MonitoringService::projects_metric_descriptors_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -924,7 +911,6 @@ pub async fn MonitoringService::projects_metric_descriptors_delete(
 /// Gets a single metric descriptor.
 pub async fn MonitoringService::projects_metric_descriptors_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> MetricDescriptor raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -934,7 +920,7 @@ pub async fn MonitoringService::projects_metric_descriptors_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -954,7 +940,6 @@ pub async fn MonitoringService::projects_metric_descriptors_get(
 /// Lists metric descriptors that match a filter.
 pub async fn MonitoringService::projects_metric_descriptors_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   active_only? : Bool? = None,
   filter? : String? = None,
@@ -990,7 +975,7 @@ pub async fn MonitoringService::projects_metric_descriptors_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1010,7 +995,6 @@ pub async fn MonitoringService::projects_metric_descriptors_list(
 /// Gets a single monitored resource descriptor.
 pub async fn MonitoringService::projects_monitored_resource_descriptors_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> MonitoredResourceDescriptor raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -1020,7 +1004,7 @@ pub async fn MonitoringService::projects_monitored_resource_descriptors_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1040,7 +1024,6 @@ pub async fn MonitoringService::projects_monitored_resource_descriptors_get(
 /// Lists monitored resource descriptors that match a filter.
 pub async fn MonitoringService::projects_monitored_resource_descriptors_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -1071,7 +1054,7 @@ pub async fn MonitoringService::projects_monitored_resource_descriptors_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1091,7 +1074,6 @@ pub async fn MonitoringService::projects_monitored_resource_descriptors_list(
 /// Gets a single channel descriptor. The descriptor indicates which fields are expected / permitted for a notification channel of the given type.
 pub async fn MonitoringService::projects_notification_channel_descriptors_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> NotificationChannelDescriptor raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -1101,7 +1083,7 @@ pub async fn MonitoringService::projects_notification_channel_descriptors_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1121,7 +1103,6 @@ pub async fn MonitoringService::projects_notification_channel_descriptors_get(
 /// Lists the descriptors for supported channel types. The use of descriptors makes it possible for new channel types to be dynamically added.
 pub async fn MonitoringService::projects_notification_channel_descriptors_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -1147,7 +1128,7 @@ pub async fn MonitoringService::projects_notification_channel_descriptors_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1167,7 +1148,6 @@ pub async fn MonitoringService::projects_notification_channel_descriptors_list(
 /// Creates a new notification channel, representing a single notification endpoint such as an email address, SMS number, or PagerDuty service.Design your application to single-thread API calls that modify the state of notification channels in a single project. This includes calls to CreateNotificationChannel, DeleteNotificationChannel and UpdateNotificationChannel.
 pub async fn MonitoringService::projects_notification_channels_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> NotificationChannel raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1182,7 +1162,7 @@ pub async fn MonitoringService::projects_notification_channels_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1202,7 +1182,6 @@ pub async fn MonitoringService::projects_notification_channels_create(
 /// Deletes a notification channel.Design your application to single-thread API calls that modify the state of notification channels in a single project. This includes calls to CreateNotificationChannel, DeleteNotificationChannel and UpdateNotificationChannel.
 pub async fn MonitoringService::projects_notification_channels_delete(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   force? : Bool? = None,
 ) -> Empty raise @http.HttpError {
@@ -1223,7 +1202,7 @@ pub async fn MonitoringService::projects_notification_channels_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1243,7 +1222,6 @@ pub async fn MonitoringService::projects_notification_channels_delete(
 /// Gets a single notification channel. The channel includes the relevant configuration details with which the channel was created. However, the response may truncate or omit passwords, API keys, or other private key matter and thus the response may not be 100% identical to the information that was supplied in the call to the create method.
 pub async fn MonitoringService::projects_notification_channels_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> NotificationChannel raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -1253,7 +1231,7 @@ pub async fn MonitoringService::projects_notification_channels_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1273,7 +1251,6 @@ pub async fn MonitoringService::projects_notification_channels_get(
 /// Requests a verification code for an already verified channel that can then be used in a call to VerifyNotificationChannel() on a different channel with an equivalent identity in the same or in a different project. This makes it possible to copy a channel between projects without requiring manual reverification of the channel. If the channel is not in the verified state, this method will fail (in other words, this may only be used if the SendNotificationChannelVerificationCode and VerifyNotificationChannel paths have already been used to put the given channel into the verified state).There is no guarantee that the verification codes returned by this method will be of a similar structure or form as the ones that are delivered to the channel via SendNotificationChannelVerificationCode; while VerifyNotificationChannel() will recognize both the codes delivered via SendNotificationChannelVerificationCode() and returned from GetNotificationChannelVerificationCode(), it is typically the case that the verification codes delivered via SendNotificationChannelVerificationCode() will be shorter and also have a shorter expiration (e.g. codes such as "G-123456") whereas GetVerificationCode() will typically return a much longer, websafe base 64 encoded string that has a longer expiration time.
 pub async fn MonitoringService::projects_notification_channels_get_verification_code(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GetNotificationChannelVerificationCodeResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1288,7 +1265,7 @@ pub async fn MonitoringService::projects_notification_channels_get_verification_
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1308,7 +1285,6 @@ pub async fn MonitoringService::projects_notification_channels_get_verification_
 /// Lists the notification channels that have been created for the project. To list the types of notification channels that are supported, use the ListNotificationChannelDescriptors method.
 pub async fn MonitoringService::projects_notification_channels_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   order_by? : String? = None,
@@ -1344,7 +1320,7 @@ pub async fn MonitoringService::projects_notification_channels_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1364,7 +1340,6 @@ pub async fn MonitoringService::projects_notification_channels_list(
 /// Updates a notification channel. Fields not specified in the field mask remain unchanged.Design your application to single-thread API calls that modify the state of notification channels in a single project. This includes calls to CreateNotificationChannel, DeleteNotificationChannel and UpdateNotificationChannel.
 pub async fn MonitoringService::projects_notification_channels_patch(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> NotificationChannel raise @http.HttpError {
@@ -1390,7 +1365,7 @@ pub async fn MonitoringService::projects_notification_channels_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1410,7 +1385,6 @@ pub async fn MonitoringService::projects_notification_channels_patch(
 /// Causes a verification code to be delivered to the channel. The code can then be supplied in VerifyNotificationChannel to verify the channel.
 pub async fn MonitoringService::projects_notification_channels_send_verification_code(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1425,7 +1399,7 @@ pub async fn MonitoringService::projects_notification_channels_send_verification
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1445,7 +1419,6 @@ pub async fn MonitoringService::projects_notification_channels_send_verification
 /// Verifies a NotificationChannel by proving receipt of the code delivered to the channel as a result of calling SendNotificationChannelVerificationCode.
 pub async fn MonitoringService::projects_notification_channels_verify(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> NotificationChannel raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1460,7 +1433,7 @@ pub async fn MonitoringService::projects_notification_channels_verify(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1480,7 +1453,6 @@ pub async fn MonitoringService::projects_notification_channels_verify(
 /// Creates a Snooze that will prevent alerts, which match the provided criteria, from being opened. The Snooze applies for a specific time interval.
 pub async fn MonitoringService::projects_snoozes_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> Snooze raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1495,7 +1467,7 @@ pub async fn MonitoringService::projects_snoozes_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1515,7 +1487,6 @@ pub async fn MonitoringService::projects_snoozes_create(
 /// Retrieves a Snooze by name.
 pub async fn MonitoringService::projects_snoozes_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Snooze raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -1525,7 +1496,7 @@ pub async fn MonitoringService::projects_snoozes_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1545,7 +1516,6 @@ pub async fn MonitoringService::projects_snoozes_get(
 /// Lists the Snoozes associated with a project. Can optionally pass in filter, which specifies predicates to match Snoozes.
 pub async fn MonitoringService::projects_snoozes_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -1576,7 +1546,7 @@ pub async fn MonitoringService::projects_snoozes_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1596,7 +1566,6 @@ pub async fn MonitoringService::projects_snoozes_list(
 /// Updates a Snooze, identified by its name, with the parameters in the given Snooze object.
 pub async fn MonitoringService::projects_snoozes_patch(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Snooze raise @http.HttpError {
@@ -1622,7 +1591,7 @@ pub async fn MonitoringService::projects_snoozes_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1642,7 +1611,6 @@ pub async fn MonitoringService::projects_snoozes_patch(
 /// Creates or adds data to one or more time series. The response is empty if all time series in the request were written. If any time series could not be written, a corresponding failure message is included in the error response. This method does not support resource locations constraint of an organization policy (https://cloud.google.com/resource-manager/docs/organization-policy/defining-locations#setting_the_organization_policy).
 pub async fn MonitoringService::projects_time_series_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1657,7 +1625,7 @@ pub async fn MonitoringService::projects_time_series_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1677,7 +1645,6 @@ pub async fn MonitoringService::projects_time_series_create(
 /// Creates or adds data to one or more service time series. A service time series is a time series for a metric from a Google Cloud service. The response is empty if all time series in the request were written. If any time series could not be written, a corresponding failure message is included in the error response. This endpoint rejects writes to user-defined metrics. This method is only for use by Google Cloud services. Use projects.timeSeries.create instead.
 pub async fn MonitoringService::projects_time_series_create_service(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1692,7 +1659,7 @@ pub async fn MonitoringService::projects_time_series_create_service(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1712,7 +1679,6 @@ pub async fn MonitoringService::projects_time_series_create_service(
 /// Lists time series that match a filter.
 pub async fn MonitoringService::projects_time_series_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   aggregation_alignment_period? : String? = None,
   aggregation_cross_series_reducer? : String? = None,
@@ -1804,7 +1770,7 @@ pub async fn MonitoringService::projects_time_series_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1824,7 +1790,6 @@ pub async fn MonitoringService::projects_time_series_list(
 /// Queries time series by using Monitoring Query Language (MQL). We recommend using PromQL instead of MQL. For more information about the status of MQL, see the MQL deprecation notice (https://cloud.google.com/stackdriver/docs/deprecations/mql).
 pub async fn MonitoringService::projects_time_series_query(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> QueryTimeSeriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1839,7 +1804,7 @@ pub async fn MonitoringService::projects_time_series_query(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1859,7 +1824,6 @@ pub async fn MonitoringService::projects_time_series_query(
 /// Creates a new Uptime check configuration.
 pub async fn MonitoringService::projects_uptime_check_configs_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> UptimeCheckConfig raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1874,7 +1838,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1894,7 +1858,6 @@ pub async fn MonitoringService::projects_uptime_check_configs_create(
 /// Deletes an Uptime check configuration. Note that this method will fail if the Uptime check configuration is referenced by an alert policy or other dependent configs that would be rendered invalid by the deletion.
 pub async fn MonitoringService::projects_uptime_check_configs_delete(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -1904,7 +1867,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1924,7 +1887,6 @@ pub async fn MonitoringService::projects_uptime_check_configs_delete(
 /// Gets a single Uptime check configuration.
 pub async fn MonitoringService::projects_uptime_check_configs_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> UptimeCheckConfig raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -1934,7 +1896,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1954,7 +1916,6 @@ pub async fn MonitoringService::projects_uptime_check_configs_get(
 /// Lists the existing valid Uptime check configurations for the project (leaving out any invalid configurations).
 pub async fn MonitoringService::projects_uptime_check_configs_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -1985,7 +1946,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2005,7 +1966,6 @@ pub async fn MonitoringService::projects_uptime_check_configs_list(
 /// Updates an Uptime check configuration. You can either replace the entire configuration with a new one or replace only certain fields in the current configuration by specifying the fields to be updated via updateMask. Returns the updated configuration.
 pub async fn MonitoringService::projects_uptime_check_configs_patch(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> UptimeCheckConfig raise @http.HttpError {
@@ -2031,7 +1991,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2051,7 +2011,6 @@ pub async fn MonitoringService::projects_uptime_check_configs_patch(
 /// Create a Service.
 pub async fn MonitoringService::services_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
   service_id? : String? = None,
 ) -> Service raise @http.HttpError {
@@ -2077,7 +2036,7 @@ pub async fn MonitoringService::services_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2097,7 +2056,6 @@ pub async fn MonitoringService::services_create(
 /// Soft delete this Service.
 pub async fn MonitoringService::services_delete(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -2107,7 +2065,7 @@ pub async fn MonitoringService::services_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2127,7 +2085,6 @@ pub async fn MonitoringService::services_delete(
 /// Get the named Service.
 pub async fn MonitoringService::services_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Service raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -2137,7 +2094,7 @@ pub async fn MonitoringService::services_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2157,7 +2114,6 @@ pub async fn MonitoringService::services_get(
 /// List Services for this Metrics Scope.
 pub async fn MonitoringService::services_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -2188,7 +2144,7 @@ pub async fn MonitoringService::services_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2208,7 +2164,6 @@ pub async fn MonitoringService::services_list(
 /// Update this Service.
 pub async fn MonitoringService::services_patch(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Service raise @http.HttpError {
@@ -2234,7 +2189,7 @@ pub async fn MonitoringService::services_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2254,7 +2209,6 @@ pub async fn MonitoringService::services_patch(
 /// Create a ServiceLevelObjective for the given Service.
 pub async fn MonitoringService::services_service_level_objectives_create(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
   service_level_objective_id? : String? = None,
 ) -> ServiceLevelObjective raise @http.HttpError {
@@ -2280,7 +2234,7 @@ pub async fn MonitoringService::services_service_level_objectives_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2300,7 +2254,6 @@ pub async fn MonitoringService::services_service_level_objectives_create(
 /// Delete the given ServiceLevelObjective.
 pub async fn MonitoringService::services_service_level_objectives_delete(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v3" + "/" + name
@@ -2310,7 +2263,7 @@ pub async fn MonitoringService::services_service_level_objectives_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2330,7 +2283,6 @@ pub async fn MonitoringService::services_service_level_objectives_delete(
 /// Get a ServiceLevelObjective by name.
 pub async fn MonitoringService::services_service_level_objectives_get(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   view? : String? = None,
 ) -> ServiceLevelObjective raise @http.HttpError {
@@ -2351,7 +2303,7 @@ pub async fn MonitoringService::services_service_level_objectives_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2371,7 +2323,6 @@ pub async fn MonitoringService::services_service_level_objectives_get(
 /// List the ServiceLevelObjectives for the given Service.
 pub async fn MonitoringService::services_service_level_objectives_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -2407,7 +2358,7 @@ pub async fn MonitoringService::services_service_level_objectives_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2427,7 +2378,6 @@ pub async fn MonitoringService::services_service_level_objectives_list(
 /// Update the given ServiceLevelObjective.
 pub async fn MonitoringService::services_service_level_objectives_patch(
   self : MonitoringService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> ServiceLevelObjective raise @http.HttpError {
@@ -2453,7 +2403,7 @@ pub async fn MonitoringService::services_service_level_objectives_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2473,7 +2423,6 @@ pub async fn MonitoringService::services_service_level_objectives_patch(
 /// Returns the list of IP addresses that checkers run from.
 pub async fn MonitoringService::uptime_check_ips_list(
   self : MonitoringService,
-  client : &@http.HttpClient,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListUptimeCheckIpsResponse raise @http.HttpError {
@@ -2498,7 +2447,7 @@ pub async fn MonitoringService::uptime_check_ips_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,

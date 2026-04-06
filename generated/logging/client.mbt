@@ -3,14 +3,22 @@
 ///| Base URL: https://logging.googleapis.com/
 
 ///|
-pub(all) struct LoggingService {
+pub struct LoggingService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
 
 ///|
-pub fn LoggingService::new(access_token : String) -> LoggingService {
-  LoggingService::{ base_url: "https://logging.googleapis.com", access_token }
+pub fn LoggingService::new(
+  client : &@http.HttpClient,
+  access_token : String,
+) -> LoggingService {
+  LoggingService::{
+    base_url: "https://logging.googleapis.com",
+    access_token,
+    client,
+  }
 }
 
 ///|
@@ -27,7 +35,6 @@ fn LoggingService::auth_headers(self : LoggingService) -> Map[String, String] {
 /// Gets the Logging CMEK settings for the given resource.Note: CMEK for the Log Router can be configured for Google Cloud projects, folders, organizations, and billing accounts. Once configured for an organization, it applies to all projects and folders in the Google Cloud organization.See Configure CMEK for Cloud Logging (https://docs.cloud.google.com/logging/docs/routing/managed-encryption) for more information.
 pub async fn LoggingService::billing_accounts_get_cmek_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
@@ -37,7 +44,7 @@ pub async fn LoggingService::billing_accounts_get_cmek_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -57,7 +64,6 @@ pub async fn LoggingService::billing_accounts_get_cmek_settings(
 /// Gets the settings for the given resource.Note: Settings can be retrieved for Google Cloud projects, folders, organizations, and billing accounts.See View default resource settings for Logging (https://docs.cloud.google.com/logging/docs/default-settings#view-org-settings) for more information.
 pub async fn LoggingService::billing_accounts_get_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
@@ -67,7 +73,7 @@ pub async fn LoggingService::billing_accounts_get_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -87,7 +93,6 @@ pub async fn LoggingService::billing_accounts_get_settings(
 /// Creates a new exclusion in the _Default sink in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource.
 pub async fn LoggingService::billing_accounts_exclusions_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -102,7 +107,7 @@ pub async fn LoggingService::billing_accounts_exclusions_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -122,7 +127,6 @@ pub async fn LoggingService::billing_accounts_exclusions_create(
 /// Deletes an exclusion in the _Default sink.
 pub async fn LoggingService::billing_accounts_exclusions_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -132,7 +136,7 @@ pub async fn LoggingService::billing_accounts_exclusions_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -152,7 +156,6 @@ pub async fn LoggingService::billing_accounts_exclusions_delete(
 /// Gets the description of an exclusion in the _Default sink.
 pub async fn LoggingService::billing_accounts_exclusions_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -162,7 +165,7 @@ pub async fn LoggingService::billing_accounts_exclusions_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -182,7 +185,6 @@ pub async fn LoggingService::billing_accounts_exclusions_get(
 /// Lists all the exclusions on the _Default sink in a parent resource.
 pub async fn LoggingService::billing_accounts_exclusions_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -208,7 +210,7 @@ pub async fn LoggingService::billing_accounts_exclusions_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -228,7 +230,6 @@ pub async fn LoggingService::billing_accounts_exclusions_list(
 /// Changes one or more properties of an existing exclusion in the _Default sink.
 pub async fn LoggingService::billing_accounts_exclusions_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
@@ -254,7 +255,7 @@ pub async fn LoggingService::billing_accounts_exclusions_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -274,7 +275,6 @@ pub async fn LoggingService::billing_accounts_exclusions_patch(
 /// Gets information about a location.
 pub async fn LoggingService::billing_accounts_locations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -284,7 +284,7 @@ pub async fn LoggingService::billing_accounts_locations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -304,7 +304,6 @@ pub async fn LoggingService::billing_accounts_locations_get(
 /// Lists information about the supported locations for this service.This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: Global locations: If name is empty, the method lists the public locations available to all projects. Project-specific locations: If name follows the format projects/{project}, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project.For gRPC and client library implementations, the resource name is passed as the name field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
 pub async fn LoggingService::billing_accounts_locations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   extra_location_types? : String? = None,
   filter? : String? = None,
@@ -340,7 +339,7 @@ pub async fn LoggingService::billing_accounts_locations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -360,7 +359,6 @@ pub async fn LoggingService::billing_accounts_locations_list(
 /// Creates a log bucket that can be used to store log entries. After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::billing_accounts_locations_buckets_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -386,7 +384,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -406,7 +404,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create(
 /// Creates a log bucket asynchronously that can be used to store log entries.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::billing_accounts_locations_buckets_create_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -432,7 +429,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -452,7 +449,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create_async(
 /// Deletes a log bucket.Changes the bucket's lifecycle_state to the DELETE_REQUESTED state. After 7 days, the bucket will be purged and all log entries in the bucket will be permanently deleted.
 pub async fn LoggingService::billing_accounts_locations_buckets_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -462,7 +458,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -482,7 +478,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_delete(
 /// Gets a log bucket.
 pub async fn LoggingService::billing_accounts_locations_buckets_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -492,7 +487,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -512,7 +507,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_get(
 /// Lists log buckets.
 pub async fn LoggingService::billing_accounts_locations_buckets_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -538,7 +532,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -558,7 +552,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_list(
 /// Updates a log bucket.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::billing_accounts_locations_buckets_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -584,7 +577,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -604,7 +597,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_patch(
 /// Undeletes a log bucket. A bucket that has been deleted can be undeleted within the grace period of 7 days.
 pub async fn LoggingService::billing_accounts_locations_buckets_undelete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -619,7 +611,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_undelete(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -639,7 +631,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_undelete(
 /// Updates a log bucket asynchronously.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::billing_accounts_locations_buckets_update_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -665,7 +656,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_update_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -685,7 +676,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_update_async(
 /// Asynchronously creates a linked dataset in BigQuery which makes it possible to use BigQuery to read the logs stored in the log bucket. A log bucket may currently only contain one link.
 pub async fn LoggingService::billing_accounts_locations_buckets_links_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -711,7 +701,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -731,7 +721,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_create(
 /// Deletes a link. This will also delete the corresponding BigQuery linked dataset.
 pub async fn LoggingService::billing_accounts_locations_buckets_links_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -741,7 +730,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -761,7 +750,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_delete(
 /// Gets a link.
 pub async fn LoggingService::billing_accounts_locations_buckets_links_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -771,7 +759,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -791,7 +779,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_get(
 /// Lists links.
 pub async fn LoggingService::billing_accounts_locations_buckets_links_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -817,7 +804,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -837,7 +824,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_list(
 /// Creates a view over log entries in a log bucket. A bucket may contain a maximum of 30 views.
 pub async fn LoggingService::billing_accounts_locations_buckets_views_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -863,7 +849,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -883,7 +869,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_create(
 /// Deletes a view on a log bucket. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can delete the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::billing_accounts_locations_buckets_views_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -893,7 +878,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -913,7 +898,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_delete(
 /// Gets a view on a log bucket.
 pub async fn LoggingService::billing_accounts_locations_buckets_views_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -923,7 +907,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -943,7 +927,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_get(
 /// Lists views on a log bucket.
 pub async fn LoggingService::billing_accounts_locations_buckets_views_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -969,7 +952,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -989,7 +972,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_list(
 /// Updates a view on a log bucket. This method replaces the value of the filter field from the existing view with the corresponding value from the new view. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can update the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::billing_accounts_locations_buckets_views_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -1015,7 +997,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1035,7 +1017,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_patch(
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -1066,7 +1047,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1086,7 +1067,6 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(
 /// Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED.
 pub async fn LoggingService::billing_accounts_locations_operations_cancel(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1101,7 +1081,7 @@ pub async fn LoggingService::billing_accounts_locations_operations_cancel(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1121,7 +1101,6 @@ pub async fn LoggingService::billing_accounts_locations_operations_cancel(
 /// Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.
 pub async fn LoggingService::billing_accounts_locations_operations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -1131,7 +1110,7 @@ pub async fn LoggingService::billing_accounts_locations_operations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1151,7 +1130,6 @@ pub async fn LoggingService::billing_accounts_locations_operations_get(
 /// Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.
 pub async fn LoggingService::billing_accounts_locations_operations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -1188,7 +1166,7 @@ pub async fn LoggingService::billing_accounts_locations_operations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1208,7 +1186,6 @@ pub async fn LoggingService::billing_accounts_locations_operations_list(
 /// Lists the RecentQueries that were created by the user making the request.
 pub async fn LoggingService::billing_accounts_locations_recent_queries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -1239,7 +1216,7 @@ pub async fn LoggingService::billing_accounts_locations_recent_queries_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1259,7 +1236,6 @@ pub async fn LoggingService::billing_accounts_locations_recent_queries_list(
 /// Creates a new SavedQuery for the user making the request.
 pub async fn LoggingService::billing_accounts_locations_saved_queries_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   saved_query_id? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
@@ -1285,7 +1261,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1305,7 +1281,6 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_create(
 /// Deletes an existing SavedQuery that was created by the user making the request.
 pub async fn LoggingService::billing_accounts_locations_saved_queries_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -1315,7 +1290,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1335,7 +1310,6 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_delete(
 /// Returns all data associated with the requested query.
 pub async fn LoggingService::billing_accounts_locations_saved_queries_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> SavedQuery raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -1345,7 +1319,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1365,7 +1339,6 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_get(
 /// Lists the SavedQueries that were created by the user making the request.
 pub async fn LoggingService::billing_accounts_locations_saved_queries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -1396,7 +1369,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1416,7 +1389,6 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_list(
 /// Updates an existing SavedQuery.
 pub async fn LoggingService::billing_accounts_locations_saved_queries_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
@@ -1442,7 +1414,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1462,7 +1434,6 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_patch(
 /// Deletes all the log entries in a log for the global _Default Log Bucket. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted.
 pub async fn LoggingService::billing_accounts_logs_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   log_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
@@ -1472,7 +1443,7 @@ pub async fn LoggingService::billing_accounts_logs_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1492,7 +1463,6 @@ pub async fn LoggingService::billing_accounts_logs_delete(
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::billing_accounts_logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -1523,7 +1493,7 @@ pub async fn LoggingService::billing_accounts_logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1543,7 +1513,6 @@ pub async fn LoggingService::billing_accounts_logs_list(
 /// Creates a sink that exports specified log entries to a destination. The export begins upon ingress, unless the sink's writer_identity is not permitted to write to the destination. A sink can export log entries only from the resource owning the sink.
 pub async fn LoggingService::billing_accounts_sinks_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -1575,7 +1544,7 @@ pub async fn LoggingService::billing_accounts_sinks_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1595,7 +1564,6 @@ pub async fn LoggingService::billing_accounts_sinks_create(
 /// Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted.
 pub async fn LoggingService::billing_accounts_sinks_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -1605,7 +1573,7 @@ pub async fn LoggingService::billing_accounts_sinks_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1625,7 +1593,6 @@ pub async fn LoggingService::billing_accounts_sinks_delete(
 /// Gets a sink.
 pub async fn LoggingService::billing_accounts_sinks_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -1635,7 +1602,7 @@ pub async fn LoggingService::billing_accounts_sinks_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1655,7 +1622,6 @@ pub async fn LoggingService::billing_accounts_sinks_get(
 /// Lists sinks.
 pub async fn LoggingService::billing_accounts_sinks_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -1686,7 +1652,7 @@ pub async fn LoggingService::billing_accounts_sinks_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1706,7 +1672,6 @@ pub async fn LoggingService::billing_accounts_sinks_list(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::billing_accounts_sinks_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -1743,7 +1708,7 @@ pub async fn LoggingService::billing_accounts_sinks_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1763,7 +1728,6 @@ pub async fn LoggingService::billing_accounts_sinks_patch(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::billing_accounts_sinks_update(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -1800,7 +1764,7 @@ pub async fn LoggingService::billing_accounts_sinks_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1820,7 +1784,6 @@ pub async fn LoggingService::billing_accounts_sinks_update(
 /// Copies a set of log entries from a log bucket to a Cloud Storage bucket.
 pub async fn LoggingService::entries_copy(
   self : LoggingService,
-  client : &@http.HttpClient,
 ) -> Operation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
@@ -1834,7 +1797,7 @@ pub async fn LoggingService::entries_copy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1854,7 +1817,6 @@ pub async fn LoggingService::entries_copy(
 /// Lists log entries. Use this method to retrieve log entries that originated from a project/folder/organization/billing account. For ways to export log entries, see Routing overview (https://docs.cloud.google.com/logging/docs/routing/overview).
 pub async fn LoggingService::entries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
 ) -> ListLogEntriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
@@ -1868,7 +1830,7 @@ pub async fn LoggingService::entries_list(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1888,7 +1850,6 @@ pub async fn LoggingService::entries_list(
 /// Streaming read of log entries as they are received. Until the stream is terminated, it will continue reading logs.
 pub async fn LoggingService::entries_tail(
   self : LoggingService,
-  client : &@http.HttpClient,
 ) -> TailLogEntriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
@@ -1902,7 +1863,7 @@ pub async fn LoggingService::entries_tail(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1922,7 +1883,6 @@ pub async fn LoggingService::entries_tail(
 /// Writes log entries to Logging. This API method is the only way to send log entries to Logging. This method is used, directly or indirectly, by the Logging agent (fluentd) and all logging libraries configured to use Logging. A single request may contain log entries for a maximum of 1000 different resource names (projects, organizations, billing accounts or folders), where the resource name for a log entry is determined from its logName field.
 pub async fn LoggingService::entries_write(
   self : LoggingService,
-  client : &@http.HttpClient,
 ) -> WriteLogEntriesResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
@@ -1936,7 +1896,7 @@ pub async fn LoggingService::entries_write(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1956,7 +1916,6 @@ pub async fn LoggingService::entries_write(
 /// Creates a new exclusion in the _Default sink in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource.
 pub async fn LoggingService::exclusions_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1971,7 +1930,7 @@ pub async fn LoggingService::exclusions_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1991,7 +1950,6 @@ pub async fn LoggingService::exclusions_create(
 /// Deletes an exclusion in the _Default sink.
 pub async fn LoggingService::exclusions_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2001,7 +1959,7 @@ pub async fn LoggingService::exclusions_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2021,7 +1979,6 @@ pub async fn LoggingService::exclusions_delete(
 /// Gets the description of an exclusion in the _Default sink.
 pub async fn LoggingService::exclusions_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2031,7 +1988,7 @@ pub async fn LoggingService::exclusions_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2051,7 +2008,6 @@ pub async fn LoggingService::exclusions_get(
 /// Lists all the exclusions on the _Default sink in a parent resource.
 pub async fn LoggingService::exclusions_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -2077,7 +2033,7 @@ pub async fn LoggingService::exclusions_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2097,7 +2053,6 @@ pub async fn LoggingService::exclusions_list(
 /// Changes one or more properties of an existing exclusion in the _Default sink.
 pub async fn LoggingService::exclusions_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
@@ -2123,7 +2078,7 @@ pub async fn LoggingService::exclusions_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2143,7 +2098,6 @@ pub async fn LoggingService::exclusions_patch(
 /// Gets the Logging CMEK settings for the given resource.Note: CMEK for the Log Router can be configured for Google Cloud projects, folders, organizations, and billing accounts. Once configured for an organization, it applies to all projects and folders in the Google Cloud organization.See Configure CMEK for Cloud Logging (https://docs.cloud.google.com/logging/docs/routing/managed-encryption) for more information.
 pub async fn LoggingService::folders_get_cmek_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
@@ -2153,7 +2107,7 @@ pub async fn LoggingService::folders_get_cmek_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2173,7 +2127,6 @@ pub async fn LoggingService::folders_get_cmek_settings(
 /// Gets the settings for the given resource.Note: Settings can be retrieved for Google Cloud projects, folders, organizations, and billing accounts.See View default resource settings for Logging (https://docs.cloud.google.com/logging/docs/default-settings#view-org-settings) for more information.
 pub async fn LoggingService::folders_get_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
@@ -2183,7 +2136,7 @@ pub async fn LoggingService::folders_get_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2203,7 +2156,6 @@ pub async fn LoggingService::folders_get_settings(
 /// Updates the settings for the given resource. This method applies to all feature configurations for organization and folders.UpdateSettings fails when any of the following are true: The value of storage_location either isn't supported by Logging or violates the location OrgPolicy. The default_sink_config field is set, but it has an unspecified filter write mode. The value of kms_key_name is invalid. The associated service account doesn't have the required roles/cloudkms.cryptoKeyEncrypterDecrypter role assigned for the key. Access to the key is disabled.See Configure default settings for organizations and folders (https://docs.cloud.google.com/logging/docs/default-settings) for more information.
 pub async fn LoggingService::folders_update_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Settings raise @http.HttpError {
@@ -2229,7 +2181,7 @@ pub async fn LoggingService::folders_update_settings(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2249,7 +2201,6 @@ pub async fn LoggingService::folders_update_settings(
 /// Creates a new exclusion in the _Default sink in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource.
 pub async fn LoggingService::folders_exclusions_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -2264,7 +2215,7 @@ pub async fn LoggingService::folders_exclusions_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2284,7 +2235,6 @@ pub async fn LoggingService::folders_exclusions_create(
 /// Deletes an exclusion in the _Default sink.
 pub async fn LoggingService::folders_exclusions_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2294,7 +2244,7 @@ pub async fn LoggingService::folders_exclusions_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2314,7 +2264,6 @@ pub async fn LoggingService::folders_exclusions_delete(
 /// Gets the description of an exclusion in the _Default sink.
 pub async fn LoggingService::folders_exclusions_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2324,7 +2273,7 @@ pub async fn LoggingService::folders_exclusions_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2344,7 +2293,6 @@ pub async fn LoggingService::folders_exclusions_get(
 /// Lists all the exclusions on the _Default sink in a parent resource.
 pub async fn LoggingService::folders_exclusions_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -2370,7 +2318,7 @@ pub async fn LoggingService::folders_exclusions_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2390,7 +2338,6 @@ pub async fn LoggingService::folders_exclusions_list(
 /// Changes one or more properties of an existing exclusion in the _Default sink.
 pub async fn LoggingService::folders_exclusions_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
@@ -2416,7 +2363,7 @@ pub async fn LoggingService::folders_exclusions_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2436,7 +2383,6 @@ pub async fn LoggingService::folders_exclusions_patch(
 /// Gets information about a location.
 pub async fn LoggingService::folders_locations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2446,7 +2392,7 @@ pub async fn LoggingService::folders_locations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2466,7 +2412,6 @@ pub async fn LoggingService::folders_locations_get(
 /// Lists information about the supported locations for this service.This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: Global locations: If name is empty, the method lists the public locations available to all projects. Project-specific locations: If name follows the format projects/{project}, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project.For gRPC and client library implementations, the resource name is passed as the name field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
 pub async fn LoggingService::folders_locations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   extra_location_types? : String? = None,
   filter? : String? = None,
@@ -2502,7 +2447,7 @@ pub async fn LoggingService::folders_locations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2522,7 +2467,6 @@ pub async fn LoggingService::folders_locations_list(
 /// Creates a log bucket that can be used to store log entries. After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::folders_locations_buckets_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -2548,7 +2492,7 @@ pub async fn LoggingService::folders_locations_buckets_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2568,7 +2512,6 @@ pub async fn LoggingService::folders_locations_buckets_create(
 /// Creates a log bucket asynchronously that can be used to store log entries.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::folders_locations_buckets_create_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -2594,7 +2537,7 @@ pub async fn LoggingService::folders_locations_buckets_create_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2614,7 +2557,6 @@ pub async fn LoggingService::folders_locations_buckets_create_async(
 /// Deletes a log bucket.Changes the bucket's lifecycle_state to the DELETE_REQUESTED state. After 7 days, the bucket will be purged and all log entries in the bucket will be permanently deleted.
 pub async fn LoggingService::folders_locations_buckets_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2624,7 +2566,7 @@ pub async fn LoggingService::folders_locations_buckets_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2644,7 +2586,6 @@ pub async fn LoggingService::folders_locations_buckets_delete(
 /// Gets a log bucket.
 pub async fn LoggingService::folders_locations_buckets_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2654,7 +2595,7 @@ pub async fn LoggingService::folders_locations_buckets_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2674,7 +2615,6 @@ pub async fn LoggingService::folders_locations_buckets_get(
 /// Lists log buckets.
 pub async fn LoggingService::folders_locations_buckets_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -2700,7 +2640,7 @@ pub async fn LoggingService::folders_locations_buckets_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2720,7 +2660,6 @@ pub async fn LoggingService::folders_locations_buckets_list(
 /// Updates a log bucket.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::folders_locations_buckets_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -2746,7 +2685,7 @@ pub async fn LoggingService::folders_locations_buckets_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2766,7 +2705,6 @@ pub async fn LoggingService::folders_locations_buckets_patch(
 /// Undeletes a log bucket. A bucket that has been deleted can be undeleted within the grace period of 7 days.
 pub async fn LoggingService::folders_locations_buckets_undelete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -2781,7 +2719,7 @@ pub async fn LoggingService::folders_locations_buckets_undelete(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2801,7 +2739,6 @@ pub async fn LoggingService::folders_locations_buckets_undelete(
 /// Updates a log bucket asynchronously.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::folders_locations_buckets_update_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -2827,7 +2764,7 @@ pub async fn LoggingService::folders_locations_buckets_update_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2847,7 +2784,6 @@ pub async fn LoggingService::folders_locations_buckets_update_async(
 /// Asynchronously creates a linked dataset in BigQuery which makes it possible to use BigQuery to read the logs stored in the log bucket. A log bucket may currently only contain one link.
 pub async fn LoggingService::folders_locations_buckets_links_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -2873,7 +2809,7 @@ pub async fn LoggingService::folders_locations_buckets_links_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2893,7 +2829,6 @@ pub async fn LoggingService::folders_locations_buckets_links_create(
 /// Deletes a link. This will also delete the corresponding BigQuery linked dataset.
 pub async fn LoggingService::folders_locations_buckets_links_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2903,7 +2838,7 @@ pub async fn LoggingService::folders_locations_buckets_links_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2923,7 +2858,6 @@ pub async fn LoggingService::folders_locations_buckets_links_delete(
 /// Gets a link.
 pub async fn LoggingService::folders_locations_buckets_links_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -2933,7 +2867,7 @@ pub async fn LoggingService::folders_locations_buckets_links_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2953,7 +2887,6 @@ pub async fn LoggingService::folders_locations_buckets_links_get(
 /// Lists links.
 pub async fn LoggingService::folders_locations_buckets_links_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -2979,7 +2912,7 @@ pub async fn LoggingService::folders_locations_buckets_links_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2999,7 +2932,6 @@ pub async fn LoggingService::folders_locations_buckets_links_list(
 /// Creates a view over log entries in a log bucket. A bucket may contain a maximum of 30 views.
 pub async fn LoggingService::folders_locations_buckets_views_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -3025,7 +2957,7 @@ pub async fn LoggingService::folders_locations_buckets_views_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3045,7 +2977,6 @@ pub async fn LoggingService::folders_locations_buckets_views_create(
 /// Deletes a view on a log bucket. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can delete the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::folders_locations_buckets_views_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -3055,7 +2986,7 @@ pub async fn LoggingService::folders_locations_buckets_views_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3075,7 +3006,6 @@ pub async fn LoggingService::folders_locations_buckets_views_delete(
 /// Gets a view on a log bucket.
 pub async fn LoggingService::folders_locations_buckets_views_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -3085,7 +3015,7 @@ pub async fn LoggingService::folders_locations_buckets_views_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3105,7 +3035,6 @@ pub async fn LoggingService::folders_locations_buckets_views_get(
 /// Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set.
 pub async fn LoggingService::folders_locations_buckets_views_get_iam_policy(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -3120,7 +3049,7 @@ pub async fn LoggingService::folders_locations_buckets_views_get_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3140,7 +3069,6 @@ pub async fn LoggingService::folders_locations_buckets_views_get_iam_policy(
 /// Lists views on a log bucket.
 pub async fn LoggingService::folders_locations_buckets_views_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -3166,7 +3094,7 @@ pub async fn LoggingService::folders_locations_buckets_views_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3186,7 +3114,6 @@ pub async fn LoggingService::folders_locations_buckets_views_list(
 /// Updates a view on a log bucket. This method replaces the value of the filter field from the existing view with the corresponding value from the new view. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can update the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::folders_locations_buckets_views_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -3212,7 +3139,7 @@ pub async fn LoggingService::folders_locations_buckets_views_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3232,7 +3159,6 @@ pub async fn LoggingService::folders_locations_buckets_views_patch(
 /// Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors.
 pub async fn LoggingService::folders_locations_buckets_views_set_iam_policy(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -3247,7 +3173,7 @@ pub async fn LoggingService::folders_locations_buckets_views_set_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3267,7 +3193,6 @@ pub async fn LoggingService::folders_locations_buckets_views_set_iam_policy(
 /// Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may "fail open" without warning.
 pub async fn LoggingService::folders_locations_buckets_views_test_iam_permissions(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -3282,7 +3207,7 @@ pub async fn LoggingService::folders_locations_buckets_views_test_iam_permission
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3302,7 +3227,6 @@ pub async fn LoggingService::folders_locations_buckets_views_test_iam_permission
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::folders_locations_buckets_views_logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -3333,7 +3257,7 @@ pub async fn LoggingService::folders_locations_buckets_views_logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3353,7 +3277,6 @@ pub async fn LoggingService::folders_locations_buckets_views_logs_list(
 /// Creates a log scope.
 pub async fn LoggingService::folders_locations_log_scopes_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   log_scope_id? : String? = None,
 ) -> LogScope raise @http.HttpError {
@@ -3379,7 +3302,7 @@ pub async fn LoggingService::folders_locations_log_scopes_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3399,7 +3322,6 @@ pub async fn LoggingService::folders_locations_log_scopes_create(
 /// Deletes a log scope.
 pub async fn LoggingService::folders_locations_log_scopes_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -3409,7 +3331,7 @@ pub async fn LoggingService::folders_locations_log_scopes_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3429,7 +3351,6 @@ pub async fn LoggingService::folders_locations_log_scopes_delete(
 /// Gets a log scope.
 pub async fn LoggingService::folders_locations_log_scopes_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogScope raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -3439,7 +3360,7 @@ pub async fn LoggingService::folders_locations_log_scopes_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3459,7 +3380,6 @@ pub async fn LoggingService::folders_locations_log_scopes_get(
 /// Lists log scopes.
 pub async fn LoggingService::folders_locations_log_scopes_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -3485,7 +3405,7 @@ pub async fn LoggingService::folders_locations_log_scopes_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3505,7 +3425,6 @@ pub async fn LoggingService::folders_locations_log_scopes_list(
 /// Updates a log scope.
 pub async fn LoggingService::folders_locations_log_scopes_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogScope raise @http.HttpError {
@@ -3531,7 +3450,7 @@ pub async fn LoggingService::folders_locations_log_scopes_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3551,7 +3470,6 @@ pub async fn LoggingService::folders_locations_log_scopes_patch(
 /// Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED.
 pub async fn LoggingService::folders_locations_operations_cancel(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -3566,7 +3484,7 @@ pub async fn LoggingService::folders_locations_operations_cancel(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3586,7 +3504,6 @@ pub async fn LoggingService::folders_locations_operations_cancel(
 /// Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.
 pub async fn LoggingService::folders_locations_operations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -3596,7 +3513,7 @@ pub async fn LoggingService::folders_locations_operations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3616,7 +3533,6 @@ pub async fn LoggingService::folders_locations_operations_get(
 /// Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.
 pub async fn LoggingService::folders_locations_operations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -3653,7 +3569,7 @@ pub async fn LoggingService::folders_locations_operations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3673,7 +3589,6 @@ pub async fn LoggingService::folders_locations_operations_list(
 /// Lists the RecentQueries that were created by the user making the request.
 pub async fn LoggingService::folders_locations_recent_queries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -3704,7 +3619,7 @@ pub async fn LoggingService::folders_locations_recent_queries_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3724,7 +3639,6 @@ pub async fn LoggingService::folders_locations_recent_queries_list(
 /// Creates a new SavedQuery for the user making the request.
 pub async fn LoggingService::folders_locations_saved_queries_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   saved_query_id? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
@@ -3750,7 +3664,7 @@ pub async fn LoggingService::folders_locations_saved_queries_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3770,7 +3684,6 @@ pub async fn LoggingService::folders_locations_saved_queries_create(
 /// Deletes an existing SavedQuery that was created by the user making the request.
 pub async fn LoggingService::folders_locations_saved_queries_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -3780,7 +3693,7 @@ pub async fn LoggingService::folders_locations_saved_queries_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3800,7 +3713,6 @@ pub async fn LoggingService::folders_locations_saved_queries_delete(
 /// Returns all data associated with the requested query.
 pub async fn LoggingService::folders_locations_saved_queries_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> SavedQuery raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -3810,7 +3722,7 @@ pub async fn LoggingService::folders_locations_saved_queries_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3830,7 +3742,6 @@ pub async fn LoggingService::folders_locations_saved_queries_get(
 /// Lists the SavedQueries that were created by the user making the request.
 pub async fn LoggingService::folders_locations_saved_queries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -3861,7 +3772,7 @@ pub async fn LoggingService::folders_locations_saved_queries_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3881,7 +3792,6 @@ pub async fn LoggingService::folders_locations_saved_queries_list(
 /// Updates an existing SavedQuery.
 pub async fn LoggingService::folders_locations_saved_queries_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
@@ -3907,7 +3817,7 @@ pub async fn LoggingService::folders_locations_saved_queries_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3927,7 +3837,6 @@ pub async fn LoggingService::folders_locations_saved_queries_patch(
 /// Deletes all the log entries in a log for the global _Default Log Bucket. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted.
 pub async fn LoggingService::folders_logs_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   log_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
@@ -3937,7 +3846,7 @@ pub async fn LoggingService::folders_logs_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -3957,7 +3866,6 @@ pub async fn LoggingService::folders_logs_delete(
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::folders_logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -3988,7 +3896,7 @@ pub async fn LoggingService::folders_logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4008,7 +3916,6 @@ pub async fn LoggingService::folders_logs_list(
 /// Creates a sink that exports specified log entries to a destination. The export begins upon ingress, unless the sink's writer_identity is not permitted to write to the destination. A sink can export log entries only from the resource owning the sink.
 pub async fn LoggingService::folders_sinks_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -4040,7 +3947,7 @@ pub async fn LoggingService::folders_sinks_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4060,7 +3967,6 @@ pub async fn LoggingService::folders_sinks_create(
 /// Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted.
 pub async fn LoggingService::folders_sinks_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -4070,7 +3976,7 @@ pub async fn LoggingService::folders_sinks_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4090,7 +3996,6 @@ pub async fn LoggingService::folders_sinks_delete(
 /// Gets a sink.
 pub async fn LoggingService::folders_sinks_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -4100,7 +4005,7 @@ pub async fn LoggingService::folders_sinks_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4120,7 +4025,6 @@ pub async fn LoggingService::folders_sinks_get(
 /// Lists sinks.
 pub async fn LoggingService::folders_sinks_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -4151,7 +4055,7 @@ pub async fn LoggingService::folders_sinks_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4171,7 +4075,6 @@ pub async fn LoggingService::folders_sinks_list(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::folders_sinks_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -4208,7 +4111,7 @@ pub async fn LoggingService::folders_sinks_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4228,7 +4131,6 @@ pub async fn LoggingService::folders_sinks_patch(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::folders_sinks_update(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -4265,7 +4167,7 @@ pub async fn LoggingService::folders_sinks_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4285,7 +4187,6 @@ pub async fn LoggingService::folders_sinks_update(
 /// Gets information about a location.
 pub async fn LoggingService::locations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -4295,7 +4196,7 @@ pub async fn LoggingService::locations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4315,7 +4216,6 @@ pub async fn LoggingService::locations_get(
 /// Lists information about the supported locations for this service.This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: Global locations: If name is empty, the method lists the public locations available to all projects. Project-specific locations: If name follows the format projects/{project}, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project.For gRPC and client library implementations, the resource name is passed as the name field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
 pub async fn LoggingService::locations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   extra_location_types? : String? = None,
   filter? : String? = None,
@@ -4351,7 +4251,7 @@ pub async fn LoggingService::locations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4371,7 +4271,6 @@ pub async fn LoggingService::locations_list(
 /// Creates a log bucket that can be used to store log entries. After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::locations_buckets_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -4397,7 +4296,7 @@ pub async fn LoggingService::locations_buckets_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4417,7 +4316,6 @@ pub async fn LoggingService::locations_buckets_create(
 /// Creates a log bucket asynchronously that can be used to store log entries.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::locations_buckets_create_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -4443,7 +4341,7 @@ pub async fn LoggingService::locations_buckets_create_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4463,7 +4361,6 @@ pub async fn LoggingService::locations_buckets_create_async(
 /// Deletes a log bucket.Changes the bucket's lifecycle_state to the DELETE_REQUESTED state. After 7 days, the bucket will be purged and all log entries in the bucket will be permanently deleted.
 pub async fn LoggingService::locations_buckets_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -4473,7 +4370,7 @@ pub async fn LoggingService::locations_buckets_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4493,7 +4390,6 @@ pub async fn LoggingService::locations_buckets_delete(
 /// Gets a log bucket.
 pub async fn LoggingService::locations_buckets_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -4503,7 +4399,7 @@ pub async fn LoggingService::locations_buckets_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4523,7 +4419,6 @@ pub async fn LoggingService::locations_buckets_get(
 /// Lists log buckets.
 pub async fn LoggingService::locations_buckets_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -4549,7 +4444,7 @@ pub async fn LoggingService::locations_buckets_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4569,7 +4464,6 @@ pub async fn LoggingService::locations_buckets_list(
 /// Updates a log bucket.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::locations_buckets_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -4595,7 +4489,7 @@ pub async fn LoggingService::locations_buckets_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4615,7 +4509,6 @@ pub async fn LoggingService::locations_buckets_patch(
 /// Undeletes a log bucket. A bucket that has been deleted can be undeleted within the grace period of 7 days.
 pub async fn LoggingService::locations_buckets_undelete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -4630,7 +4523,7 @@ pub async fn LoggingService::locations_buckets_undelete(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4650,7 +4543,6 @@ pub async fn LoggingService::locations_buckets_undelete(
 /// Updates a log bucket asynchronously.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::locations_buckets_update_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -4676,7 +4568,7 @@ pub async fn LoggingService::locations_buckets_update_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4696,7 +4588,6 @@ pub async fn LoggingService::locations_buckets_update_async(
 /// Asynchronously creates a linked dataset in BigQuery which makes it possible to use BigQuery to read the logs stored in the log bucket. A log bucket may currently only contain one link.
 pub async fn LoggingService::locations_buckets_links_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -4722,7 +4613,7 @@ pub async fn LoggingService::locations_buckets_links_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4742,7 +4633,6 @@ pub async fn LoggingService::locations_buckets_links_create(
 /// Deletes a link. This will also delete the corresponding BigQuery linked dataset.
 pub async fn LoggingService::locations_buckets_links_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -4752,7 +4642,7 @@ pub async fn LoggingService::locations_buckets_links_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4772,7 +4662,6 @@ pub async fn LoggingService::locations_buckets_links_delete(
 /// Gets a link.
 pub async fn LoggingService::locations_buckets_links_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -4782,7 +4671,7 @@ pub async fn LoggingService::locations_buckets_links_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4802,7 +4691,6 @@ pub async fn LoggingService::locations_buckets_links_get(
 /// Lists links.
 pub async fn LoggingService::locations_buckets_links_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -4828,7 +4716,7 @@ pub async fn LoggingService::locations_buckets_links_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4848,7 +4736,6 @@ pub async fn LoggingService::locations_buckets_links_list(
 /// Creates a view over log entries in a log bucket. A bucket may contain a maximum of 30 views.
 pub async fn LoggingService::locations_buckets_views_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -4874,7 +4761,7 @@ pub async fn LoggingService::locations_buckets_views_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4894,7 +4781,6 @@ pub async fn LoggingService::locations_buckets_views_create(
 /// Deletes a view on a log bucket. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can delete the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::locations_buckets_views_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -4904,7 +4790,7 @@ pub async fn LoggingService::locations_buckets_views_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4924,7 +4810,6 @@ pub async fn LoggingService::locations_buckets_views_delete(
 /// Gets a view on a log bucket.
 pub async fn LoggingService::locations_buckets_views_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -4934,7 +4819,7 @@ pub async fn LoggingService::locations_buckets_views_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4954,7 +4839,6 @@ pub async fn LoggingService::locations_buckets_views_get(
 /// Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set.
 pub async fn LoggingService::locations_buckets_views_get_iam_policy(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -4969,7 +4853,7 @@ pub async fn LoggingService::locations_buckets_views_get_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -4989,7 +4873,6 @@ pub async fn LoggingService::locations_buckets_views_get_iam_policy(
 /// Lists views on a log bucket.
 pub async fn LoggingService::locations_buckets_views_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -5015,7 +4898,7 @@ pub async fn LoggingService::locations_buckets_views_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5035,7 +4918,6 @@ pub async fn LoggingService::locations_buckets_views_list(
 /// Updates a view on a log bucket. This method replaces the value of the filter field from the existing view with the corresponding value from the new view. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can update the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::locations_buckets_views_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -5061,7 +4943,7 @@ pub async fn LoggingService::locations_buckets_views_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5081,7 +4963,6 @@ pub async fn LoggingService::locations_buckets_views_patch(
 /// Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors.
 pub async fn LoggingService::locations_buckets_views_set_iam_policy(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -5096,7 +4977,7 @@ pub async fn LoggingService::locations_buckets_views_set_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5116,7 +4997,6 @@ pub async fn LoggingService::locations_buckets_views_set_iam_policy(
 /// Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may "fail open" without warning.
 pub async fn LoggingService::locations_buckets_views_test_iam_permissions(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -5131,7 +5011,7 @@ pub async fn LoggingService::locations_buckets_views_test_iam_permissions(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5151,7 +5031,6 @@ pub async fn LoggingService::locations_buckets_views_test_iam_permissions(
 /// Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED.
 pub async fn LoggingService::locations_operations_cancel(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -5166,7 +5045,7 @@ pub async fn LoggingService::locations_operations_cancel(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5186,7 +5065,6 @@ pub async fn LoggingService::locations_operations_cancel(
 /// Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.
 pub async fn LoggingService::locations_operations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -5196,7 +5074,7 @@ pub async fn LoggingService::locations_operations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5216,7 +5094,6 @@ pub async fn LoggingService::locations_operations_get(
 /// Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.
 pub async fn LoggingService::locations_operations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -5253,7 +5130,7 @@ pub async fn LoggingService::locations_operations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5273,7 +5150,6 @@ pub async fn LoggingService::locations_operations_list(
 /// Deletes all the log entries in a log for the global _Default Log Bucket. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted.
 pub async fn LoggingService::logs_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   log_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
@@ -5283,7 +5159,7 @@ pub async fn LoggingService::logs_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5303,7 +5179,6 @@ pub async fn LoggingService::logs_delete(
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -5334,7 +5209,7 @@ pub async fn LoggingService::logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5354,7 +5229,6 @@ pub async fn LoggingService::logs_list(
 /// Lists the descriptors for monitored resource types used by Logging.
 pub async fn LoggingService::monitored_resource_descriptors_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListMonitoredResourceDescriptorsResponse raise @http.HttpError {
@@ -5379,7 +5253,7 @@ pub async fn LoggingService::monitored_resource_descriptors_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5399,7 +5273,6 @@ pub async fn LoggingService::monitored_resource_descriptors_list(
 /// Gets the Logging CMEK settings for the given resource.Note: CMEK for the Log Router can be configured for Google Cloud projects, folders, organizations, and billing accounts. Once configured for an organization, it applies to all projects and folders in the Google Cloud organization.See Configure CMEK for Cloud Logging (https://docs.cloud.google.com/logging/docs/routing/managed-encryption) for more information.
 pub async fn LoggingService::organizations_get_cmek_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
@@ -5409,7 +5282,7 @@ pub async fn LoggingService::organizations_get_cmek_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5429,7 +5302,6 @@ pub async fn LoggingService::organizations_get_cmek_settings(
 /// Gets the settings for the given resource.Note: Settings can be retrieved for Google Cloud projects, folders, organizations, and billing accounts.See View default resource settings for Logging (https://docs.cloud.google.com/logging/docs/default-settings#view-org-settings) for more information.
 pub async fn LoggingService::organizations_get_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
@@ -5439,7 +5311,7 @@ pub async fn LoggingService::organizations_get_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5459,7 +5331,6 @@ pub async fn LoggingService::organizations_get_settings(
 /// Updates the Log Router CMEK settings for the given resource.Note: CMEK for the Log Router can currently only be configured for Google Cloud organizations. Once configured, it applies to all projects and folders in the Google Cloud organization.UpdateCmekSettings fails when any of the following are true: The value of kms_key_name is invalid. The associated service account doesn't have the required roles/cloudkms.cryptoKeyEncrypterDecrypter role assigned for the key. Access to the key is disabled.See Configure CMEK for Cloud Logging (https://docs.cloud.google.com/logging/docs/routing/managed-encryption) for more information.
 pub async fn LoggingService::organizations_update_cmek_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> CmekSettings raise @http.HttpError {
@@ -5485,7 +5356,7 @@ pub async fn LoggingService::organizations_update_cmek_settings(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5505,7 +5376,6 @@ pub async fn LoggingService::organizations_update_cmek_settings(
 /// Updates the settings for the given resource. This method applies to all feature configurations for organization and folders.UpdateSettings fails when any of the following are true: The value of storage_location either isn't supported by Logging or violates the location OrgPolicy. The default_sink_config field is set, but it has an unspecified filter write mode. The value of kms_key_name is invalid. The associated service account doesn't have the required roles/cloudkms.cryptoKeyEncrypterDecrypter role assigned for the key. Access to the key is disabled.See Configure default settings for organizations and folders (https://docs.cloud.google.com/logging/docs/default-settings) for more information.
 pub async fn LoggingService::organizations_update_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Settings raise @http.HttpError {
@@ -5531,7 +5401,7 @@ pub async fn LoggingService::organizations_update_settings(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5551,7 +5421,6 @@ pub async fn LoggingService::organizations_update_settings(
 /// Creates a new exclusion in the _Default sink in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource.
 pub async fn LoggingService::organizations_exclusions_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -5566,7 +5435,7 @@ pub async fn LoggingService::organizations_exclusions_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5586,7 +5455,6 @@ pub async fn LoggingService::organizations_exclusions_create(
 /// Deletes an exclusion in the _Default sink.
 pub async fn LoggingService::organizations_exclusions_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -5596,7 +5464,7 @@ pub async fn LoggingService::organizations_exclusions_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5616,7 +5484,6 @@ pub async fn LoggingService::organizations_exclusions_delete(
 /// Gets the description of an exclusion in the _Default sink.
 pub async fn LoggingService::organizations_exclusions_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -5626,7 +5493,7 @@ pub async fn LoggingService::organizations_exclusions_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5646,7 +5513,6 @@ pub async fn LoggingService::organizations_exclusions_get(
 /// Lists all the exclusions on the _Default sink in a parent resource.
 pub async fn LoggingService::organizations_exclusions_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -5672,7 +5538,7 @@ pub async fn LoggingService::organizations_exclusions_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5692,7 +5558,6 @@ pub async fn LoggingService::organizations_exclusions_list(
 /// Changes one or more properties of an existing exclusion in the _Default sink.
 pub async fn LoggingService::organizations_exclusions_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
@@ -5718,7 +5583,7 @@ pub async fn LoggingService::organizations_exclusions_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5738,7 +5603,6 @@ pub async fn LoggingService::organizations_exclusions_patch(
 /// Gets information about a location.
 pub async fn LoggingService::organizations_locations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -5748,7 +5612,7 @@ pub async fn LoggingService::organizations_locations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5768,7 +5632,6 @@ pub async fn LoggingService::organizations_locations_get(
 /// Lists information about the supported locations for this service.This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: Global locations: If name is empty, the method lists the public locations available to all projects. Project-specific locations: If name follows the format projects/{project}, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project.For gRPC and client library implementations, the resource name is passed as the name field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
 pub async fn LoggingService::organizations_locations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   extra_location_types? : String? = None,
   filter? : String? = None,
@@ -5804,7 +5667,7 @@ pub async fn LoggingService::organizations_locations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5824,7 +5687,6 @@ pub async fn LoggingService::organizations_locations_list(
 /// Creates a log bucket that can be used to store log entries. After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::organizations_locations_buckets_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -5850,7 +5712,7 @@ pub async fn LoggingService::organizations_locations_buckets_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5870,7 +5732,6 @@ pub async fn LoggingService::organizations_locations_buckets_create(
 /// Creates a log bucket asynchronously that can be used to store log entries.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::organizations_locations_buckets_create_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -5896,7 +5757,7 @@ pub async fn LoggingService::organizations_locations_buckets_create_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5916,7 +5777,6 @@ pub async fn LoggingService::organizations_locations_buckets_create_async(
 /// Deletes a log bucket.Changes the bucket's lifecycle_state to the DELETE_REQUESTED state. After 7 days, the bucket will be purged and all log entries in the bucket will be permanently deleted.
 pub async fn LoggingService::organizations_locations_buckets_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -5926,7 +5786,7 @@ pub async fn LoggingService::organizations_locations_buckets_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5946,7 +5806,6 @@ pub async fn LoggingService::organizations_locations_buckets_delete(
 /// Gets a log bucket.
 pub async fn LoggingService::organizations_locations_buckets_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -5956,7 +5815,7 @@ pub async fn LoggingService::organizations_locations_buckets_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -5976,7 +5835,6 @@ pub async fn LoggingService::organizations_locations_buckets_get(
 /// Lists log buckets.
 pub async fn LoggingService::organizations_locations_buckets_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -6002,7 +5860,7 @@ pub async fn LoggingService::organizations_locations_buckets_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6022,7 +5880,6 @@ pub async fn LoggingService::organizations_locations_buckets_list(
 /// Updates a log bucket.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::organizations_locations_buckets_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -6048,7 +5905,7 @@ pub async fn LoggingService::organizations_locations_buckets_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6068,7 +5925,6 @@ pub async fn LoggingService::organizations_locations_buckets_patch(
 /// Undeletes a log bucket. A bucket that has been deleted can be undeleted within the grace period of 7 days.
 pub async fn LoggingService::organizations_locations_buckets_undelete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -6083,7 +5939,7 @@ pub async fn LoggingService::organizations_locations_buckets_undelete(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6103,7 +5959,6 @@ pub async fn LoggingService::organizations_locations_buckets_undelete(
 /// Updates a log bucket asynchronously.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::organizations_locations_buckets_update_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -6129,7 +5984,7 @@ pub async fn LoggingService::organizations_locations_buckets_update_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6149,7 +6004,6 @@ pub async fn LoggingService::organizations_locations_buckets_update_async(
 /// Asynchronously creates a linked dataset in BigQuery which makes it possible to use BigQuery to read the logs stored in the log bucket. A log bucket may currently only contain one link.
 pub async fn LoggingService::organizations_locations_buckets_links_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -6175,7 +6029,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6195,7 +6049,6 @@ pub async fn LoggingService::organizations_locations_buckets_links_create(
 /// Deletes a link. This will also delete the corresponding BigQuery linked dataset.
 pub async fn LoggingService::organizations_locations_buckets_links_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -6205,7 +6058,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6225,7 +6078,6 @@ pub async fn LoggingService::organizations_locations_buckets_links_delete(
 /// Gets a link.
 pub async fn LoggingService::organizations_locations_buckets_links_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -6235,7 +6087,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6255,7 +6107,6 @@ pub async fn LoggingService::organizations_locations_buckets_links_get(
 /// Lists links.
 pub async fn LoggingService::organizations_locations_buckets_links_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -6281,7 +6132,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6301,7 +6152,6 @@ pub async fn LoggingService::organizations_locations_buckets_links_list(
 /// Creates a view over log entries in a log bucket. A bucket may contain a maximum of 30 views.
 pub async fn LoggingService::organizations_locations_buckets_views_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -6327,7 +6177,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6347,7 +6197,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_create(
 /// Deletes a view on a log bucket. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can delete the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::organizations_locations_buckets_views_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -6357,7 +6206,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6377,7 +6226,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_delete(
 /// Gets a view on a log bucket.
 pub async fn LoggingService::organizations_locations_buckets_views_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -6387,7 +6235,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6407,7 +6255,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_get(
 /// Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set.
 pub async fn LoggingService::organizations_locations_buckets_views_get_iam_policy(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -6422,7 +6269,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_get_iam_polic
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6442,7 +6289,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_get_iam_polic
 /// Lists views on a log bucket.
 pub async fn LoggingService::organizations_locations_buckets_views_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -6468,7 +6314,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6488,7 +6334,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_list(
 /// Updates a view on a log bucket. This method replaces the value of the filter field from the existing view with the corresponding value from the new view. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can update the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::organizations_locations_buckets_views_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -6514,7 +6359,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6534,7 +6379,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_patch(
 /// Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors.
 pub async fn LoggingService::organizations_locations_buckets_views_set_iam_policy(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -6549,7 +6393,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_set_iam_polic
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6569,7 +6413,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_set_iam_polic
 /// Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may "fail open" without warning.
 pub async fn LoggingService::organizations_locations_buckets_views_test_iam_permissions(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -6584,7 +6427,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_test_iam_perm
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6604,7 +6447,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_test_iam_perm
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::organizations_locations_buckets_views_logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -6635,7 +6477,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6655,7 +6497,6 @@ pub async fn LoggingService::organizations_locations_buckets_views_logs_list(
 /// Creates a log scope.
 pub async fn LoggingService::organizations_locations_log_scopes_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   log_scope_id? : String? = None,
 ) -> LogScope raise @http.HttpError {
@@ -6681,7 +6522,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6701,7 +6542,6 @@ pub async fn LoggingService::organizations_locations_log_scopes_create(
 /// Deletes a log scope.
 pub async fn LoggingService::organizations_locations_log_scopes_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -6711,7 +6551,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6731,7 +6571,6 @@ pub async fn LoggingService::organizations_locations_log_scopes_delete(
 /// Gets a log scope.
 pub async fn LoggingService::organizations_locations_log_scopes_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogScope raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -6741,7 +6580,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6761,7 +6600,6 @@ pub async fn LoggingService::organizations_locations_log_scopes_get(
 /// Lists log scopes.
 pub async fn LoggingService::organizations_locations_log_scopes_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -6787,7 +6625,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6807,7 +6645,6 @@ pub async fn LoggingService::organizations_locations_log_scopes_list(
 /// Updates a log scope.
 pub async fn LoggingService::organizations_locations_log_scopes_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogScope raise @http.HttpError {
@@ -6833,7 +6670,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6853,7 +6690,6 @@ pub async fn LoggingService::organizations_locations_log_scopes_patch(
 /// Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED.
 pub async fn LoggingService::organizations_locations_operations_cancel(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -6868,7 +6704,7 @@ pub async fn LoggingService::organizations_locations_operations_cancel(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6888,7 +6724,6 @@ pub async fn LoggingService::organizations_locations_operations_cancel(
 /// Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.
 pub async fn LoggingService::organizations_locations_operations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -6898,7 +6733,7 @@ pub async fn LoggingService::organizations_locations_operations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6918,7 +6753,6 @@ pub async fn LoggingService::organizations_locations_operations_get(
 /// Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.
 pub async fn LoggingService::organizations_locations_operations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -6955,7 +6789,7 @@ pub async fn LoggingService::organizations_locations_operations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -6975,7 +6809,6 @@ pub async fn LoggingService::organizations_locations_operations_list(
 /// Lists the RecentQueries that were created by the user making the request.
 pub async fn LoggingService::organizations_locations_recent_queries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -7006,7 +6839,7 @@ pub async fn LoggingService::organizations_locations_recent_queries_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7026,7 +6859,6 @@ pub async fn LoggingService::organizations_locations_recent_queries_list(
 /// Creates a new SavedQuery for the user making the request.
 pub async fn LoggingService::organizations_locations_saved_queries_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   saved_query_id? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
@@ -7052,7 +6884,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7072,7 +6904,6 @@ pub async fn LoggingService::organizations_locations_saved_queries_create(
 /// Deletes an existing SavedQuery that was created by the user making the request.
 pub async fn LoggingService::organizations_locations_saved_queries_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -7082,7 +6913,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7102,7 +6933,6 @@ pub async fn LoggingService::organizations_locations_saved_queries_delete(
 /// Returns all data associated with the requested query.
 pub async fn LoggingService::organizations_locations_saved_queries_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> SavedQuery raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -7112,7 +6942,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7132,7 +6962,6 @@ pub async fn LoggingService::organizations_locations_saved_queries_get(
 /// Lists the SavedQueries that were created by the user making the request.
 pub async fn LoggingService::organizations_locations_saved_queries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -7163,7 +6992,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7183,7 +7012,6 @@ pub async fn LoggingService::organizations_locations_saved_queries_list(
 /// Updates an existing SavedQuery.
 pub async fn LoggingService::organizations_locations_saved_queries_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
@@ -7209,7 +7037,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7229,7 +7057,6 @@ pub async fn LoggingService::organizations_locations_saved_queries_patch(
 /// Deletes all the log entries in a log for the global _Default Log Bucket. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted.
 pub async fn LoggingService::organizations_logs_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   log_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
@@ -7239,7 +7066,7 @@ pub async fn LoggingService::organizations_logs_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7259,7 +7086,6 @@ pub async fn LoggingService::organizations_logs_delete(
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::organizations_logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -7290,7 +7116,7 @@ pub async fn LoggingService::organizations_logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7310,7 +7136,6 @@ pub async fn LoggingService::organizations_logs_list(
 /// Creates a sink that exports specified log entries to a destination. The export begins upon ingress, unless the sink's writer_identity is not permitted to write to the destination. A sink can export log entries only from the resource owning the sink.
 pub async fn LoggingService::organizations_sinks_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -7342,7 +7167,7 @@ pub async fn LoggingService::organizations_sinks_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7362,7 +7187,6 @@ pub async fn LoggingService::organizations_sinks_create(
 /// Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted.
 pub async fn LoggingService::organizations_sinks_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -7372,7 +7196,7 @@ pub async fn LoggingService::organizations_sinks_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7392,7 +7216,6 @@ pub async fn LoggingService::organizations_sinks_delete(
 /// Gets a sink.
 pub async fn LoggingService::organizations_sinks_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -7402,7 +7225,7 @@ pub async fn LoggingService::organizations_sinks_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7422,7 +7245,6 @@ pub async fn LoggingService::organizations_sinks_get(
 /// Lists sinks.
 pub async fn LoggingService::organizations_sinks_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -7453,7 +7275,7 @@ pub async fn LoggingService::organizations_sinks_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7473,7 +7295,6 @@ pub async fn LoggingService::organizations_sinks_list(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::organizations_sinks_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -7510,7 +7331,7 @@ pub async fn LoggingService::organizations_sinks_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7530,7 +7351,6 @@ pub async fn LoggingService::organizations_sinks_patch(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::organizations_sinks_update(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -7567,7 +7387,7 @@ pub async fn LoggingService::organizations_sinks_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7587,7 +7407,6 @@ pub async fn LoggingService::organizations_sinks_update(
 /// Gets the Logging CMEK settings for the given resource.Note: CMEK for the Log Router can be configured for Google Cloud projects, folders, organizations, and billing accounts. Once configured for an organization, it applies to all projects and folders in the Google Cloud organization.See Configure CMEK for Cloud Logging (https://docs.cloud.google.com/logging/docs/routing/managed-encryption) for more information.
 pub async fn LoggingService::projects_get_cmek_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
@@ -7597,7 +7416,7 @@ pub async fn LoggingService::projects_get_cmek_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7617,7 +7436,6 @@ pub async fn LoggingService::projects_get_cmek_settings(
 /// Gets the settings for the given resource.Note: Settings can be retrieved for Google Cloud projects, folders, organizations, and billing accounts.See View default resource settings for Logging (https://docs.cloud.google.com/logging/docs/default-settings#view-org-settings) for more information.
 pub async fn LoggingService::projects_get_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
@@ -7627,7 +7445,7 @@ pub async fn LoggingService::projects_get_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7647,7 +7465,6 @@ pub async fn LoggingService::projects_get_settings(
 /// Creates a new exclusion in the _Default sink in a specified parent resource. Only log entries belonging to that resource can be excluded. You can have up to 10 exclusions in a resource.
 pub async fn LoggingService::projects_exclusions_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> LogExclusion raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -7662,7 +7479,7 @@ pub async fn LoggingService::projects_exclusions_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7682,7 +7499,6 @@ pub async fn LoggingService::projects_exclusions_create(
 /// Deletes an exclusion in the _Default sink.
 pub async fn LoggingService::projects_exclusions_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -7692,7 +7508,7 @@ pub async fn LoggingService::projects_exclusions_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7712,7 +7528,6 @@ pub async fn LoggingService::projects_exclusions_delete(
 /// Gets the description of an exclusion in the _Default sink.
 pub async fn LoggingService::projects_exclusions_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogExclusion raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -7722,7 +7537,7 @@ pub async fn LoggingService::projects_exclusions_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7742,7 +7557,6 @@ pub async fn LoggingService::projects_exclusions_get(
 /// Lists all the exclusions on the _Default sink in a parent resource.
 pub async fn LoggingService::projects_exclusions_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -7768,7 +7582,7 @@ pub async fn LoggingService::projects_exclusions_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7788,7 +7602,6 @@ pub async fn LoggingService::projects_exclusions_list(
 /// Changes one or more properties of an existing exclusion in the _Default sink.
 pub async fn LoggingService::projects_exclusions_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
@@ -7814,7 +7627,7 @@ pub async fn LoggingService::projects_exclusions_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7834,7 +7647,6 @@ pub async fn LoggingService::projects_exclusions_patch(
 /// Gets information about a location.
 pub async fn LoggingService::projects_locations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Location raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -7844,7 +7656,7 @@ pub async fn LoggingService::projects_locations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7864,7 +7676,6 @@ pub async fn LoggingService::projects_locations_get(
 /// Lists information about the supported locations for this service.This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: Global locations: If name is empty, the method lists the public locations available to all projects. Project-specific locations: If name follows the format projects/{project}, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project.For gRPC and client library implementations, the resource name is passed as the name field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
 pub async fn LoggingService::projects_locations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   extra_location_types? : String? = None,
   filter? : String? = None,
@@ -7900,7 +7711,7 @@ pub async fn LoggingService::projects_locations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7920,7 +7731,6 @@ pub async fn LoggingService::projects_locations_list(
 /// Creates a log bucket that can be used to store log entries. After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::projects_locations_buckets_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -7946,7 +7756,7 @@ pub async fn LoggingService::projects_locations_buckets_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -7966,7 +7776,6 @@ pub async fn LoggingService::projects_locations_buckets_create(
 /// Creates a log bucket asynchronously that can be used to store log entries.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::projects_locations_buckets_create_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -7992,7 +7801,7 @@ pub async fn LoggingService::projects_locations_buckets_create_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8012,7 +7821,6 @@ pub async fn LoggingService::projects_locations_buckets_create_async(
 /// Deletes a log bucket.Changes the bucket's lifecycle_state to the DELETE_REQUESTED state. After 7 days, the bucket will be purged and all log entries in the bucket will be permanently deleted.
 pub async fn LoggingService::projects_locations_buckets_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8022,7 +7830,7 @@ pub async fn LoggingService::projects_locations_buckets_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8042,7 +7850,6 @@ pub async fn LoggingService::projects_locations_buckets_delete(
 /// Gets a log bucket.
 pub async fn LoggingService::projects_locations_buckets_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogBucket raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8052,7 +7859,7 @@ pub async fn LoggingService::projects_locations_buckets_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8072,7 +7879,6 @@ pub async fn LoggingService::projects_locations_buckets_get(
 /// Lists log buckets.
 pub async fn LoggingService::projects_locations_buckets_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -8098,7 +7904,7 @@ pub async fn LoggingService::projects_locations_buckets_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8118,7 +7924,6 @@ pub async fn LoggingService::projects_locations_buckets_list(
 /// Updates a log bucket.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::projects_locations_buckets_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
@@ -8144,7 +7949,7 @@ pub async fn LoggingService::projects_locations_buckets_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8164,7 +7969,6 @@ pub async fn LoggingService::projects_locations_buckets_patch(
 /// Undeletes a log bucket. A bucket that has been deleted can be undeleted within the grace period of 7 days.
 pub async fn LoggingService::projects_locations_buckets_undelete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -8179,7 +7983,7 @@ pub async fn LoggingService::projects_locations_buckets_undelete(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8199,7 +8003,6 @@ pub async fn LoggingService::projects_locations_buckets_undelete(
 /// Updates a log bucket asynchronously.If the bucket has a lifecycle_state of DELETE_REQUESTED, then FAILED_PRECONDITION will be returned.After a bucket has been created, the bucket's location cannot be changed.
 pub async fn LoggingService::projects_locations_buckets_update_async(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -8225,7 +8028,7 @@ pub async fn LoggingService::projects_locations_buckets_update_async(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8245,7 +8048,6 @@ pub async fn LoggingService::projects_locations_buckets_update_async(
 /// Asynchronously creates a linked dataset in BigQuery which makes it possible to use BigQuery to read the logs stored in the log bucket. A log bucket may currently only contain one link.
 pub async fn LoggingService::projects_locations_buckets_links_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
@@ -8271,7 +8073,7 @@ pub async fn LoggingService::projects_locations_buckets_links_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8291,7 +8093,6 @@ pub async fn LoggingService::projects_locations_buckets_links_create(
 /// Deletes a link. This will also delete the corresponding BigQuery linked dataset.
 pub async fn LoggingService::projects_locations_buckets_links_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8301,7 +8102,7 @@ pub async fn LoggingService::projects_locations_buckets_links_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8321,7 +8122,6 @@ pub async fn LoggingService::projects_locations_buckets_links_delete(
 /// Gets a link.
 pub async fn LoggingService::projects_locations_buckets_links_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Link raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8331,7 +8131,7 @@ pub async fn LoggingService::projects_locations_buckets_links_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8351,7 +8151,6 @@ pub async fn LoggingService::projects_locations_buckets_links_get(
 /// Lists links.
 pub async fn LoggingService::projects_locations_buckets_links_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -8377,7 +8176,7 @@ pub async fn LoggingService::projects_locations_buckets_links_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8397,7 +8196,6 @@ pub async fn LoggingService::projects_locations_buckets_links_list(
 /// Creates a view over log entries in a log bucket. A bucket may contain a maximum of 30 views.
 pub async fn LoggingService::projects_locations_buckets_views_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -8423,7 +8221,7 @@ pub async fn LoggingService::projects_locations_buckets_views_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8443,7 +8241,6 @@ pub async fn LoggingService::projects_locations_buckets_views_create(
 /// Deletes a view on a log bucket. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can delete the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::projects_locations_buckets_views_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8453,7 +8250,7 @@ pub async fn LoggingService::projects_locations_buckets_views_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8473,7 +8270,6 @@ pub async fn LoggingService::projects_locations_buckets_views_delete(
 /// Gets a view on a log bucket.
 pub async fn LoggingService::projects_locations_buckets_views_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogView raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8483,7 +8279,7 @@ pub async fn LoggingService::projects_locations_buckets_views_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8503,7 +8299,6 @@ pub async fn LoggingService::projects_locations_buckets_views_get(
 /// Gets the access control policy for a resource. Returns an empty policy if the resource exists and does not have a policy set.
 pub async fn LoggingService::projects_locations_buckets_views_get_iam_policy(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -8518,7 +8313,7 @@ pub async fn LoggingService::projects_locations_buckets_views_get_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8538,7 +8333,6 @@ pub async fn LoggingService::projects_locations_buckets_views_get_iam_policy(
 /// Lists views on a log bucket.
 pub async fn LoggingService::projects_locations_buckets_views_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -8564,7 +8358,7 @@ pub async fn LoggingService::projects_locations_buckets_views_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8584,7 +8378,6 @@ pub async fn LoggingService::projects_locations_buckets_views_list(
 /// Updates a view on a log bucket. This method replaces the value of the filter field from the existing view with the corresponding value from the new view. If an UNAVAILABLE error is returned, this indicates that system is not in a state where it can update the view. If this occurs, please try again in a few minutes.
 pub async fn LoggingService::projects_locations_buckets_views_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
@@ -8610,7 +8403,7 @@ pub async fn LoggingService::projects_locations_buckets_views_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8630,7 +8423,6 @@ pub async fn LoggingService::projects_locations_buckets_views_patch(
 /// Sets the access control policy on the specified resource. Replaces any existing policy.Can return NOT_FOUND, INVALID_ARGUMENT, and PERMISSION_DENIED errors.
 pub async fn LoggingService::projects_locations_buckets_views_set_iam_policy(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> Policy raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -8645,7 +8437,7 @@ pub async fn LoggingService::projects_locations_buckets_views_set_iam_policy(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8665,7 +8457,6 @@ pub async fn LoggingService::projects_locations_buckets_views_set_iam_policy(
 /// Returns permissions that a caller has on the specified resource. If the resource does not exist, this will return an empty set of permissions, not a NOT_FOUND error.Note: This operation is designed to be used for building permission-aware UIs and command-line tools, not for authorization checking. This operation may "fail open" without warning.
 pub async fn LoggingService::projects_locations_buckets_views_test_iam_permissions(
   self : LoggingService,
-  client : &@http.HttpClient,
   resource : String,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -8680,7 +8471,7 @@ pub async fn LoggingService::projects_locations_buckets_views_test_iam_permissio
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8700,7 +8491,6 @@ pub async fn LoggingService::projects_locations_buckets_views_test_iam_permissio
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::projects_locations_buckets_views_logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -8731,7 +8521,7 @@ pub async fn LoggingService::projects_locations_buckets_views_logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8751,7 +8541,6 @@ pub async fn LoggingService::projects_locations_buckets_views_logs_list(
 /// Creates a log scope.
 pub async fn LoggingService::projects_locations_log_scopes_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   log_scope_id? : String? = None,
 ) -> LogScope raise @http.HttpError {
@@ -8777,7 +8566,7 @@ pub async fn LoggingService::projects_locations_log_scopes_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8797,7 +8586,6 @@ pub async fn LoggingService::projects_locations_log_scopes_create(
 /// Deletes a log scope.
 pub async fn LoggingService::projects_locations_log_scopes_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8807,7 +8595,7 @@ pub async fn LoggingService::projects_locations_log_scopes_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8827,7 +8615,6 @@ pub async fn LoggingService::projects_locations_log_scopes_delete(
 /// Gets a log scope.
 pub async fn LoggingService::projects_locations_log_scopes_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> LogScope raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8837,7 +8624,7 @@ pub async fn LoggingService::projects_locations_log_scopes_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8857,7 +8644,6 @@ pub async fn LoggingService::projects_locations_log_scopes_get(
 /// Lists log scopes.
 pub async fn LoggingService::projects_locations_log_scopes_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -8883,7 +8669,7 @@ pub async fn LoggingService::projects_locations_log_scopes_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8903,7 +8689,6 @@ pub async fn LoggingService::projects_locations_log_scopes_list(
 /// Updates a log scope.
 pub async fn LoggingService::projects_locations_log_scopes_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> LogScope raise @http.HttpError {
@@ -8929,7 +8714,7 @@ pub async fn LoggingService::projects_locations_log_scopes_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8949,7 +8734,6 @@ pub async fn LoggingService::projects_locations_log_scopes_patch(
 /// Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns google.rpc.Code.UNIMPLEMENTED. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of 1, corresponding to Code.CANCELLED.
 pub async fn LoggingService::projects_locations_operations_cancel(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -8964,7 +8748,7 @@ pub async fn LoggingService::projects_locations_operations_cancel(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -8984,7 +8768,6 @@ pub async fn LoggingService::projects_locations_operations_cancel(
 /// Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.
 pub async fn LoggingService::projects_locations_operations_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Operation raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -8994,7 +8777,7 @@ pub async fn LoggingService::projects_locations_operations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9014,7 +8797,6 @@ pub async fn LoggingService::projects_locations_operations_get(
 /// Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns UNIMPLEMENTED.
 pub async fn LoggingService::projects_locations_operations_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -9051,7 +8833,7 @@ pub async fn LoggingService::projects_locations_operations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9071,7 +8853,6 @@ pub async fn LoggingService::projects_locations_operations_list(
 /// Lists the RecentQueries that were created by the user making the request.
 pub async fn LoggingService::projects_locations_recent_queries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -9102,7 +8883,7 @@ pub async fn LoggingService::projects_locations_recent_queries_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9122,7 +8903,6 @@ pub async fn LoggingService::projects_locations_recent_queries_list(
 /// Creates a new SavedQuery for the user making the request.
 pub async fn LoggingService::projects_locations_saved_queries_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   saved_query_id? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
@@ -9148,7 +8928,7 @@ pub async fn LoggingService::projects_locations_saved_queries_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9168,7 +8948,6 @@ pub async fn LoggingService::projects_locations_saved_queries_create(
 /// Deletes an existing SavedQuery that was created by the user making the request.
 pub async fn LoggingService::projects_locations_saved_queries_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -9178,7 +8957,7 @@ pub async fn LoggingService::projects_locations_saved_queries_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9198,7 +8977,6 @@ pub async fn LoggingService::projects_locations_saved_queries_delete(
 /// Returns all data associated with the requested query.
 pub async fn LoggingService::projects_locations_saved_queries_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> SavedQuery raise @http.HttpError {
   let path = "/" + "v2" + "/" + name
@@ -9208,7 +8986,7 @@ pub async fn LoggingService::projects_locations_saved_queries_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9228,7 +9006,6 @@ pub async fn LoggingService::projects_locations_saved_queries_get(
 /// Lists the SavedQueries that were created by the user making the request.
 pub async fn LoggingService::projects_locations_saved_queries_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -9259,7 +9036,7 @@ pub async fn LoggingService::projects_locations_saved_queries_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9279,7 +9056,6 @@ pub async fn LoggingService::projects_locations_saved_queries_list(
 /// Updates an existing SavedQuery.
 pub async fn LoggingService::projects_locations_saved_queries_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
@@ -9305,7 +9081,7 @@ pub async fn LoggingService::projects_locations_saved_queries_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9325,7 +9101,6 @@ pub async fn LoggingService::projects_locations_saved_queries_patch(
 /// Deletes all the log entries in a log for the global _Default Log Bucket. The log reappears if it receives new entries. Log entries written shortly before the delete operation might not be deleted. Entries received after the delete operation with a timestamp before the operation will be deleted.
 pub async fn LoggingService::projects_logs_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   log_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + log_name
@@ -9335,7 +9110,7 @@ pub async fn LoggingService::projects_logs_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9355,7 +9130,6 @@ pub async fn LoggingService::projects_logs_delete(
 /// Lists the logs in projects, organizations, folders, or billing accounts. Only logs that have entries are listed.
 pub async fn LoggingService::projects_logs_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -9386,7 +9160,7 @@ pub async fn LoggingService::projects_logs_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9406,7 +9180,6 @@ pub async fn LoggingService::projects_logs_list(
 /// Creates a logs-based metric.
 pub async fn LoggingService::projects_metrics_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> LogMetric raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -9421,7 +9194,7 @@ pub async fn LoggingService::projects_metrics_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9441,7 +9214,6 @@ pub async fn LoggingService::projects_metrics_create(
 /// Deletes a logs-based metric.
 pub async fn LoggingService::projects_metrics_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   metric_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + metric_name
@@ -9451,7 +9223,7 @@ pub async fn LoggingService::projects_metrics_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9471,7 +9243,6 @@ pub async fn LoggingService::projects_metrics_delete(
 /// Gets a logs-based metric.
 pub async fn LoggingService::projects_metrics_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   metric_name : String,
 ) -> LogMetric raise @http.HttpError {
   let path = "/" + "v2" + "/" + metric_name
@@ -9481,7 +9252,7 @@ pub async fn LoggingService::projects_metrics_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9501,7 +9272,6 @@ pub async fn LoggingService::projects_metrics_get(
 /// Lists logs-based metrics.
 pub async fn LoggingService::projects_metrics_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -9527,7 +9297,7 @@ pub async fn LoggingService::projects_metrics_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9547,7 +9317,6 @@ pub async fn LoggingService::projects_metrics_list(
 /// Creates or updates a logs-based metric.
 pub async fn LoggingService::projects_metrics_update(
   self : LoggingService,
-  client : &@http.HttpClient,
   metric_name : String,
 ) -> LogMetric raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -9562,7 +9331,7 @@ pub async fn LoggingService::projects_metrics_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9582,7 +9351,6 @@ pub async fn LoggingService::projects_metrics_update(
 /// Creates a sink that exports specified log entries to a destination. The export begins upon ingress, unless the sink's writer_identity is not permitted to write to the destination. A sink can export log entries only from the resource owning the sink.
 pub async fn LoggingService::projects_sinks_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -9614,7 +9382,7 @@ pub async fn LoggingService::projects_sinks_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9634,7 +9402,6 @@ pub async fn LoggingService::projects_sinks_create(
 /// Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted.
 pub async fn LoggingService::projects_sinks_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -9644,7 +9411,7 @@ pub async fn LoggingService::projects_sinks_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9664,7 +9431,6 @@ pub async fn LoggingService::projects_sinks_delete(
 /// Gets a sink.
 pub async fn LoggingService::projects_sinks_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -9674,7 +9440,7 @@ pub async fn LoggingService::projects_sinks_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9694,7 +9460,6 @@ pub async fn LoggingService::projects_sinks_get(
 /// Lists sinks.
 pub async fn LoggingService::projects_sinks_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -9725,7 +9490,7 @@ pub async fn LoggingService::projects_sinks_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9745,7 +9510,6 @@ pub async fn LoggingService::projects_sinks_list(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::projects_sinks_patch(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -9782,7 +9546,7 @@ pub async fn LoggingService::projects_sinks_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9802,7 +9566,6 @@ pub async fn LoggingService::projects_sinks_patch(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::projects_sinks_update(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -9839,7 +9602,7 @@ pub async fn LoggingService::projects_sinks_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9859,7 +9622,6 @@ pub async fn LoggingService::projects_sinks_update(
 /// Creates a sink that exports specified log entries to a destination. The export begins upon ingress, unless the sink's writer_identity is not permitted to write to the destination. A sink can export log entries only from the resource owning the sink.
 pub async fn LoggingService::sinks_create(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -9891,7 +9653,7 @@ pub async fn LoggingService::sinks_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9911,7 +9673,6 @@ pub async fn LoggingService::sinks_create(
 /// Deletes a sink. If the sink has a unique writer_identity, then that service account is also deleted.
 pub async fn LoggingService::sinks_delete(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -9921,7 +9682,7 @@ pub async fn LoggingService::sinks_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9941,7 +9702,6 @@ pub async fn LoggingService::sinks_delete(
 /// Gets a sink.
 pub async fn LoggingService::sinks_get(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
 ) -> LogSink raise @http.HttpError {
   let path = "/" + "v2" + "/" + sink_name
@@ -9951,7 +9711,7 @@ pub async fn LoggingService::sinks_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -9971,7 +9731,6 @@ pub async fn LoggingService::sinks_get(
 /// Lists sinks.
 pub async fn LoggingService::sinks_list(
   self : LoggingService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -10002,7 +9761,7 @@ pub async fn LoggingService::sinks_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -10022,7 +9781,6 @@ pub async fn LoggingService::sinks_list(
 /// Updates a sink. This method replaces the values of the destination and filter fields of the existing sink with the corresponding values from the new sink.The updated sink might also have a new writer_identity; see the unique_writer_identity field.
 pub async fn LoggingService::sinks_update(
   self : LoggingService,
-  client : &@http.HttpClient,
   sink_name : String,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
@@ -10059,7 +9817,7 @@ pub async fn LoggingService::sinks_update(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -10079,7 +9837,6 @@ pub async fn LoggingService::sinks_update(
 /// Gets the Logging CMEK settings for the given resource.Note: CMEK for the Log Router can be configured for Google Cloud projects, folders, organizations, and billing accounts. Once configured for an organization, it applies to all projects and folders in the Google Cloud organization.See Configure CMEK for Cloud Logging (https://docs.cloud.google.com/logging/docs/routing/managed-encryption) for more information.
 pub async fn LoggingService::v2_get_cmek_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> CmekSettings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
@@ -10089,7 +9846,7 @@ pub async fn LoggingService::v2_get_cmek_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -10109,7 +9866,6 @@ pub async fn LoggingService::v2_get_cmek_settings(
 /// Gets the settings for the given resource.Note: Settings can be retrieved for Google Cloud projects, folders, organizations, and billing accounts.See View default resource settings for Logging (https://docs.cloud.google.com/logging/docs/default-settings#view-org-settings) for more information.
 pub async fn LoggingService::v2_get_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Settings raise @http.HttpError {
   let path = "/" + "v2" + "/" + name + "/" + "settings"
@@ -10119,7 +9875,7 @@ pub async fn LoggingService::v2_get_settings(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -10139,7 +9895,6 @@ pub async fn LoggingService::v2_get_settings(
 /// Updates the Log Router CMEK settings for the given resource.Note: CMEK for the Log Router can currently only be configured for Google Cloud organizations. Once configured, it applies to all projects and folders in the Google Cloud organization.UpdateCmekSettings fails when any of the following are true: The value of kms_key_name is invalid. The associated service account doesn't have the required roles/cloudkms.cryptoKeyEncrypterDecrypter role assigned for the key. Access to the key is disabled.See Configure CMEK for Cloud Logging (https://docs.cloud.google.com/logging/docs/routing/managed-encryption) for more information.
 pub async fn LoggingService::v2_update_cmek_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> CmekSettings raise @http.HttpError {
@@ -10165,7 +9920,7 @@ pub async fn LoggingService::v2_update_cmek_settings(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -10185,7 +9940,6 @@ pub async fn LoggingService::v2_update_cmek_settings(
 /// Updates the settings for the given resource. This method applies to all feature configurations for organization and folders.UpdateSettings fails when any of the following are true: The value of storage_location either isn't supported by Logging or violates the location OrgPolicy. The default_sink_config field is set, but it has an unspecified filter write mode. The value of kms_key_name is invalid. The associated service account doesn't have the required roles/cloudkms.cryptoKeyEncrypterDecrypter role assigned for the key. Access to the key is disabled.See Configure default settings for organizations and folders (https://docs.cloud.google.com/logging/docs/default-settings) for more information.
 pub async fn LoggingService::v2_update_settings(
   self : LoggingService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> Settings raise @http.HttpError {
@@ -10211,7 +9965,7 @@ pub async fn LoggingService::v2_update_settings(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,

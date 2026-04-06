@@ -570,7 +570,7 @@ fn write_rest_method(
     None => ()
   }
   b.write_string(
-    "pub async fn \{service_ty}::\{fn_name}(\n  self : \{service_ty},\n  client : &@http.HttpClient,\n",
+    "pub async fn \{service_ty}::\{fn_name}(\n  self : \{service_ty},\n",
   )
   for pb in path_bindings {
     let arg = safe_field_name(pb.0)
@@ -647,7 +647,7 @@ fn write_rest_method(
     )
   }
   b.write_string(
-    "  let resp = client.request(req) catch {\n    e => raise e\n  }\n",
+    "  let resp = self.client.request(req) catch {\n    e => raise e\n  }\n",
   )
   b.write_string(
     "  if resp.status_code >= 400 {\n    raise @http.HttpError::network_message(\n      \"HTTP \" + resp.status_code.to_string() + \": \" + resp.body,\n    )\n  }\n",
@@ -919,17 +919,19 @@ pub fn generate_client(desc : RestDescription) -> String {
   b.write_string("///| API client for \{desc.name} \{desc.version}\n")
   b.write_string("///| Base URL: \{desc.base_url}\n\n")
   b.write_string("///|\n")
-  b.write_string("pub(all) struct \{service_ty} {\n")
+  b.write_string("pub struct \{service_ty} {\n")
   b.write_string("  base_url : String\n")
   b.write_string("  access_token : String\n")
+  b.write_string("  client : &@http.HttpClient\n")
   b.write_string("}\n\n")
   b.write_string("///|\n")
   b.write_string(
-    "pub fn \{service_ty}::new(access_token : String) -> \{service_ty} {\n",
+    "pub fn \{service_ty}::new(client : &@http.HttpClient, access_token : String) -> \{service_ty} {\n",
   )
   b.write_string("  " + service_ty + "::{\n")
   b.write_string("    base_url: \"\{base_lit}\",\n")
   b.write_string("    access_token,\n")
+  b.write_string("    client,\n")
   b.write_string("  }\n")
   b.write_string("}\n\n")
   b.write_string("///|\n")

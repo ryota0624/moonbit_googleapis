@@ -456,265 +456,266 @@ pub(all) struct LoggingQuery {
   summary_field_end : Int?
 } derive(Eq, Show, @json.FromJson)
 
-pub(all) struct LoggingService {
+pub struct LoggingService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
-pub async fn LoggingService::billing_accounts_exclusions_create(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::billing_accounts_exclusions_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::billing_accounts_exclusions_get(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::billing_accounts_exclusions_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_exclusions_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::billing_accounts_get_cmek_settings(Self, &@http.HttpClient, String) -> CmekSettings raise @http.HttpError
-pub async fn LoggingService::billing_accounts_get_settings(Self, &@http.HttpClient, String) -> Settings raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_create(Self, &@http.HttpClient, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_create_async(Self, &@http.HttpClient, String, bucket_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_get(Self, &@http.HttpClient, String) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_links_create(Self, &@http.HttpClient, String, link_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_links_delete(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_links_get(Self, &@http.HttpClient, String) -> Link raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_links_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_undelete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_update_async(Self, &@http.HttpClient, String, update_mask? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_views_create(Self, &@http.HttpClient, String, view_id? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_views_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_views_get(Self, &@http.HttpClient, String) -> LogView raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_views_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_buckets_views_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_get(Self, &@http.HttpClient, String) -> Location raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_list(Self, &@http.HttpClient, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_operations_cancel(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_operations_get(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_operations_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_recent_queries_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListRecentQueriesResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_saved_queries_create(Self, &@http.HttpClient, String, saved_query_id? : String?) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_saved_queries_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_saved_queries_get(Self, &@http.HttpClient, String) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_saved_queries_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSavedQueriesResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_locations_saved_queries_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::billing_accounts_logs_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::billing_accounts_logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_sinks_create(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::billing_accounts_sinks_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::billing_accounts_sinks_get(Self, &@http.HttpClient, String) -> LogSink raise @http.HttpError
-pub async fn LoggingService::billing_accounts_sinks_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
-pub async fn LoggingService::billing_accounts_sinks_patch(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::billing_accounts_sinks_update(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::entries_copy(Self, &@http.HttpClient) -> Operation raise @http.HttpError
-pub async fn LoggingService::entries_list(Self, &@http.HttpClient) -> ListLogEntriesResponse raise @http.HttpError
-pub async fn LoggingService::entries_tail(Self, &@http.HttpClient) -> TailLogEntriesResponse raise @http.HttpError
-pub async fn LoggingService::entries_write(Self, &@http.HttpClient) -> WriteLogEntriesResponse raise @http.HttpError
-pub async fn LoggingService::exclusions_create(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::exclusions_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::exclusions_get(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::exclusions_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
-pub async fn LoggingService::exclusions_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::folders_exclusions_create(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::folders_exclusions_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_exclusions_get(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::folders_exclusions_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
-pub async fn LoggingService::folders_exclusions_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::folders_get_cmek_settings(Self, &@http.HttpClient, String) -> CmekSettings raise @http.HttpError
-pub async fn LoggingService::folders_get_settings(Self, &@http.HttpClient, String) -> Settings raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_create(Self, &@http.HttpClient, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_create_async(Self, &@http.HttpClient, String, bucket_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_get(Self, &@http.HttpClient, String) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_links_create(Self, &@http.HttpClient, String, link_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_links_delete(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_links_get(Self, &@http.HttpClient, String) -> Link raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_links_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_undelete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_update_async(Self, &@http.HttpClient, String, update_mask? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_create(Self, &@http.HttpClient, String, view_id? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_get(Self, &@http.HttpClient, String) -> LogView raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_get_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn LoggingService::folders_locations_buckets_views_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_get(Self, &@http.HttpClient, String) -> Location raise @http.HttpError
-pub async fn LoggingService::folders_locations_list(Self, &@http.HttpClient, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_log_scopes_create(Self, &@http.HttpClient, String, log_scope_id? : String?) -> LogScope raise @http.HttpError
-pub async fn LoggingService::folders_locations_log_scopes_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_locations_log_scopes_get(Self, &@http.HttpClient, String) -> LogScope raise @http.HttpError
-pub async fn LoggingService::folders_locations_log_scopes_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLogScopesResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_log_scopes_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogScope raise @http.HttpError
-pub async fn LoggingService::folders_locations_operations_cancel(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_locations_operations_get(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::folders_locations_operations_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_recent_queries_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListRecentQueriesResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_saved_queries_create(Self, &@http.HttpClient, String, saved_query_id? : String?) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::folders_locations_saved_queries_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_locations_saved_queries_get(Self, &@http.HttpClient, String) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::folders_locations_saved_queries_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSavedQueriesResponse raise @http.HttpError
-pub async fn LoggingService::folders_locations_saved_queries_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::folders_logs_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::folders_sinks_create(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::folders_sinks_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::folders_sinks_get(Self, &@http.HttpClient, String) -> LogSink raise @http.HttpError
-pub async fn LoggingService::folders_sinks_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
-pub async fn LoggingService::folders_sinks_patch(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::folders_sinks_update(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::folders_update_settings(Self, &@http.HttpClient, String, update_mask? : String?) -> Settings raise @http.HttpError
-pub async fn LoggingService::locations_buckets_create(Self, &@http.HttpClient, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::locations_buckets_create_async(Self, &@http.HttpClient, String, bucket_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::locations_buckets_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::locations_buckets_get(Self, &@http.HttpClient, String) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::locations_buckets_links_create(Self, &@http.HttpClient, String, link_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::locations_buckets_links_delete(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::locations_buckets_links_get(Self, &@http.HttpClient, String) -> Link raise @http.HttpError
-pub async fn LoggingService::locations_buckets_links_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
-pub async fn LoggingService::locations_buckets_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
-pub async fn LoggingService::locations_buckets_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::locations_buckets_undelete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::locations_buckets_update_async(Self, &@http.HttpClient, String, update_mask? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::locations_buckets_views_create(Self, &@http.HttpClient, String, view_id? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::locations_buckets_views_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::locations_buckets_views_get(Self, &@http.HttpClient, String) -> LogView raise @http.HttpError
-pub async fn LoggingService::locations_buckets_views_get_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn LoggingService::locations_buckets_views_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
-pub async fn LoggingService::locations_buckets_views_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::locations_buckets_views_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn LoggingService::locations_buckets_views_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn LoggingService::locations_get(Self, &@http.HttpClient, String) -> Location raise @http.HttpError
-pub async fn LoggingService::locations_list(Self, &@http.HttpClient, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
-pub async fn LoggingService::locations_operations_cancel(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::locations_operations_get(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::locations_operations_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
-pub async fn LoggingService::logs_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::monitored_resource_descriptors_list(Self, &@http.HttpClient, page_size? : Int?, page_token? : String?) -> ListMonitoredResourceDescriptorsResponse raise @http.HttpError
-pub fn LoggingService::new(String) -> Self
-pub async fn LoggingService::organizations_exclusions_create(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::organizations_exclusions_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_exclusions_get(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::organizations_exclusions_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
-pub async fn LoggingService::organizations_exclusions_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::organizations_get_cmek_settings(Self, &@http.HttpClient, String) -> CmekSettings raise @http.HttpError
-pub async fn LoggingService::organizations_get_settings(Self, &@http.HttpClient, String) -> Settings raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_create(Self, &@http.HttpClient, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_create_async(Self, &@http.HttpClient, String, bucket_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_get(Self, &@http.HttpClient, String) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_links_create(Self, &@http.HttpClient, String, link_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_links_delete(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_links_get(Self, &@http.HttpClient, String) -> Link raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_links_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_undelete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_update_async(Self, &@http.HttpClient, String, update_mask? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_create(Self, &@http.HttpClient, String, view_id? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_get(Self, &@http.HttpClient, String) -> LogView raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_get_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn LoggingService::organizations_locations_buckets_views_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_get(Self, &@http.HttpClient, String) -> Location raise @http.HttpError
-pub async fn LoggingService::organizations_locations_list(Self, &@http.HttpClient, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_log_scopes_create(Self, &@http.HttpClient, String, log_scope_id? : String?) -> LogScope raise @http.HttpError
-pub async fn LoggingService::organizations_locations_log_scopes_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_locations_log_scopes_get(Self, &@http.HttpClient, String) -> LogScope raise @http.HttpError
-pub async fn LoggingService::organizations_locations_log_scopes_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLogScopesResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_log_scopes_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogScope raise @http.HttpError
-pub async fn LoggingService::organizations_locations_operations_cancel(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_locations_operations_get(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::organizations_locations_operations_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_recent_queries_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListRecentQueriesResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_saved_queries_create(Self, &@http.HttpClient, String, saved_query_id? : String?) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::organizations_locations_saved_queries_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_locations_saved_queries_get(Self, &@http.HttpClient, String) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::organizations_locations_saved_queries_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSavedQueriesResponse raise @http.HttpError
-pub async fn LoggingService::organizations_locations_saved_queries_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::organizations_logs_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::organizations_sinks_create(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::organizations_sinks_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::organizations_sinks_get(Self, &@http.HttpClient, String) -> LogSink raise @http.HttpError
-pub async fn LoggingService::organizations_sinks_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
-pub async fn LoggingService::organizations_sinks_patch(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::organizations_sinks_update(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::organizations_update_cmek_settings(Self, &@http.HttpClient, String, update_mask? : String?) -> CmekSettings raise @http.HttpError
-pub async fn LoggingService::organizations_update_settings(Self, &@http.HttpClient, String, update_mask? : String?) -> Settings raise @http.HttpError
-pub async fn LoggingService::projects_exclusions_create(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::projects_exclusions_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_exclusions_get(Self, &@http.HttpClient, String) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::projects_exclusions_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
-pub async fn LoggingService::projects_exclusions_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
-pub async fn LoggingService::projects_get_cmek_settings(Self, &@http.HttpClient, String) -> CmekSettings raise @http.HttpError
-pub async fn LoggingService::projects_get_settings(Self, &@http.HttpClient, String) -> Settings raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_create(Self, &@http.HttpClient, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_create_async(Self, &@http.HttpClient, String, bucket_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_get(Self, &@http.HttpClient, String) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_links_create(Self, &@http.HttpClient, String, link_id? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_links_delete(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_links_get(Self, &@http.HttpClient, String) -> Link raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_links_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogBucket raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_undelete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_update_async(Self, &@http.HttpClient, String, update_mask? : String?) -> Operation raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_create(Self, &@http.HttpClient, String, view_id? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_get(Self, &@http.HttpClient, String) -> LogView raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_get_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogView raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn LoggingService::projects_locations_buckets_views_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_get(Self, &@http.HttpClient, String) -> Location raise @http.HttpError
-pub async fn LoggingService::projects_locations_list(Self, &@http.HttpClient, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_log_scopes_create(Self, &@http.HttpClient, String, log_scope_id? : String?) -> LogScope raise @http.HttpError
-pub async fn LoggingService::projects_locations_log_scopes_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_locations_log_scopes_get(Self, &@http.HttpClient, String) -> LogScope raise @http.HttpError
-pub async fn LoggingService::projects_locations_log_scopes_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLogScopesResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_log_scopes_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> LogScope raise @http.HttpError
-pub async fn LoggingService::projects_locations_operations_cancel(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_locations_operations_get(Self, &@http.HttpClient, String) -> Operation raise @http.HttpError
-pub async fn LoggingService::projects_locations_operations_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_recent_queries_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListRecentQueriesResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_saved_queries_create(Self, &@http.HttpClient, String, saved_query_id? : String?) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::projects_locations_saved_queries_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_locations_saved_queries_get(Self, &@http.HttpClient, String) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::projects_locations_saved_queries_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSavedQueriesResponse raise @http.HttpError
-pub async fn LoggingService::projects_locations_saved_queries_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> SavedQuery raise @http.HttpError
-pub async fn LoggingService::projects_logs_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_logs_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
-pub async fn LoggingService::projects_metrics_create(Self, &@http.HttpClient, String) -> LogMetric raise @http.HttpError
-pub async fn LoggingService::projects_metrics_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_metrics_get(Self, &@http.HttpClient, String) -> LogMetric raise @http.HttpError
-pub async fn LoggingService::projects_metrics_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListLogMetricsResponse raise @http.HttpError
-pub async fn LoggingService::projects_metrics_update(Self, &@http.HttpClient, String) -> LogMetric raise @http.HttpError
-pub async fn LoggingService::projects_sinks_create(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::projects_sinks_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::projects_sinks_get(Self, &@http.HttpClient, String) -> LogSink raise @http.HttpError
-pub async fn LoggingService::projects_sinks_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
-pub async fn LoggingService::projects_sinks_patch(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::projects_sinks_update(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::sinks_create(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::sinks_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn LoggingService::sinks_get(Self, &@http.HttpClient, String) -> LogSink raise @http.HttpError
-pub async fn LoggingService::sinks_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
-pub async fn LoggingService::sinks_update(Self, &@http.HttpClient, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
-pub async fn LoggingService::v2_get_cmek_settings(Self, &@http.HttpClient, String) -> CmekSettings raise @http.HttpError
-pub async fn LoggingService::v2_get_settings(Self, &@http.HttpClient, String) -> Settings raise @http.HttpError
-pub async fn LoggingService::v2_update_cmek_settings(Self, &@http.HttpClient, String, update_mask? : String?) -> CmekSettings raise @http.HttpError
-pub async fn LoggingService::v2_update_settings(Self, &@http.HttpClient, String, update_mask? : String?) -> Settings raise @http.HttpError
+pub async fn LoggingService::billing_accounts_exclusions_create(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::billing_accounts_exclusions_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::billing_accounts_exclusions_get(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::billing_accounts_exclusions_list(Self, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_exclusions_patch(Self, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::billing_accounts_get_cmek_settings(Self, String) -> CmekSettings raise @http.HttpError
+pub async fn LoggingService::billing_accounts_get_settings(Self, String) -> Settings raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_create(Self, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_create_async(Self, String, bucket_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_get(Self, String) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_links_create(Self, String, link_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_links_delete(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_links_get(Self, String) -> Link raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_links_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_list(Self, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_patch(Self, String, update_mask? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_undelete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_update_async(Self, String, update_mask? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_views_create(Self, String, view_id? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_views_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_views_get(Self, String) -> LogView raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_views_list(Self, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_buckets_views_patch(Self, String, update_mask? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_get(Self, String) -> Location raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_operations_cancel(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_operations_get(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_operations_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_recent_queries_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListRecentQueriesResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_saved_queries_create(Self, String, saved_query_id? : String?) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_saved_queries_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_saved_queries_get(Self, String) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_saved_queries_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSavedQueriesResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_locations_saved_queries_patch(Self, String, update_mask? : String?) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::billing_accounts_logs_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::billing_accounts_logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_sinks_create(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::billing_accounts_sinks_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::billing_accounts_sinks_get(Self, String) -> LogSink raise @http.HttpError
+pub async fn LoggingService::billing_accounts_sinks_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
+pub async fn LoggingService::billing_accounts_sinks_patch(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::billing_accounts_sinks_update(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::entries_copy(Self) -> Operation raise @http.HttpError
+pub async fn LoggingService::entries_list(Self) -> ListLogEntriesResponse raise @http.HttpError
+pub async fn LoggingService::entries_tail(Self) -> TailLogEntriesResponse raise @http.HttpError
+pub async fn LoggingService::entries_write(Self) -> WriteLogEntriesResponse raise @http.HttpError
+pub async fn LoggingService::exclusions_create(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::exclusions_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::exclusions_get(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::exclusions_list(Self, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
+pub async fn LoggingService::exclusions_patch(Self, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::folders_exclusions_create(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::folders_exclusions_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_exclusions_get(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::folders_exclusions_list(Self, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
+pub async fn LoggingService::folders_exclusions_patch(Self, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::folders_get_cmek_settings(Self, String) -> CmekSettings raise @http.HttpError
+pub async fn LoggingService::folders_get_settings(Self, String) -> Settings raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_create(Self, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_create_async(Self, String, bucket_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_get(Self, String) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_links_create(Self, String, link_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_links_delete(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_links_get(Self, String) -> Link raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_links_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_list(Self, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_patch(Self, String, update_mask? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_undelete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_update_async(Self, String, update_mask? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_create(Self, String, view_id? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_get(Self, String) -> LogView raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_get_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_list(Self, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_patch(Self, String, update_mask? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn LoggingService::folders_locations_buckets_views_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_get(Self, String) -> Location raise @http.HttpError
+pub async fn LoggingService::folders_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_log_scopes_create(Self, String, log_scope_id? : String?) -> LogScope raise @http.HttpError
+pub async fn LoggingService::folders_locations_log_scopes_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_locations_log_scopes_get(Self, String) -> LogScope raise @http.HttpError
+pub async fn LoggingService::folders_locations_log_scopes_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLogScopesResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_log_scopes_patch(Self, String, update_mask? : String?) -> LogScope raise @http.HttpError
+pub async fn LoggingService::folders_locations_operations_cancel(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_locations_operations_get(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::folders_locations_operations_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_recent_queries_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListRecentQueriesResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_saved_queries_create(Self, String, saved_query_id? : String?) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::folders_locations_saved_queries_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_locations_saved_queries_get(Self, String) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::folders_locations_saved_queries_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSavedQueriesResponse raise @http.HttpError
+pub async fn LoggingService::folders_locations_saved_queries_patch(Self, String, update_mask? : String?) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::folders_logs_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::folders_sinks_create(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::folders_sinks_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::folders_sinks_get(Self, String) -> LogSink raise @http.HttpError
+pub async fn LoggingService::folders_sinks_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
+pub async fn LoggingService::folders_sinks_patch(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::folders_sinks_update(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::folders_update_settings(Self, String, update_mask? : String?) -> Settings raise @http.HttpError
+pub async fn LoggingService::locations_buckets_create(Self, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::locations_buckets_create_async(Self, String, bucket_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::locations_buckets_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::locations_buckets_get(Self, String) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::locations_buckets_links_create(Self, String, link_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::locations_buckets_links_delete(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::locations_buckets_links_get(Self, String) -> Link raise @http.HttpError
+pub async fn LoggingService::locations_buckets_links_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
+pub async fn LoggingService::locations_buckets_list(Self, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
+pub async fn LoggingService::locations_buckets_patch(Self, String, update_mask? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::locations_buckets_undelete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::locations_buckets_update_async(Self, String, update_mask? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::locations_buckets_views_create(Self, String, view_id? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::locations_buckets_views_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::locations_buckets_views_get(Self, String) -> LogView raise @http.HttpError
+pub async fn LoggingService::locations_buckets_views_get_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn LoggingService::locations_buckets_views_list(Self, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
+pub async fn LoggingService::locations_buckets_views_patch(Self, String, update_mask? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::locations_buckets_views_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn LoggingService::locations_buckets_views_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn LoggingService::locations_get(Self, String) -> Location raise @http.HttpError
+pub async fn LoggingService::locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
+pub async fn LoggingService::locations_operations_cancel(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::locations_operations_get(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::locations_operations_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
+pub async fn LoggingService::logs_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::monitored_resource_descriptors_list(Self, page_size? : Int?, page_token? : String?) -> ListMonitoredResourceDescriptorsResponse raise @http.HttpError
+pub fn LoggingService::new(&@http.HttpClient, String) -> Self
+pub async fn LoggingService::organizations_exclusions_create(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::organizations_exclusions_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_exclusions_get(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::organizations_exclusions_list(Self, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
+pub async fn LoggingService::organizations_exclusions_patch(Self, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::organizations_get_cmek_settings(Self, String) -> CmekSettings raise @http.HttpError
+pub async fn LoggingService::organizations_get_settings(Self, String) -> Settings raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_create(Self, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_create_async(Self, String, bucket_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_get(Self, String) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_links_create(Self, String, link_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_links_delete(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_links_get(Self, String) -> Link raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_links_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_list(Self, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_patch(Self, String, update_mask? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_undelete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_update_async(Self, String, update_mask? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_create(Self, String, view_id? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_get(Self, String) -> LogView raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_get_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_list(Self, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_patch(Self, String, update_mask? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn LoggingService::organizations_locations_buckets_views_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_get(Self, String) -> Location raise @http.HttpError
+pub async fn LoggingService::organizations_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_log_scopes_create(Self, String, log_scope_id? : String?) -> LogScope raise @http.HttpError
+pub async fn LoggingService::organizations_locations_log_scopes_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_locations_log_scopes_get(Self, String) -> LogScope raise @http.HttpError
+pub async fn LoggingService::organizations_locations_log_scopes_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLogScopesResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_log_scopes_patch(Self, String, update_mask? : String?) -> LogScope raise @http.HttpError
+pub async fn LoggingService::organizations_locations_operations_cancel(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_locations_operations_get(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::organizations_locations_operations_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_recent_queries_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListRecentQueriesResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_saved_queries_create(Self, String, saved_query_id? : String?) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::organizations_locations_saved_queries_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_locations_saved_queries_get(Self, String) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::organizations_locations_saved_queries_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSavedQueriesResponse raise @http.HttpError
+pub async fn LoggingService::organizations_locations_saved_queries_patch(Self, String, update_mask? : String?) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::organizations_logs_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::organizations_sinks_create(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::organizations_sinks_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::organizations_sinks_get(Self, String) -> LogSink raise @http.HttpError
+pub async fn LoggingService::organizations_sinks_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
+pub async fn LoggingService::organizations_sinks_patch(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::organizations_sinks_update(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::organizations_update_cmek_settings(Self, String, update_mask? : String?) -> CmekSettings raise @http.HttpError
+pub async fn LoggingService::organizations_update_settings(Self, String, update_mask? : String?) -> Settings raise @http.HttpError
+pub async fn LoggingService::projects_exclusions_create(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::projects_exclusions_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_exclusions_get(Self, String) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::projects_exclusions_list(Self, String, page_size? : Int?, page_token? : String?) -> ListExclusionsResponse raise @http.HttpError
+pub async fn LoggingService::projects_exclusions_patch(Self, String, update_mask? : String?) -> LogExclusion raise @http.HttpError
+pub async fn LoggingService::projects_get_cmek_settings(Self, String) -> CmekSettings raise @http.HttpError
+pub async fn LoggingService::projects_get_settings(Self, String) -> Settings raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_create(Self, String, bucket_id? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_create_async(Self, String, bucket_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_get(Self, String) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_links_create(Self, String, link_id? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_links_delete(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_links_get(Self, String) -> Link raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_links_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLinksResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_list(Self, String, page_size? : Int?, page_token? : String?) -> ListBucketsResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_patch(Self, String, update_mask? : String?) -> LogBucket raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_undelete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_update_async(Self, String, update_mask? : String?) -> Operation raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_create(Self, String, view_id? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_get(Self, String) -> LogView raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_get_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_list(Self, String, page_size? : Int?, page_token? : String?) -> ListViewsResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_patch(Self, String, update_mask? : String?) -> LogView raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn LoggingService::projects_locations_buckets_views_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_get(Self, String) -> Location raise @http.HttpError
+pub async fn LoggingService::projects_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_log_scopes_create(Self, String, log_scope_id? : String?) -> LogScope raise @http.HttpError
+pub async fn LoggingService::projects_locations_log_scopes_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_locations_log_scopes_get(Self, String) -> LogScope raise @http.HttpError
+pub async fn LoggingService::projects_locations_log_scopes_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLogScopesResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_log_scopes_patch(Self, String, update_mask? : String?) -> LogScope raise @http.HttpError
+pub async fn LoggingService::projects_locations_operations_cancel(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_locations_operations_get(Self, String) -> Operation raise @http.HttpError
+pub async fn LoggingService::projects_locations_operations_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_recent_queries_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListRecentQueriesResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_saved_queries_create(Self, String, saved_query_id? : String?) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::projects_locations_saved_queries_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_locations_saved_queries_get(Self, String) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::projects_locations_saved_queries_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSavedQueriesResponse raise @http.HttpError
+pub async fn LoggingService::projects_locations_saved_queries_patch(Self, String, update_mask? : String?) -> SavedQuery raise @http.HttpError
+pub async fn LoggingService::projects_logs_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
+pub async fn LoggingService::projects_metrics_create(Self, String) -> LogMetric raise @http.HttpError
+pub async fn LoggingService::projects_metrics_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_metrics_get(Self, String) -> LogMetric raise @http.HttpError
+pub async fn LoggingService::projects_metrics_list(Self, String, page_size? : Int?, page_token? : String?) -> ListLogMetricsResponse raise @http.HttpError
+pub async fn LoggingService::projects_metrics_update(Self, String) -> LogMetric raise @http.HttpError
+pub async fn LoggingService::projects_sinks_create(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::projects_sinks_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::projects_sinks_get(Self, String) -> LogSink raise @http.HttpError
+pub async fn LoggingService::projects_sinks_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
+pub async fn LoggingService::projects_sinks_patch(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::projects_sinks_update(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::sinks_create(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::sinks_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn LoggingService::sinks_get(Self, String) -> LogSink raise @http.HttpError
+pub async fn LoggingService::sinks_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSinksResponse raise @http.HttpError
+pub async fn LoggingService::sinks_update(Self, String, custom_writer_identity? : String?, unique_writer_identity? : Bool?, update_mask? : String?) -> LogSink raise @http.HttpError
+pub async fn LoggingService::v2_get_cmek_settings(Self, String) -> CmekSettings raise @http.HttpError
+pub async fn LoggingService::v2_get_settings(Self, String) -> Settings raise @http.HttpError
+pub async fn LoggingService::v2_update_cmek_settings(Self, String, update_mask? : String?) -> CmekSettings raise @http.HttpError
+pub async fn LoggingService::v2_update_settings(Self, String, update_mask? : String?) -> Settings raise @http.HttpError
 
 pub(all) struct MetricDescriptor {
   name : String?

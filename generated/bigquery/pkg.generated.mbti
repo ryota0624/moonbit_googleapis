@@ -133,58 +133,59 @@ pub(all) struct BigQueryModelTraining {
   expected_total_iterations : String?
 } derive(Eq, Show, @json.FromJson)
 
-pub(all) struct BigqueryService {
+pub struct BigqueryService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
-pub async fn BigqueryService::datasets_delete(Self, &@http.HttpClient, String, String, delete_contents? : Bool?) -> @http.HttpResponse raise @http.HttpError
-pub async fn BigqueryService::datasets_get(Self, &@http.HttpClient, String, String, access_policy_version? : Int?, dataset_view? : String?) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::datasets_insert(Self, &@http.HttpClient, String, access_policy_version? : Int?) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::datasets_list(Self, &@http.HttpClient, String, all? : Bool?, filter? : String?, max_results? : Int?, page_token? : String?) -> DatasetList raise @http.HttpError
-pub async fn BigqueryService::datasets_patch(Self, &@http.HttpClient, String, String, access_policy_version? : Int?, update_mode? : String?) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::datasets_undelete(Self, &@http.HttpClient, String, String) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::datasets_update(Self, &@http.HttpClient, String, String, access_policy_version? : Int?, update_mode? : String?) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::jobs_cancel(Self, &@http.HttpClient, String, String, location? : String?) -> JobCancelResponse raise @http.HttpError
-pub async fn BigqueryService::jobs_delete(Self, &@http.HttpClient, String, String, location? : String?) -> @http.HttpResponse raise @http.HttpError
-pub async fn BigqueryService::jobs_get(Self, &@http.HttpClient, String, String, location? : String?) -> Job raise @http.HttpError
-pub async fn BigqueryService::jobs_get_query_results(Self, &@http.HttpClient, String, String, format_options_timestamp_output_format? : String?, format_options_use_int64_timestamp? : Bool?, location? : String?, max_results? : Int?, page_token? : String?, start_index? : String?, timeout_ms? : Int?) -> GetQueryResultsResponse raise @http.HttpError
-pub async fn BigqueryService::jobs_insert(Self, &@http.HttpClient, String) -> Job raise @http.HttpError
-pub async fn BigqueryService::jobs_list(Self, &@http.HttpClient, String, all_users? : Bool?, max_creation_time? : String?, max_results? : Int?, min_creation_time? : String?, page_token? : String?, parent_job_id? : String?, projection? : String?, state_filter? : String?) -> JobList raise @http.HttpError
-pub async fn BigqueryService::jobs_query(Self, &@http.HttpClient, String) -> QueryResponse raise @http.HttpError
-pub async fn BigqueryService::models_delete(Self, &@http.HttpClient, String, String, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn BigqueryService::models_get(Self, &@http.HttpClient, String, String, String) -> Model raise @http.HttpError
-pub async fn BigqueryService::models_list(Self, &@http.HttpClient, String, String, max_results? : Int?, page_token? : String?) -> ListModelsResponse raise @http.HttpError
-pub async fn BigqueryService::models_patch(Self, &@http.HttpClient, String, String, String) -> Model raise @http.HttpError
-pub fn BigqueryService::new(String) -> Self
-pub async fn BigqueryService::projects_get_service_account(Self, &@http.HttpClient, String) -> GetServiceAccountResponse raise @http.HttpError
-pub async fn BigqueryService::projects_list(Self, &@http.HttpClient, max_results? : Int?, page_token? : String?) -> ProjectList raise @http.HttpError
-pub async fn BigqueryService::routines_delete(Self, &@http.HttpClient, String, String, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn BigqueryService::routines_get(Self, &@http.HttpClient, String, String, String, read_mask? : String?) -> Routine raise @http.HttpError
-pub async fn BigqueryService::routines_get_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn BigqueryService::routines_insert(Self, &@http.HttpClient, String, String) -> Routine raise @http.HttpError
-pub async fn BigqueryService::routines_list(Self, &@http.HttpClient, String, String, filter? : String?, max_results? : Int?, page_token? : String?, read_mask? : String?) -> ListRoutinesResponse raise @http.HttpError
-pub async fn BigqueryService::routines_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn BigqueryService::routines_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn BigqueryService::routines_update(Self, &@http.HttpClient, String, String, String) -> Routine raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_batch_delete(Self, &@http.HttpClient, String, String, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_delete(Self, &@http.HttpClient, String, String, String, String, force? : Bool?) -> @http.HttpResponse raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_get(Self, &@http.HttpClient, String, String, String, String) -> RowAccessPolicy raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_get_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_insert(Self, &@http.HttpClient, String, String, String) -> RowAccessPolicy raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_list(Self, &@http.HttpClient, String, String, String, page_size? : Int?, page_token? : String?) -> ListRowAccessPoliciesResponse raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_update(Self, &@http.HttpClient, String, String, String, String) -> RowAccessPolicy raise @http.HttpError
-pub async fn BigqueryService::tabledata_insert_all(Self, &@http.HttpClient, String, String, String) -> TableDataInsertAllResponse raise @http.HttpError
-pub async fn BigqueryService::tabledata_list(Self, &@http.HttpClient, String, String, String, format_options_timestamp_output_format? : String?, format_options_use_int64_timestamp? : Bool?, max_results? : Int?, page_token? : String?, selected_fields? : String?, start_index? : String?) -> TableDataList raise @http.HttpError
-pub async fn BigqueryService::tables_delete(Self, &@http.HttpClient, String, String, String) -> @http.HttpResponse raise @http.HttpError
-pub async fn BigqueryService::tables_get(Self, &@http.HttpClient, String, String, String, selected_fields? : String?, view? : String?) -> Table raise @http.HttpError
-pub async fn BigqueryService::tables_get_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn BigqueryService::tables_insert(Self, &@http.HttpClient, String, String) -> Table raise @http.HttpError
-pub async fn BigqueryService::tables_list(Self, &@http.HttpClient, String, String, max_results? : Int?, page_token? : String?) -> TableList raise @http.HttpError
-pub async fn BigqueryService::tables_patch(Self, &@http.HttpClient, String, String, String, autodetect_schema? : Bool?) -> Table raise @http.HttpError
-pub async fn BigqueryService::tables_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn BigqueryService::tables_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn BigqueryService::tables_update(Self, &@http.HttpClient, String, String, String, autodetect_schema? : Bool?) -> Table raise @http.HttpError
+pub async fn BigqueryService::datasets_delete(Self, String, String, delete_contents? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn BigqueryService::datasets_get(Self, String, String, access_policy_version? : Int?, dataset_view? : String?) -> Dataset raise @http.HttpError
+pub async fn BigqueryService::datasets_insert(Self, String, access_policy_version? : Int?) -> Dataset raise @http.HttpError
+pub async fn BigqueryService::datasets_list(Self, String, all? : Bool?, filter? : String?, max_results? : Int?, page_token? : String?) -> DatasetList raise @http.HttpError
+pub async fn BigqueryService::datasets_patch(Self, String, String, access_policy_version? : Int?, update_mode? : String?) -> Dataset raise @http.HttpError
+pub async fn BigqueryService::datasets_undelete(Self, String, String) -> Dataset raise @http.HttpError
+pub async fn BigqueryService::datasets_update(Self, String, String, access_policy_version? : Int?, update_mode? : String?) -> Dataset raise @http.HttpError
+pub async fn BigqueryService::jobs_cancel(Self, String, String, location? : String?) -> JobCancelResponse raise @http.HttpError
+pub async fn BigqueryService::jobs_delete(Self, String, String, location? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn BigqueryService::jobs_get(Self, String, String, location? : String?) -> Job raise @http.HttpError
+pub async fn BigqueryService::jobs_get_query_results(Self, String, String, format_options_timestamp_output_format? : String?, format_options_use_int64_timestamp? : Bool?, location? : String?, max_results? : Int?, page_token? : String?, start_index? : String?, timeout_ms? : Int?) -> GetQueryResultsResponse raise @http.HttpError
+pub async fn BigqueryService::jobs_insert(Self, String) -> Job raise @http.HttpError
+pub async fn BigqueryService::jobs_list(Self, String, all_users? : Bool?, max_creation_time? : String?, max_results? : Int?, min_creation_time? : String?, page_token? : String?, parent_job_id? : String?, projection? : String?, state_filter? : String?) -> JobList raise @http.HttpError
+pub async fn BigqueryService::jobs_query(Self, String) -> QueryResponse raise @http.HttpError
+pub async fn BigqueryService::models_delete(Self, String, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn BigqueryService::models_get(Self, String, String, String) -> Model raise @http.HttpError
+pub async fn BigqueryService::models_list(Self, String, String, max_results? : Int?, page_token? : String?) -> ListModelsResponse raise @http.HttpError
+pub async fn BigqueryService::models_patch(Self, String, String, String) -> Model raise @http.HttpError
+pub fn BigqueryService::new(&@http.HttpClient, String) -> Self
+pub async fn BigqueryService::projects_get_service_account(Self, String) -> GetServiceAccountResponse raise @http.HttpError
+pub async fn BigqueryService::projects_list(Self, max_results? : Int?, page_token? : String?) -> ProjectList raise @http.HttpError
+pub async fn BigqueryService::routines_delete(Self, String, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn BigqueryService::routines_get(Self, String, String, String, read_mask? : String?) -> Routine raise @http.HttpError
+pub async fn BigqueryService::routines_get_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn BigqueryService::routines_insert(Self, String, String) -> Routine raise @http.HttpError
+pub async fn BigqueryService::routines_list(Self, String, String, filter? : String?, max_results? : Int?, page_token? : String?, read_mask? : String?) -> ListRoutinesResponse raise @http.HttpError
+pub async fn BigqueryService::routines_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn BigqueryService::routines_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn BigqueryService::routines_update(Self, String, String, String) -> Routine raise @http.HttpError
+pub async fn BigqueryService::row_access_policies_batch_delete(Self, String, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn BigqueryService::row_access_policies_delete(Self, String, String, String, String, force? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn BigqueryService::row_access_policies_get(Self, String, String, String, String) -> RowAccessPolicy raise @http.HttpError
+pub async fn BigqueryService::row_access_policies_get_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn BigqueryService::row_access_policies_insert(Self, String, String, String) -> RowAccessPolicy raise @http.HttpError
+pub async fn BigqueryService::row_access_policies_list(Self, String, String, String, page_size? : Int?, page_token? : String?) -> ListRowAccessPoliciesResponse raise @http.HttpError
+pub async fn BigqueryService::row_access_policies_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn BigqueryService::row_access_policies_update(Self, String, String, String, String) -> RowAccessPolicy raise @http.HttpError
+pub async fn BigqueryService::tabledata_insert_all(Self, String, String, String) -> TableDataInsertAllResponse raise @http.HttpError
+pub async fn BigqueryService::tabledata_list(Self, String, String, String, format_options_timestamp_output_format? : String?, format_options_use_int64_timestamp? : Bool?, max_results? : Int?, page_token? : String?, selected_fields? : String?, start_index? : String?) -> TableDataList raise @http.HttpError
+pub async fn BigqueryService::tables_delete(Self, String, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn BigqueryService::tables_get(Self, String, String, String, selected_fields? : String?, view? : String?) -> Table raise @http.HttpError
+pub async fn BigqueryService::tables_get_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn BigqueryService::tables_insert(Self, String, String) -> Table raise @http.HttpError
+pub async fn BigqueryService::tables_list(Self, String, String, max_results? : Int?, page_token? : String?) -> TableList raise @http.HttpError
+pub async fn BigqueryService::tables_patch(Self, String, String, String, autodetect_schema? : Bool?) -> Table raise @http.HttpError
+pub async fn BigqueryService::tables_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn BigqueryService::tables_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn BigqueryService::tables_update(Self, String, String, String, autodetect_schema? : Bool?) -> Table raise @http.HttpError
 
 pub(all) struct BigtableColumn {
   encoding : String?

@@ -33,12 +33,10 @@ async fn main {
     Some(c) => c
   }
   try {
-    let firestore = @gfs.FirestoreService::new(token)
-    let http_impl = @http.DefaultHttpClient::new()
-    let http_client = http_impl as &@http.HttpClient
+    let http_client = @http.DefaultHttpClient::new() as &@http.HttpClient
+    let firestore = @gfs.FirestoreService::new(http_client, token)
     let parent = "projects/" + project + "/databases/(default)/documents"
     let result = firestore.projects_databases_documents_list_documents(
-      http_client,
       parent,
       collection,
       page_size=Some(10),

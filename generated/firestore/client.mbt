@@ -3,16 +3,21 @@
 ///| Base URL: https://firestore.googleapis.com/
 
 ///|
-pub(all) struct FirestoreService {
+pub struct FirestoreService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
 
 ///|
-pub fn FirestoreService::new(access_token : String) -> FirestoreService {
+pub fn FirestoreService::new(
+  client : &@http.HttpClient,
+  access_token : String,
+) -> FirestoreService {
   FirestoreService::{
     base_url: "https://firestore.googleapis.com",
     access_token,
+    client,
   }
 }
 
@@ -32,7 +37,6 @@ fn FirestoreService::auth_headers(
 /// Bulk deletes a subset of documents from Google Cloud Firestore. Documents created or updated after the underlying system starts to process the request will not be deleted. The bulk delete occurs in the background and its progress can be monitored and managed via the Operation resource that is created. For more details on bulk delete behavior, refer to: https://cloud.google.com/firestore/docs/manage-data/bulk-delete
 pub async fn FirestoreService::projects_databases_bulk_delete_documents(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -47,7 +51,7 @@ pub async fn FirestoreService::projects_databases_bulk_delete_documents(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -67,7 +71,6 @@ pub async fn FirestoreService::projects_databases_bulk_delete_documents(
 /// Creates a new database by cloning an existing one. The new database must be in the same cloud region or multi-region location as the existing database. This behaves similar to FirestoreAdmin.CreateDatabase except instead of creating a new empty database, a new database is created with the database type, index configuration, and documents from an existing database. The long-running operation can be used to track the progress of the clone, with the Operation's metadata field type being the CloneDatabaseMetadata. The response type is the Database if the clone was successful. The new database is not readable or writeable until the LRO has completed.
 pub async fn FirestoreService::projects_databases_clone(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -82,7 +85,7 @@ pub async fn FirestoreService::projects_databases_clone(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -102,7 +105,6 @@ pub async fn FirestoreService::projects_databases_clone(
 /// Create a database.
 pub async fn FirestoreService::projects_databases_create(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   database_id? : String? = None,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
@@ -128,7 +130,7 @@ pub async fn FirestoreService::projects_databases_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -148,7 +150,6 @@ pub async fn FirestoreService::projects_databases_create(
 /// Deletes a database.
 pub async fn FirestoreService::projects_databases_delete(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   etag? : String? = None,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
@@ -169,7 +170,7 @@ pub async fn FirestoreService::projects_databases_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -189,7 +190,6 @@ pub async fn FirestoreService::projects_databases_delete(
 /// Exports a copy of all or a subset of documents from Google Cloud Firestore to another storage system, such as Google Cloud Storage. Recent updates to documents may not be reflected in the export. The export occurs in the background and its progress can be monitored and managed via the Operation resource that is created. The output of an export may only be used once the associated operation is done. If an export operation is cancelled before completion it may leave partial data behind in Google Cloud Storage. For more details on export behavior and output format, refer to: https://cloud.google.com/firestore/docs/manage-data/export-import
 pub async fn FirestoreService::projects_databases_export_documents(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -204,7 +204,7 @@ pub async fn FirestoreService::projects_databases_export_documents(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -224,7 +224,6 @@ pub async fn FirestoreService::projects_databases_export_documents(
 /// Gets information about a database.
 pub async fn FirestoreService::projects_databases_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1Database raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -234,7 +233,7 @@ pub async fn FirestoreService::projects_databases_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -254,7 +253,6 @@ pub async fn FirestoreService::projects_databases_get(
 /// Imports documents into Google Cloud Firestore. Existing documents with the same name are overwritten. The import occurs in the background and its progress can be monitored and managed via the Operation resource that is created. If an ImportDocuments operation is cancelled, it is possible that a subset of the data has already been imported to Cloud Firestore.
 pub async fn FirestoreService::projects_databases_import_documents(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -269,7 +267,7 @@ pub async fn FirestoreService::projects_databases_import_documents(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -289,7 +287,6 @@ pub async fn FirestoreService::projects_databases_import_documents(
 /// List all the databases in the project.
 pub async fn FirestoreService::projects_databases_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   show_deleted? : Bool? = None,
 ) -> GoogleFirestoreAdminV1ListDatabasesResponse raise @http.HttpError {
@@ -310,7 +307,7 @@ pub async fn FirestoreService::projects_databases_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -330,7 +327,6 @@ pub async fn FirestoreService::projects_databases_list(
 /// Updates a database.
 pub async fn FirestoreService::projects_databases_patch(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
@@ -356,7 +352,7 @@ pub async fn FirestoreService::projects_databases_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -376,7 +372,6 @@ pub async fn FirestoreService::projects_databases_patch(
 /// Creates a new database by restoring from an existing backup. The new database must be in the same cloud region or multi-region location as the existing backup. This behaves similar to FirestoreAdmin.CreateDatabase except instead of creating a new empty database, a new database is created with the database type, index configuration, and documents from an existing backup. The long-running operation can be used to track the progress of the restore, with the Operation's metadata field type being the RestoreDatabaseMetadata. The response type is the Database if the restore was successful. The new database is not readable or writeable until the LRO has completed.
 pub async fn FirestoreService::projects_databases_restore(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -391,7 +386,7 @@ pub async fn FirestoreService::projects_databases_restore(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -411,7 +406,6 @@ pub async fn FirestoreService::projects_databases_restore(
 /// Creates a backup schedule on a database. At most two backup schedules can be configured on a database, one daily backup schedule and one weekly backup schedule.
 pub async fn FirestoreService::projects_databases_backup_schedules_create(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -426,7 +420,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -446,7 +440,6 @@ pub async fn FirestoreService::projects_databases_backup_schedules_create(
 /// Deletes a backup schedule.
 pub async fn FirestoreService::projects_databases_backup_schedules_delete(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -456,7 +449,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -476,7 +469,6 @@ pub async fn FirestoreService::projects_databases_backup_schedules_delete(
 /// Gets information about a backup schedule.
 pub async fn FirestoreService::projects_databases_backup_schedules_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -486,7 +478,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -506,7 +498,6 @@ pub async fn FirestoreService::projects_databases_backup_schedules_get(
 /// List backup schedules.
 pub async fn FirestoreService::projects_databases_backup_schedules_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> GoogleFirestoreAdminV1ListBackupSchedulesResponse raise @http.HttpError {
   let path = "/" + "v1" + "/" + parent + "/" + "backupSchedules"
@@ -516,7 +507,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -536,7 +527,6 @@ pub async fn FirestoreService::projects_databases_backup_schedules_list(
 /// Updates a backup schedule.
 pub async fn FirestoreService::projects_databases_backup_schedules_patch(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError {
@@ -562,7 +552,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -582,7 +572,6 @@ pub async fn FirestoreService::projects_databases_backup_schedules_patch(
 /// Gets the metadata and configuration for a Field.
 pub async fn FirestoreService::projects_databases_collection_groups_fields_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1Field raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -592,7 +581,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -612,7 +601,6 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_get(
 /// Lists the field configuration and metadata for this database. Currently, FirestoreAdmin.ListFields only supports listing fields that have been explicitly overridden. To issue this query, call FirestoreAdmin.ListFields with the filter set to `indexConfig.usesAncestorConfig:false` or `ttlConfig:*`.
 pub async fn FirestoreService::projects_databases_collection_groups_fields_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -643,7 +631,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -663,7 +651,6 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_list(
 /// Updates a field configuration. Currently, field updates apply only to single field index configuration. However, calls to FirestoreAdmin.UpdateField should provide a field mask to avoid changing any configuration that the caller isn't aware of. The field mask should be specified as: `{ paths: "index_config" }`. This call returns a google.longrunning.Operation which may be used to track the status of the field update. The metadata for the operation will be the type FieldOperationMetadata. To configure the default field settings for the database, use the special `Field` with resource name: `projects/{project_id}/databases/{database_id}/collectionGroups/__default__/fields/*`.
 pub async fn FirestoreService::projects_databases_collection_groups_fields_patch(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   update_mask? : String? = None,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
@@ -689,7 +676,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_patch
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -709,7 +696,6 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_patch
 /// Creates a composite index. This returns a google.longrunning.Operation which may be used to track the status of the creation. The metadata for the operation will be the type IndexOperationMetadata.
 pub async fn FirestoreService::projects_databases_collection_groups_indexes_create(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -724,7 +710,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_crea
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -744,7 +730,6 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_crea
 /// Deletes a composite index.
 pub async fn FirestoreService::projects_databases_collection_groups_indexes_delete(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -754,7 +739,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_dele
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -774,7 +759,6 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_dele
 /// Gets a composite index.
 pub async fn FirestoreService::projects_databases_collection_groups_indexes_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1Index raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -784,7 +768,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -804,7 +788,6 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_get(
 /// Lists composite indexes.
 pub async fn FirestoreService::projects_databases_collection_groups_indexes_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -835,7 +818,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_list
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -855,7 +838,6 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_list
 /// Gets multiple documents. Documents returned by this method are not guaranteed to be returned in the same order that they were requested.
 pub async fn FirestoreService::projects_databases_documents_batch_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   database : String,
 ) -> BatchGetDocumentsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -870,7 +852,7 @@ pub async fn FirestoreService::projects_databases_documents_batch_get(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -890,7 +872,6 @@ pub async fn FirestoreService::projects_databases_documents_batch_get(
 /// Applies a batch of write operations. The BatchWrite method does not apply the write operations atomically and can apply them out of order. Method does not allow more than one write per document. Each write succeeds or fails independently. See the BatchWriteResponse for the success status of each write. If you require an atomically applied set of writes, use Commit instead.
 pub async fn FirestoreService::projects_databases_documents_batch_write(
   self : FirestoreService,
-  client : &@http.HttpClient,
   database : String,
 ) -> BatchWriteResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -905,7 +886,7 @@ pub async fn FirestoreService::projects_databases_documents_batch_write(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -925,7 +906,6 @@ pub async fn FirestoreService::projects_databases_documents_batch_write(
 /// Starts a new transaction.
 pub async fn FirestoreService::projects_databases_documents_begin_transaction(
   self : FirestoreService,
-  client : &@http.HttpClient,
   database : String,
 ) -> BeginTransactionResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -940,7 +920,7 @@ pub async fn FirestoreService::projects_databases_documents_begin_transaction(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -960,7 +940,6 @@ pub async fn FirestoreService::projects_databases_documents_begin_transaction(
 /// Commits a transaction, while optionally updating documents.
 pub async fn FirestoreService::projects_databases_documents_commit(
   self : FirestoreService,
-  client : &@http.HttpClient,
   database : String,
 ) -> CommitResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -975,7 +954,7 @@ pub async fn FirestoreService::projects_databases_documents_commit(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -995,7 +974,6 @@ pub async fn FirestoreService::projects_databases_documents_commit(
 /// Creates a new document.
 pub async fn FirestoreService::projects_databases_documents_create_document(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   collection_id : String,
   document_id? : String? = None,
@@ -1027,7 +1005,7 @@ pub async fn FirestoreService::projects_databases_documents_create_document(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1047,7 +1025,6 @@ pub async fn FirestoreService::projects_databases_documents_create_document(
 /// Deletes a document.
 pub async fn FirestoreService::projects_databases_documents_delete(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   current_document_exists? : Bool? = None,
   current_document_update_time? : String? = None,
@@ -1074,7 +1051,7 @@ pub async fn FirestoreService::projects_databases_documents_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1094,7 +1071,6 @@ pub async fn FirestoreService::projects_databases_documents_delete(
 /// Executes a pipeline query.
 pub async fn FirestoreService::projects_databases_documents_execute_pipeline(
   self : FirestoreService,
-  client : &@http.HttpClient,
   database : String,
 ) -> ExecutePipelineResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1109,7 +1085,7 @@ pub async fn FirestoreService::projects_databases_documents_execute_pipeline(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1129,7 +1105,6 @@ pub async fn FirestoreService::projects_databases_documents_execute_pipeline(
 /// Gets a single document.
 pub async fn FirestoreService::projects_databases_documents_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   mask_field_paths? : String? = None,
   read_time? : String? = None,
@@ -1160,7 +1135,7 @@ pub async fn FirestoreService::projects_databases_documents_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1180,7 +1155,6 @@ pub async fn FirestoreService::projects_databases_documents_get(
 /// Lists documents.
 pub async fn FirestoreService::projects_databases_documents_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   collection_id : String,
   mask_field_paths? : String? = None,
@@ -1232,7 +1206,7 @@ pub async fn FirestoreService::projects_databases_documents_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1252,7 +1226,6 @@ pub async fn FirestoreService::projects_databases_documents_list(
 /// Lists all the collection IDs underneath a document.
 pub async fn FirestoreService::projects_databases_documents_list_collection_ids(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> ListCollectionIdsResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1267,7 +1240,7 @@ pub async fn FirestoreService::projects_databases_documents_list_collection_ids(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1287,7 +1260,6 @@ pub async fn FirestoreService::projects_databases_documents_list_collection_ids(
 /// Lists documents.
 pub async fn FirestoreService::projects_databases_documents_list_documents(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   collection_id : String,
   mask_field_paths? : String? = None,
@@ -1339,7 +1311,7 @@ pub async fn FirestoreService::projects_databases_documents_list_documents(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1359,7 +1331,6 @@ pub async fn FirestoreService::projects_databases_documents_list_documents(
 /// Listens to changes. This method is only available via gRPC or WebChannel (not REST).
 pub async fn FirestoreService::projects_databases_documents_listen(
   self : FirestoreService,
-  client : &@http.HttpClient,
   database : String,
 ) -> ListenResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1374,7 +1345,7 @@ pub async fn FirestoreService::projects_databases_documents_listen(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1394,7 +1365,6 @@ pub async fn FirestoreService::projects_databases_documents_listen(
 /// Partitions a query by returning partition cursors that can be used to run the query in parallel. The returned partition cursors are split points that can be used by RunQuery as starting/end points for the query results.
 pub async fn FirestoreService::projects_databases_documents_partition_query(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> PartitionQueryResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1409,7 +1379,7 @@ pub async fn FirestoreService::projects_databases_documents_partition_query(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1429,7 +1399,6 @@ pub async fn FirestoreService::projects_databases_documents_partition_query(
 /// Updates or inserts a document.
 pub async fn FirestoreService::projects_databases_documents_patch(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   current_document_exists? : Bool? = None,
   current_document_update_time? : String? = None,
@@ -1471,7 +1440,7 @@ pub async fn FirestoreService::projects_databases_documents_patch(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1491,7 +1460,6 @@ pub async fn FirestoreService::projects_databases_documents_patch(
 /// Rolls back a transaction.
 pub async fn FirestoreService::projects_databases_documents_rollback(
   self : FirestoreService,
-  client : &@http.HttpClient,
   database : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1506,7 +1474,7 @@ pub async fn FirestoreService::projects_databases_documents_rollback(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1526,7 +1494,6 @@ pub async fn FirestoreService::projects_databases_documents_rollback(
 /// Runs an aggregation query. Rather than producing Document results like Firestore.RunQuery, this API allows running an aggregation to produce a series of AggregationResult server-side. High-Level Example: ``` -- Return the number of documents in table given a filter. SELECT COUNT(*) FROM ( SELECT * FROM k where a = true ); ```
 pub async fn FirestoreService::projects_databases_documents_run_aggregation_query(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> RunAggregationQueryResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1541,7 +1508,7 @@ pub async fn FirestoreService::projects_databases_documents_run_aggregation_quer
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1561,7 +1528,6 @@ pub async fn FirestoreService::projects_databases_documents_run_aggregation_quer
 /// Runs a query.
 pub async fn FirestoreService::projects_databases_documents_run_query(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> RunQueryResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1576,7 +1542,7 @@ pub async fn FirestoreService::projects_databases_documents_run_query(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1596,7 +1562,6 @@ pub async fn FirestoreService::projects_databases_documents_run_query(
 /// Streams batches of document updates and deletes, in order. This method is only available via gRPC or WebChannel (not REST).
 pub async fn FirestoreService::projects_databases_documents_write(
   self : FirestoreService,
-  client : &@http.HttpClient,
   database : String,
 ) -> WriteResponse raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1611,7 +1576,7 @@ pub async fn FirestoreService::projects_databases_documents_write(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1631,7 +1596,6 @@ pub async fn FirestoreService::projects_databases_documents_write(
 /// Starts asynchronous cancellation on a long-running operation. The server makes a best effort to cancel the operation, but success is not guaranteed. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`. Clients can use Operations.GetOperation or other methods to check whether the cancellation succeeded or whether the operation completed despite cancellation. On successful cancellation, the operation is not deleted; instead, it becomes an operation with an Operation.error value with a google.rpc.Status.code of `1`, corresponding to `Code.CANCELLED`.
 pub async fn FirestoreService::projects_databases_operations_cancel(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1646,7 +1610,7 @@ pub async fn FirestoreService::projects_databases_operations_cancel(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1666,7 +1630,6 @@ pub async fn FirestoreService::projects_databases_operations_cancel(
 /// Deletes a long-running operation. This method indicates that the client is no longer interested in the operation result. It does not cancel the operation. If the server doesn't support this method, it returns `google.rpc.Code.UNIMPLEMENTED`.
 pub async fn FirestoreService::projects_databases_operations_delete(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -1676,7 +1639,7 @@ pub async fn FirestoreService::projects_databases_operations_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1696,7 +1659,6 @@ pub async fn FirestoreService::projects_databases_operations_delete(
 /// Gets the latest state of a long-running operation. Clients can use this method to poll the operation result at intervals as recommended by the API service.
 pub async fn FirestoreService::projects_databases_operations_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -1706,7 +1668,7 @@ pub async fn FirestoreService::projects_databases_operations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1726,7 +1688,6 @@ pub async fn FirestoreService::projects_databases_operations_get(
 /// Lists operations that match the specified filter in the request. If the server doesn't support this method, it returns `UNIMPLEMENTED`.
 pub async fn FirestoreService::projects_databases_operations_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   filter? : String? = None,
   page_size? : Int? = None,
@@ -1763,7 +1724,7 @@ pub async fn FirestoreService::projects_databases_operations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1783,7 +1744,6 @@ pub async fn FirestoreService::projects_databases_operations_list(
 /// Create a user creds.
 pub async fn FirestoreService::projects_databases_user_creds_create(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   user_creds_id? : String? = None,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
@@ -1809,7 +1769,7 @@ pub async fn FirestoreService::projects_databases_user_creds_create(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1829,7 +1789,6 @@ pub async fn FirestoreService::projects_databases_user_creds_create(
 /// Deletes a user creds.
 pub async fn FirestoreService::projects_databases_user_creds_delete(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -1839,7 +1798,7 @@ pub async fn FirestoreService::projects_databases_user_creds_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1859,7 +1818,6 @@ pub async fn FirestoreService::projects_databases_user_creds_delete(
 /// Disables a user creds. No-op if the user creds are already disabled.
 pub async fn FirestoreService::projects_databases_user_creds_disable(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1874,7 +1832,7 @@ pub async fn FirestoreService::projects_databases_user_creds_disable(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1894,7 +1852,6 @@ pub async fn FirestoreService::projects_databases_user_creds_disable(
 /// Enables a user creds. No-op if the user creds are already enabled.
 pub async fn FirestoreService::projects_databases_user_creds_enable(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -1909,7 +1866,7 @@ pub async fn FirestoreService::projects_databases_user_creds_enable(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1929,7 +1886,6 @@ pub async fn FirestoreService::projects_databases_user_creds_enable(
 /// Gets a user creds resource. Note that the returned resource does not contain the secret value itself.
 pub async fn FirestoreService::projects_databases_user_creds_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -1939,7 +1895,7 @@ pub async fn FirestoreService::projects_databases_user_creds_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1959,7 +1915,6 @@ pub async fn FirestoreService::projects_databases_user_creds_get(
 /// List all user creds in the database. Note that the returned resource does not contain the secret value itself.
 pub async fn FirestoreService::projects_databases_user_creds_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
 ) -> GoogleFirestoreAdminV1ListUserCredsResponse raise @http.HttpError {
   let path = "/" + "v1" + "/" + parent + "/" + "userCreds"
@@ -1969,7 +1924,7 @@ pub async fn FirestoreService::projects_databases_user_creds_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -1989,7 +1944,6 @@ pub async fn FirestoreService::projects_databases_user_creds_list(
 /// Resets the password of a user creds.
 pub async fn FirestoreService::projects_databases_user_creds_reset_password(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -2004,7 +1958,7 @@ pub async fn FirestoreService::projects_databases_user_creds_reset_password(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2024,7 +1978,6 @@ pub async fn FirestoreService::projects_databases_user_creds_reset_password(
 /// Gets information about a location.
 pub async fn FirestoreService::projects_locations_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Location raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -2034,7 +1987,7 @@ pub async fn FirestoreService::projects_locations_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2054,7 +2007,6 @@ pub async fn FirestoreService::projects_locations_get(
 /// Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the [ListLocationsRequest.name] field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
 pub async fn FirestoreService::projects_locations_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
   extra_location_types? : String? = None,
   filter? : String? = None,
@@ -2090,7 +2042,7 @@ pub async fn FirestoreService::projects_locations_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2110,7 +2062,6 @@ pub async fn FirestoreService::projects_locations_list(
 /// Deletes a backup.
 pub async fn FirestoreService::projects_locations_backups_delete(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -2120,7 +2071,7 @@ pub async fn FirestoreService::projects_locations_backups_delete(
     @http.HttpMethod::DELETE,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2140,7 +2091,6 @@ pub async fn FirestoreService::projects_locations_backups_delete(
 /// Gets information about a backup.
 pub async fn FirestoreService::projects_locations_backups_get(
   self : FirestoreService,
-  client : &@http.HttpClient,
   name : String,
 ) -> GoogleFirestoreAdminV1Backup raise @http.HttpError {
   let path = "/" + "v1" + "/" + name
@@ -2150,7 +2100,7 @@ pub async fn FirestoreService::projects_locations_backups_get(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -2170,7 +2120,6 @@ pub async fn FirestoreService::projects_locations_backups_get(
 /// Lists all the backups.
 pub async fn FirestoreService::projects_locations_backups_list(
   self : FirestoreService,
-  client : &@http.HttpClient,
   parent : String,
   filter? : String? = None,
 ) -> GoogleFirestoreAdminV1ListBackupsResponse raise @http.HttpError {
@@ -2191,7 +2140,7 @@ pub async fn FirestoreService::projects_locations_backups_list(
     @http.HttpMethod::GET,
     self.auth_headers(),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,

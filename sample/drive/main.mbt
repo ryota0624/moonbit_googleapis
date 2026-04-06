@@ -19,11 +19,10 @@ async fn main {
   }
   try {
     // 2. Client for Drive v3; each request gets `Authorization: Bearer …`.
-    let drive = @gdrive.DriveService::new(token)
-    let http_impl = @http.DefaultHttpClient::new()
-    let http_client = http_impl as &@http.HttpClient
+    let http_client = @http.DefaultHttpClient::new() as &@http.HttpClient
+    let drive = @gdrive.DriveService::new(http_client, token)
     // 3. List files (HTTP + JSON decode in one call).
-    let file_list = drive.files_list(http_client, page_size=Some(10))
+    let file_list = drive.files_list(page_size=Some(10))
     // 4. Print file names and ids (`files` may be absent in the payload).
     println("Files:")
     match file_list.files {

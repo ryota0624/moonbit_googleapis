@@ -3,16 +3,21 @@
 ///| Base URL: https://cloudtrace.googleapis.com/
 
 ///|
-pub(all) struct CloudtraceService {
+pub struct CloudtraceService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
 
 ///|
-pub fn CloudtraceService::new(access_token : String) -> CloudtraceService {
+pub fn CloudtraceService::new(
+  client : &@http.HttpClient,
+  access_token : String,
+) -> CloudtraceService {
   CloudtraceService::{
     base_url: "https://cloudtrace.googleapis.com",
     access_token,
+    client,
   }
 }
 
@@ -32,7 +37,6 @@ fn CloudtraceService::auth_headers(
 /// Batch writes new spans to new or existing traces. You cannot update existing spans. If a span ID already exists, an additional copy of the span will be stored.
 pub async fn CloudtraceService::projects_traces_batch_write(
   self : CloudtraceService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Empty raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -47,7 +51,7 @@ pub async fn CloudtraceService::projects_traces_batch_write(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
@@ -67,7 +71,6 @@ pub async fn CloudtraceService::projects_traces_batch_write(
 /// Creates a new span. If a span ID already exists, an additional copy of the span will be stored.
 pub async fn CloudtraceService::projects_traces_spans_create_span(
   self : CloudtraceService,
-  client : &@http.HttpClient,
   name : String,
 ) -> Span raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
@@ -82,7 +85,7 @@ pub async fn CloudtraceService::projects_traces_spans_create_span(
     h,
     body=Some(body),
   )
-  let resp = client.request(req) catch { e => raise e }
+  let resp = self.client.request(req) catch { e => raise e }
   if resp.status_code >= 400 {
     raise @http.HttpError::network_message(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,

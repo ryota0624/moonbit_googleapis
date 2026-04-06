@@ -47,32 +47,33 @@ pub(all) struct BufferTaskResponse {
   task : Task?
 } derive(Eq, Show, @json.FromJson)
 
-pub(all) struct CloudtasksService {
+pub struct CloudtasksService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
-pub fn CloudtasksService::new(String) -> Self
-pub async fn CloudtasksService::projects_locations_get(Self, &@http.HttpClient, String) -> Location raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_get_cmek_config(Self, &@http.HttpClient, String) -> CmekConfig raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_list(Self, &@http.HttpClient, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_create(Self, &@http.HttpClient, String) -> Queue raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_get(Self, &@http.HttpClient, String) -> Queue raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_get_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListQueuesResponse raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> Queue raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_pause(Self, &@http.HttpClient, String) -> Queue raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_purge(Self, &@http.HttpClient, String) -> Queue raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_resume(Self, &@http.HttpClient, String) -> Queue raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_set_iam_policy(Self, &@http.HttpClient, String) -> Policy raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_tasks_buffer(Self, &@http.HttpClient, String, String) -> BufferTaskResponse raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_tasks_create(Self, &@http.HttpClient, String) -> Task raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_tasks_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_tasks_get(Self, &@http.HttpClient, String, response_view? : String?) -> Task raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_tasks_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?, response_view? : String?) -> ListTasksResponse raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_tasks_run(Self, &@http.HttpClient, String) -> Task raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_queues_test_iam_permissions(Self, &@http.HttpClient, String) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn CloudtasksService::projects_locations_update_cmek_config(Self, &@http.HttpClient, String, update_mask? : String?) -> CmekConfig raise @http.HttpError
+pub fn CloudtasksService::new(&@http.HttpClient, String) -> Self
+pub async fn CloudtasksService::projects_locations_get(Self, String) -> Location raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_get_cmek_config(Self, String) -> CmekConfig raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_create(Self, String) -> Queue raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_get(Self, String) -> Queue raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_get_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListQueuesResponse raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_patch(Self, String, update_mask? : String?) -> Queue raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_pause(Self, String) -> Queue raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_purge(Self, String) -> Queue raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_resume(Self, String) -> Queue raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_set_iam_policy(Self, String) -> Policy raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_tasks_buffer(Self, String, String) -> BufferTaskResponse raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_tasks_create(Self, String) -> Task raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_tasks_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_tasks_get(Self, String, response_view? : String?) -> Task raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_tasks_list(Self, String, page_size? : Int?, page_token? : String?, response_view? : String?) -> ListTasksResponse raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_tasks_run(Self, String) -> Task raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_queues_test_iam_permissions(Self, String) -> TestIamPermissionsResponse raise @http.HttpError
+pub async fn CloudtasksService::projects_locations_update_cmek_config(Self, String, update_mask? : String?) -> CmekConfig raise @http.HttpError
 
 pub(all) struct CmekConfig {
   name : String?

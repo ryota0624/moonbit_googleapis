@@ -147,16 +147,18 @@ test "generate_types and generate_client snapshot" {
       #|///| Base URL: https://www.googleapis.com/
       #|
       #|///|
-      #|pub(all) struct DriveService {
+      #|pub struct DriveService {
       #|  base_url : String
       #|  access_token : String
+      #|  client : &@http.HttpClient
       #|}
       #|
       #|///|
-      #|pub fn DriveService::new(access_token : String) -> DriveService {
+      #|pub fn DriveService::new(client : &@http.HttpClient, access_token : String) -> DriveService {
       #|  DriveService::{
       #|    base_url: "https://www.googleapis.com",
       #|    access_token,
+      #|    client,
       #|  }
       #|}
       #|
@@ -172,7 +174,6 @@ test "generate_types and generate_client snapshot" {
       #|///| Creates a file
       #|pub async fn DriveService::files_create(
       #|  self : DriveService,
-      #|  client : &@http.HttpClient,
       #|  name : String,
       #|  mime_type : String,
       #|  parents? : Array[String]? = None,
@@ -196,7 +197,7 @@ test "generate_types and generate_client snapshot" {
       #|  let path = "/" + "files"
       #|  let url = self.base_url + path
       #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
-      #|  let resp = client.request(req) catch {
+      #|  let resp = self.client.request(req) catch {
       #|    e => raise e
       #|  }
       #|  if resp.status_code >= 400 {
@@ -216,7 +217,6 @@ test "generate_types and generate_client snapshot" {
       #|///| Gets a file
       #|pub async fn DriveService::files_get(
       #|  self : DriveService,
-      #|  client : &@http.HttpClient,
       #|  file_id : String,
       #|  fields? : String? = None,
       #|) -> File raise @http.HttpError {
@@ -233,7 +233,7 @@ test "generate_types and generate_client snapshot" {
       #|    self.base_url + path + "?" + qs
       #|  }
       #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
-      #|  let resp = client.request(req) catch {
+      #|  let resp = self.client.request(req) catch {
       #|    e => raise e
       #|  }
       #|  if resp.status_code >= 400 {
@@ -253,7 +253,6 @@ test "generate_types and generate_client snapshot" {
       #|///| Lists files
       #|pub async fn DriveService::files_list(
       #|  self : DriveService,
-      #|  client : &@http.HttpClient,
       #|  page_size? : Int? = None,
       #|  page_token? : String? = None,
       #|  q? : String? = None,
@@ -279,7 +278,7 @@ test "generate_types and generate_client snapshot" {
       #|    self.base_url + path + "?" + qs
       #|  }
       #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, self.auth_headers())
-      #|  let resp = client.request(req) catch {
+      #|  let resp = self.client.request(req) catch {
       #|    e => raise e
       #|  }
       #|  if resp.status_code >= 400 {

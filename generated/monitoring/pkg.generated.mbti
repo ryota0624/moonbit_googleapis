@@ -544,67 +544,68 @@ pub(all) struct MonitoringQueryLanguageCondition {
   evaluation_missing_data : String?
 } derive(Eq, Show, @json.FromJson)
 
-pub(all) struct MonitoringService {
+pub struct MonitoringService {
   base_url : String
   access_token : String
+  client : &@http.HttpClient
 }
-pub async fn MonitoringService::folders_time_series_list(Self, &@http.HttpClient, String, aggregation_alignment_period? : String?, aggregation_cross_series_reducer? : String?, aggregation_group_by_fields? : String?, aggregation_per_series_aligner? : String?, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, order_by? : String?, page_size? : Int?, page_token? : String?, secondary_aggregation_alignment_period? : String?, secondary_aggregation_cross_series_reducer? : String?, secondary_aggregation_group_by_fields? : String?, secondary_aggregation_per_series_aligner? : String?, view? : String?) -> ListTimeSeriesResponse raise @http.HttpError
-pub fn MonitoringService::new(String) -> Self
-pub async fn MonitoringService::organizations_time_series_list(Self, &@http.HttpClient, String, aggregation_alignment_period? : String?, aggregation_cross_series_reducer? : String?, aggregation_group_by_fields? : String?, aggregation_per_series_aligner? : String?, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, order_by? : String?, page_size? : Int?, page_token? : String?, secondary_aggregation_alignment_period? : String?, secondary_aggregation_cross_series_reducer? : String?, secondary_aggregation_group_by_fields? : String?, secondary_aggregation_per_series_aligner? : String?, view? : String?) -> ListTimeSeriesResponse raise @http.HttpError
-pub async fn MonitoringService::projects_alert_policies_create(Self, &@http.HttpClient, String) -> AlertPolicy raise @http.HttpError
-pub async fn MonitoringService::projects_alert_policies_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn MonitoringService::projects_alert_policies_get(Self, &@http.HttpClient, String) -> AlertPolicy raise @http.HttpError
-pub async fn MonitoringService::projects_alert_policies_list(Self, &@http.HttpClient, String, filter? : String?, order_by? : String?, page_size? : Int?, page_token? : String?) -> ListAlertPoliciesResponse raise @http.HttpError
-pub async fn MonitoringService::projects_alert_policies_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> AlertPolicy raise @http.HttpError
-pub async fn MonitoringService::projects_alerts_get(Self, &@http.HttpClient, String) -> Alert raise @http.HttpError
-pub async fn MonitoringService::projects_alerts_list(Self, &@http.HttpClient, String, filter? : String?, order_by? : String?, page_size? : Int?, page_token? : String?) -> ListAlertsResponse raise @http.HttpError
-pub async fn MonitoringService::projects_collectd_time_series_create(Self, &@http.HttpClient, String) -> CreateCollectdTimeSeriesResponse raise @http.HttpError
-pub async fn MonitoringService::projects_groups_create(Self, &@http.HttpClient, String, validate_only? : Bool?) -> Group raise @http.HttpError
-pub async fn MonitoringService::projects_groups_delete(Self, &@http.HttpClient, String, recursive? : Bool?) -> Empty raise @http.HttpError
-pub async fn MonitoringService::projects_groups_get(Self, &@http.HttpClient, String) -> Group raise @http.HttpError
-pub async fn MonitoringService::projects_groups_list(Self, &@http.HttpClient, String, ancestors_of_group? : String?, children_of_group? : String?, descendants_of_group? : String?, page_size? : Int?, page_token? : String?) -> ListGroupsResponse raise @http.HttpError
-pub async fn MonitoringService::projects_groups_members_list(Self, &@http.HttpClient, String, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, page_size? : Int?, page_token? : String?) -> ListGroupMembersResponse raise @http.HttpError
-pub async fn MonitoringService::projects_groups_update(Self, &@http.HttpClient, String, validate_only? : Bool?) -> Group raise @http.HttpError
-pub async fn MonitoringService::projects_metric_descriptors_create(Self, &@http.HttpClient, String) -> MetricDescriptor raise @http.HttpError
-pub async fn MonitoringService::projects_metric_descriptors_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn MonitoringService::projects_metric_descriptors_get(Self, &@http.HttpClient, String) -> MetricDescriptor raise @http.HttpError
-pub async fn MonitoringService::projects_metric_descriptors_list(Self, &@http.HttpClient, String, active_only? : Bool?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListMetricDescriptorsResponse raise @http.HttpError
-pub async fn MonitoringService::projects_monitored_resource_descriptors_get(Self, &@http.HttpClient, String) -> MonitoredResourceDescriptor raise @http.HttpError
-pub async fn MonitoringService::projects_monitored_resource_descriptors_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListMonitoredResourceDescriptorsResponse raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channel_descriptors_get(Self, &@http.HttpClient, String) -> NotificationChannelDescriptor raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channel_descriptors_list(Self, &@http.HttpClient, String, page_size? : Int?, page_token? : String?) -> ListNotificationChannelDescriptorsResponse raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channels_create(Self, &@http.HttpClient, String) -> NotificationChannel raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channels_delete(Self, &@http.HttpClient, String, force? : Bool?) -> Empty raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channels_get(Self, &@http.HttpClient, String) -> NotificationChannel raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channels_get_verification_code(Self, &@http.HttpClient, String) -> GetNotificationChannelVerificationCodeResponse raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channels_list(Self, &@http.HttpClient, String, filter? : String?, order_by? : String?, page_size? : Int?, page_token? : String?) -> ListNotificationChannelsResponse raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channels_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> NotificationChannel raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channels_send_verification_code(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn MonitoringService::projects_notification_channels_verify(Self, &@http.HttpClient, String) -> NotificationChannel raise @http.HttpError
-pub async fn MonitoringService::projects_snoozes_create(Self, &@http.HttpClient, String) -> Snooze raise @http.HttpError
-pub async fn MonitoringService::projects_snoozes_get(Self, &@http.HttpClient, String) -> Snooze raise @http.HttpError
-pub async fn MonitoringService::projects_snoozes_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSnoozesResponse raise @http.HttpError
-pub async fn MonitoringService::projects_snoozes_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> Snooze raise @http.HttpError
-pub async fn MonitoringService::projects_time_series_create(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn MonitoringService::projects_time_series_create_service(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn MonitoringService::projects_time_series_list(Self, &@http.HttpClient, String, aggregation_alignment_period? : String?, aggregation_cross_series_reducer? : String?, aggregation_group_by_fields? : String?, aggregation_per_series_aligner? : String?, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, order_by? : String?, page_size? : Int?, page_token? : String?, secondary_aggregation_alignment_period? : String?, secondary_aggregation_cross_series_reducer? : String?, secondary_aggregation_group_by_fields? : String?, secondary_aggregation_per_series_aligner? : String?, view? : String?) -> ListTimeSeriesResponse raise @http.HttpError
-pub async fn MonitoringService::projects_time_series_query(Self, &@http.HttpClient, String) -> QueryTimeSeriesResponse raise @http.HttpError
-pub async fn MonitoringService::projects_uptime_check_configs_create(Self, &@http.HttpClient, String) -> UptimeCheckConfig raise @http.HttpError
-pub async fn MonitoringService::projects_uptime_check_configs_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn MonitoringService::projects_uptime_check_configs_get(Self, &@http.HttpClient, String) -> UptimeCheckConfig raise @http.HttpError
-pub async fn MonitoringService::projects_uptime_check_configs_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListUptimeCheckConfigsResponse raise @http.HttpError
-pub async fn MonitoringService::projects_uptime_check_configs_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> UptimeCheckConfig raise @http.HttpError
-pub async fn MonitoringService::services_create(Self, &@http.HttpClient, String, service_id? : String?) -> Service raise @http.HttpError
-pub async fn MonitoringService::services_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn MonitoringService::services_get(Self, &@http.HttpClient, String) -> Service raise @http.HttpError
-pub async fn MonitoringService::services_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListServicesResponse raise @http.HttpError
-pub async fn MonitoringService::services_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> Service raise @http.HttpError
-pub async fn MonitoringService::services_service_level_objectives_create(Self, &@http.HttpClient, String, service_level_objective_id? : String?) -> ServiceLevelObjective raise @http.HttpError
-pub async fn MonitoringService::services_service_level_objectives_delete(Self, &@http.HttpClient, String) -> Empty raise @http.HttpError
-pub async fn MonitoringService::services_service_level_objectives_get(Self, &@http.HttpClient, String, view? : String?) -> ServiceLevelObjective raise @http.HttpError
-pub async fn MonitoringService::services_service_level_objectives_list(Self, &@http.HttpClient, String, filter? : String?, page_size? : Int?, page_token? : String?, view? : String?) -> ListServiceLevelObjectivesResponse raise @http.HttpError
-pub async fn MonitoringService::services_service_level_objectives_patch(Self, &@http.HttpClient, String, update_mask? : String?) -> ServiceLevelObjective raise @http.HttpError
-pub async fn MonitoringService::uptime_check_ips_list(Self, &@http.HttpClient, page_size? : Int?, page_token? : String?) -> ListUptimeCheckIpsResponse raise @http.HttpError
+pub async fn MonitoringService::folders_time_series_list(Self, String, aggregation_alignment_period? : String?, aggregation_cross_series_reducer? : String?, aggregation_group_by_fields? : String?, aggregation_per_series_aligner? : String?, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, order_by? : String?, page_size? : Int?, page_token? : String?, secondary_aggregation_alignment_period? : String?, secondary_aggregation_cross_series_reducer? : String?, secondary_aggregation_group_by_fields? : String?, secondary_aggregation_per_series_aligner? : String?, view? : String?) -> ListTimeSeriesResponse raise @http.HttpError
+pub fn MonitoringService::new(&@http.HttpClient, String) -> Self
+pub async fn MonitoringService::organizations_time_series_list(Self, String, aggregation_alignment_period? : String?, aggregation_cross_series_reducer? : String?, aggregation_group_by_fields? : String?, aggregation_per_series_aligner? : String?, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, order_by? : String?, page_size? : Int?, page_token? : String?, secondary_aggregation_alignment_period? : String?, secondary_aggregation_cross_series_reducer? : String?, secondary_aggregation_group_by_fields? : String?, secondary_aggregation_per_series_aligner? : String?, view? : String?) -> ListTimeSeriesResponse raise @http.HttpError
+pub async fn MonitoringService::projects_alert_policies_create(Self, String) -> AlertPolicy raise @http.HttpError
+pub async fn MonitoringService::projects_alert_policies_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn MonitoringService::projects_alert_policies_get(Self, String) -> AlertPolicy raise @http.HttpError
+pub async fn MonitoringService::projects_alert_policies_list(Self, String, filter? : String?, order_by? : String?, page_size? : Int?, page_token? : String?) -> ListAlertPoliciesResponse raise @http.HttpError
+pub async fn MonitoringService::projects_alert_policies_patch(Self, String, update_mask? : String?) -> AlertPolicy raise @http.HttpError
+pub async fn MonitoringService::projects_alerts_get(Self, String) -> Alert raise @http.HttpError
+pub async fn MonitoringService::projects_alerts_list(Self, String, filter? : String?, order_by? : String?, page_size? : Int?, page_token? : String?) -> ListAlertsResponse raise @http.HttpError
+pub async fn MonitoringService::projects_collectd_time_series_create(Self, String) -> CreateCollectdTimeSeriesResponse raise @http.HttpError
+pub async fn MonitoringService::projects_groups_create(Self, String, validate_only? : Bool?) -> Group raise @http.HttpError
+pub async fn MonitoringService::projects_groups_delete(Self, String, recursive? : Bool?) -> Empty raise @http.HttpError
+pub async fn MonitoringService::projects_groups_get(Self, String) -> Group raise @http.HttpError
+pub async fn MonitoringService::projects_groups_list(Self, String, ancestors_of_group? : String?, children_of_group? : String?, descendants_of_group? : String?, page_size? : Int?, page_token? : String?) -> ListGroupsResponse raise @http.HttpError
+pub async fn MonitoringService::projects_groups_members_list(Self, String, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, page_size? : Int?, page_token? : String?) -> ListGroupMembersResponse raise @http.HttpError
+pub async fn MonitoringService::projects_groups_update(Self, String, validate_only? : Bool?) -> Group raise @http.HttpError
+pub async fn MonitoringService::projects_metric_descriptors_create(Self, String) -> MetricDescriptor raise @http.HttpError
+pub async fn MonitoringService::projects_metric_descriptors_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn MonitoringService::projects_metric_descriptors_get(Self, String) -> MetricDescriptor raise @http.HttpError
+pub async fn MonitoringService::projects_metric_descriptors_list(Self, String, active_only? : Bool?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListMetricDescriptorsResponse raise @http.HttpError
+pub async fn MonitoringService::projects_monitored_resource_descriptors_get(Self, String) -> MonitoredResourceDescriptor raise @http.HttpError
+pub async fn MonitoringService::projects_monitored_resource_descriptors_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListMonitoredResourceDescriptorsResponse raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channel_descriptors_get(Self, String) -> NotificationChannelDescriptor raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channel_descriptors_list(Self, String, page_size? : Int?, page_token? : String?) -> ListNotificationChannelDescriptorsResponse raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channels_create(Self, String) -> NotificationChannel raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channels_delete(Self, String, force? : Bool?) -> Empty raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channels_get(Self, String) -> NotificationChannel raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channels_get_verification_code(Self, String) -> GetNotificationChannelVerificationCodeResponse raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channels_list(Self, String, filter? : String?, order_by? : String?, page_size? : Int?, page_token? : String?) -> ListNotificationChannelsResponse raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channels_patch(Self, String, update_mask? : String?) -> NotificationChannel raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channels_send_verification_code(Self, String) -> Empty raise @http.HttpError
+pub async fn MonitoringService::projects_notification_channels_verify(Self, String) -> NotificationChannel raise @http.HttpError
+pub async fn MonitoringService::projects_snoozes_create(Self, String) -> Snooze raise @http.HttpError
+pub async fn MonitoringService::projects_snoozes_get(Self, String) -> Snooze raise @http.HttpError
+pub async fn MonitoringService::projects_snoozes_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListSnoozesResponse raise @http.HttpError
+pub async fn MonitoringService::projects_snoozes_patch(Self, String, update_mask? : String?) -> Snooze raise @http.HttpError
+pub async fn MonitoringService::projects_time_series_create(Self, String) -> Empty raise @http.HttpError
+pub async fn MonitoringService::projects_time_series_create_service(Self, String) -> Empty raise @http.HttpError
+pub async fn MonitoringService::projects_time_series_list(Self, String, aggregation_alignment_period? : String?, aggregation_cross_series_reducer? : String?, aggregation_group_by_fields? : String?, aggregation_per_series_aligner? : String?, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, order_by? : String?, page_size? : Int?, page_token? : String?, secondary_aggregation_alignment_period? : String?, secondary_aggregation_cross_series_reducer? : String?, secondary_aggregation_group_by_fields? : String?, secondary_aggregation_per_series_aligner? : String?, view? : String?) -> ListTimeSeriesResponse raise @http.HttpError
+pub async fn MonitoringService::projects_time_series_query(Self, String) -> QueryTimeSeriesResponse raise @http.HttpError
+pub async fn MonitoringService::projects_uptime_check_configs_create(Self, String) -> UptimeCheckConfig raise @http.HttpError
+pub async fn MonitoringService::projects_uptime_check_configs_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn MonitoringService::projects_uptime_check_configs_get(Self, String) -> UptimeCheckConfig raise @http.HttpError
+pub async fn MonitoringService::projects_uptime_check_configs_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListUptimeCheckConfigsResponse raise @http.HttpError
+pub async fn MonitoringService::projects_uptime_check_configs_patch(Self, String, update_mask? : String?) -> UptimeCheckConfig raise @http.HttpError
+pub async fn MonitoringService::services_create(Self, String, service_id? : String?) -> Service raise @http.HttpError
+pub async fn MonitoringService::services_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn MonitoringService::services_get(Self, String) -> Service raise @http.HttpError
+pub async fn MonitoringService::services_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> ListServicesResponse raise @http.HttpError
+pub async fn MonitoringService::services_patch(Self, String, update_mask? : String?) -> Service raise @http.HttpError
+pub async fn MonitoringService::services_service_level_objectives_create(Self, String, service_level_objective_id? : String?) -> ServiceLevelObjective raise @http.HttpError
+pub async fn MonitoringService::services_service_level_objectives_delete(Self, String) -> Empty raise @http.HttpError
+pub async fn MonitoringService::services_service_level_objectives_get(Self, String, view? : String?) -> ServiceLevelObjective raise @http.HttpError
+pub async fn MonitoringService::services_service_level_objectives_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?, view? : String?) -> ListServiceLevelObjectivesResponse raise @http.HttpError
+pub async fn MonitoringService::services_service_level_objectives_patch(Self, String, update_mask? : String?) -> ServiceLevelObjective raise @http.HttpError
+pub async fn MonitoringService::uptime_check_ips_list(Self, page_size? : Int?, page_token? : String?) -> ListUptimeCheckIpsResponse raise @http.HttpError
 
 pub(all) struct MutationRecord {
   mutate_time : String?
