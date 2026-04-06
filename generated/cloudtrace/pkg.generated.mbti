@@ -33,10 +33,10 @@ pub(all) struct BatchWriteSpansRequest {
 
 pub struct CloudtraceService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
-pub fn CloudtraceService::new(&@http.HttpClient, String) -> Self
+pub fn CloudtraceService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn CloudtraceService::projects_traces_batch_write(Self, String) -> Empty raise @http.HttpError
 pub async fn CloudtraceService::projects_traces_spans_create_span(Self, String) -> Span raise @http.HttpError
 

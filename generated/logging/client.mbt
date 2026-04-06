@@ -5,28 +5,30 @@
 ///|
 pub struct LoggingService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn LoggingService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> LoggingService {
   LoggingService::{
     base_url: "https://logging.googleapis.com",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn LoggingService::auth_headers(self : LoggingService) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+async fn LoggingService::auth_headers(
+  self : LoggingService,
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| logging.billingAccounts.getCmekSettings

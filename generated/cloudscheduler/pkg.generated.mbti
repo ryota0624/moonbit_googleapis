@@ -31,10 +31,10 @@ pub(all) struct CancelOperationRequest {
 
 pub struct CloudschedulerService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
-pub fn CloudschedulerService::new(&@http.HttpClient, String) -> Self
+pub fn CloudschedulerService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn CloudschedulerService::projects_locations_get(Self, String) -> Location raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_get_cmek_config(Self, String) -> CmekConfig raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_jobs_create(Self, String) -> Job raise @http.HttpError

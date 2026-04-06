@@ -546,11 +546,11 @@ pub(all) struct MonitoringQueryLanguageCondition {
 
 pub struct MonitoringService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 pub async fn MonitoringService::folders_time_series_list(Self, String, aggregation_alignment_period? : String?, aggregation_cross_series_reducer? : String?, aggregation_group_by_fields? : String?, aggregation_per_series_aligner? : String?, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, order_by? : String?, page_size? : Int?, page_token? : String?, secondary_aggregation_alignment_period? : String?, secondary_aggregation_cross_series_reducer? : String?, secondary_aggregation_group_by_fields? : String?, secondary_aggregation_per_series_aligner? : String?, view? : String?) -> ListTimeSeriesResponse raise @http.HttpError
-pub fn MonitoringService::new(&@http.HttpClient, String) -> Self
+pub fn MonitoringService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn MonitoringService::organizations_time_series_list(Self, String, aggregation_alignment_period? : String?, aggregation_cross_series_reducer? : String?, aggregation_group_by_fields? : String?, aggregation_per_series_aligner? : String?, filter? : String?, interval_end_time? : String?, interval_start_time? : String?, order_by? : String?, page_size? : Int?, page_token? : String?, secondary_aggregation_alignment_period? : String?, secondary_aggregation_cross_series_reducer? : String?, secondary_aggregation_group_by_fields? : String?, secondary_aggregation_per_series_aligner? : String?, view? : String?) -> ListTimeSeriesResponse raise @http.HttpError
 pub async fn MonitoringService::projects_alert_policies_create(Self, String) -> AlertPolicy raise @http.HttpError
 pub async fn MonitoringService::projects_alert_policies_delete(Self, String) -> Empty raise @http.HttpError

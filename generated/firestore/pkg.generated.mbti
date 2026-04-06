@@ -220,10 +220,10 @@ pub(all) struct FindNearest {
 
 pub struct FirestoreService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
-pub fn FirestoreService::new(&@http.HttpClient, String) -> Self
+pub fn FirestoreService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn FirestoreService::projects_databases_backup_schedules_create(Self, String) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError
 pub async fn FirestoreService::projects_databases_backup_schedules_delete(Self, String) -> Empty raise @http.HttpError
 pub async fn FirestoreService::projects_databases_backup_schedules_get(Self, String) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError

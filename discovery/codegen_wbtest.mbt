@@ -149,23 +149,26 @@ test "generate_types and generate_client snapshot" {
       #|///|
       #|pub struct DriveService {
       #|  base_url : String
-      #|  access_token : String
+      #|  get_token : async () -> String
       #|  client : &@http.HttpClient
       #|}
       #|
       #|///|
-      #|pub fn DriveService::new(client : &@http.HttpClient, access_token : String) -> DriveService {
+      #|pub fn DriveService::new(client : &@http.HttpClient, get_token : async () -> String) -> DriveService {
       #|  DriveService::{
       #|    base_url: "https://www.googleapis.com",
-      #|    access_token,
+      #|    get_token,
       #|    client,
       #|  }
       #|}
       #|
       #|///|
-      #|fn DriveService::auth_headers(self : DriveService) -> Map[String, String] {
+      #|async fn DriveService::auth_headers(self : DriveService) -> Map[String, String] raise @http.HttpError {
+      #|  let token = (self.get_token)() catch {
+      #|    e => raise @http.HttpError::NetworkError(e.to_string())
+      #|  }
       #|  {
-      #|    "Authorization": "Bearer " + self.access_token,
+      #|    "Authorization": "Bearer " + token,
       #|    "Accept": "application/json",
       #|  }
       #|}
@@ -295,6 +298,7 @@ test "generate_types and generate_client snapshot" {
       #|}
       #|
       #|
+
     ),
   )
 }

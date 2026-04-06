@@ -23,7 +23,7 @@ pub(all) struct HttpResponse {
 }
 
 ///|
-pub suberror HttpError {
+pub(all) suberror HttpError {
   NetworkError(String)
   TimeoutError(String)
   InvalidUrl(String)

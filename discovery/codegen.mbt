@@ -921,25 +921,30 @@ pub fn generate_client(desc : RestDescription) -> String {
   b.write_string("///|\n")
   b.write_string("pub struct \{service_ty} {\n")
   b.write_string("  base_url : String\n")
-  b.write_string("  access_token : String\n")
+  b.write_string("  get_token : async () -> String\n")
   b.write_string("  client : &@http.HttpClient\n")
   b.write_string("}\n\n")
   b.write_string("///|\n")
   b.write_string(
-    "pub fn \{service_ty}::new(client : &@http.HttpClient, access_token : String) -> \{service_ty} {\n",
+    "pub fn \{service_ty}::new(client : &@http.HttpClient, get_token : async () -> String) -> \{service_ty} {\n",
   )
   b.write_string("  " + service_ty + "::{\n")
   b.write_string("    base_url: \"\{base_lit}\",\n")
-  b.write_string("    access_token,\n")
+  b.write_string("    get_token,\n")
   b.write_string("    client,\n")
   b.write_string("  }\n")
   b.write_string("}\n\n")
   b.write_string("///|\n")
   b.write_string(
-    "fn \{service_ty}::auth_headers(self : \{service_ty}) -> Map[String, String] {\n",
+    "async fn \{service_ty}::auth_headers(self : \{service_ty}) -> Map[String, String] raise @http.HttpError {\n",
   )
+  b.write_string("  let token = (self.get_token)() catch {\n")
+  b.write_string(
+    "    e => raise @http.HttpError::NetworkError(e.to_string())\n",
+  )
+  b.write_string("  }\n")
   b.write_string("  {\n")
-  b.write_string("    \"Authorization\": \"Bearer \" + self.access_token,\n")
+  b.write_string("    \"Authorization\": \"Bearer \" + token,\n")
   b.write_string("    \"Accept\": \"application/json\",\n")
   b.write_string("  }\n")
   b.write_string("}\n\n")

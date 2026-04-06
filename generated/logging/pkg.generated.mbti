@@ -458,7 +458,7 @@ pub(all) struct LoggingQuery {
 
 pub struct LoggingService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 pub async fn LoggingService::billing_accounts_exclusions_create(Self, String) -> LogExclusion raise @http.HttpError
@@ -595,7 +595,7 @@ pub async fn LoggingService::locations_operations_list(Self, String, filter? : S
 pub async fn LoggingService::logs_delete(Self, String) -> Empty raise @http.HttpError
 pub async fn LoggingService::logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : String?) -> ListLogsResponse raise @http.HttpError
 pub async fn LoggingService::monitored_resource_descriptors_list(Self, page_size? : Int?, page_token? : String?) -> ListMonitoredResourceDescriptorsResponse raise @http.HttpError
-pub fn LoggingService::new(&@http.HttpClient, String) -> Self
+pub fn LoggingService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn LoggingService::organizations_exclusions_create(Self, String) -> LogExclusion raise @http.HttpError
 pub async fn LoggingService::organizations_exclusions_delete(Self, String) -> Empty raise @http.HttpError
 pub async fn LoggingService::organizations_exclusions_get(Self, String) -> LogExclusion raise @http.HttpError

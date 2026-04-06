@@ -5,28 +5,30 @@
 ///|
 pub struct StorageService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn StorageService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> StorageService {
   StorageService::{
     base_url: "https://storage.googleapis.com/storage/v1",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn StorageService::auth_headers(self : StorageService) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+async fn StorageService::auth_headers(
+  self : StorageService,
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| storage.anywhereCaches.disable

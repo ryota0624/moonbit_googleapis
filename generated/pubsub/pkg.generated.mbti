@@ -260,10 +260,10 @@ pub(all) struct PubsubMessage {
 
 pub struct PubsubService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
-pub fn PubsubService::new(&@http.HttpClient, String) -> Self
+pub fn PubsubService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn PubsubService::projects_schemas_commit(Self, String) -> Schema raise @http.HttpError
 pub async fn PubsubService::projects_schemas_create(Self, String, schema_id? : String?) -> Schema raise @http.HttpError
 pub async fn PubsubService::projects_schemas_delete(Self, String) -> Empty raise @http.HttpError

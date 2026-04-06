@@ -5,30 +5,30 @@
 ///|
 pub struct CloudtraceService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn CloudtraceService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> CloudtraceService {
   CloudtraceService::{
     base_url: "https://cloudtrace.googleapis.com",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn CloudtraceService::auth_headers(
+async fn CloudtraceService::auth_headers(
   self : CloudtraceService,
-) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| cloudtrace.projects.traces.batchWrite

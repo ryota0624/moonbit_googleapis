@@ -355,7 +355,7 @@ pub(all) struct ServiceAccount {
 
 pub struct StorageService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 pub async fn StorageService::anywhere_caches_disable(Self, String, String) -> AnywhereCache raise @http.HttpError
@@ -404,7 +404,7 @@ pub async fn StorageService::managed_folders_insert(Self, String) -> ManagedFold
 pub async fn StorageService::managed_folders_list(Self, String, page_size? : Int?, page_token? : String?, prefix? : String?) -> ManagedFolders raise @http.HttpError
 pub async fn StorageService::managed_folders_set_iam_policy(Self, String, String, user_project? : String?) -> Policy raise @http.HttpError
 pub async fn StorageService::managed_folders_test_iam_permissions(Self, String, String, permissions? : String?, user_project? : String?) -> TestIamPermissionsResponse raise @http.HttpError
-pub fn StorageService::new(&@http.HttpClient, String) -> Self
+pub fn StorageService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn StorageService::notifications_delete(Self, String, String, user_project? : String?) -> @http.HttpResponse raise @http.HttpError
 pub async fn StorageService::notifications_get(Self, String, String, user_project? : String?) -> Notification raise @http.HttpError
 pub async fn StorageService::notifications_insert(Self, String, user_project? : String?) -> Notification raise @http.HttpError

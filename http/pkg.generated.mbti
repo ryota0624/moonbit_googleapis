@@ -7,7 +7,7 @@ pub async fn default_http_request(HttpRequest) -> HttpResponse raise HttpError
 pub fn parse_http_method(String) -> HttpMethod?
 
 // Errors
-pub suberror HttpError {
+pub(all) suberror HttpError {
   NetworkError(String)
   TimeoutError(String)
   InvalidUrl(String)

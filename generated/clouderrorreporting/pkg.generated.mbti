@@ -13,10 +13,10 @@ import {
 // Types and methods
 pub struct ClouderrorreportingService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
-pub fn ClouderrorreportingService::new(&@http.HttpClient, String) -> Self
+pub fn ClouderrorreportingService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn ClouderrorreportingService::projects_delete_events(Self, String) -> DeleteEventsResponse raise @http.HttpError
 pub async fn ClouderrorreportingService::projects_events_list(Self, String, group_id? : String?, page_size? : Int?, page_token? : String?, service_filter_resource_type? : String?, service_filter_service? : String?, service_filter_version? : String?, time_range_period? : String?) -> ListEventsResponse raise @http.HttpError
 pub async fn ClouderrorreportingService::projects_events_report(Self, String) -> ReportErrorEventResponse raise @http.HttpError

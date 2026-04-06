@@ -49,10 +49,10 @@ pub(all) struct BufferTaskResponse {
 
 pub struct CloudtasksService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
-pub fn CloudtasksService::new(&@http.HttpClient, String) -> Self
+pub fn CloudtasksService::new(&@http.HttpClient, async () -> String) -> Self
 pub async fn CloudtasksService::projects_locations_get(Self, String) -> Location raise @http.HttpError
 pub async fn CloudtasksService::projects_locations_get_cmek_config(Self, String) -> CmekConfig raise @http.HttpError
 pub async fn CloudtasksService::projects_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError

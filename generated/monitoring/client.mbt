@@ -5,30 +5,30 @@
 ///|
 pub struct MonitoringService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn MonitoringService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> MonitoringService {
   MonitoringService::{
     base_url: "https://monitoring.googleapis.com",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn MonitoringService::auth_headers(
+async fn MonitoringService::auth_headers(
   self : MonitoringService,
-) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| monitoring.folders.timeSeries.list

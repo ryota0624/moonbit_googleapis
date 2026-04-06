@@ -5,30 +5,30 @@
 ///|
 pub struct ClouderrorreportingService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn ClouderrorreportingService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> ClouderrorreportingService {
   ClouderrorreportingService::{
     base_url: "https://clouderrorreporting.googleapis.com",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn ClouderrorreportingService::auth_headers(
+async fn ClouderrorreportingService::auth_headers(
   self : ClouderrorreportingService,
-) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| clouderrorreporting.projects.deleteEvents

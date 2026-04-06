@@ -5,30 +5,30 @@
 ///|
 pub struct CloudschedulerService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn CloudschedulerService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> CloudschedulerService {
   CloudschedulerService::{
     base_url: "https://cloudscheduler.googleapis.com",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn CloudschedulerService::auth_headers(
+async fn CloudschedulerService::auth_headers(
   self : CloudschedulerService,
-) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| cloudscheduler.projects.locations.get

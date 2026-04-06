@@ -5,28 +5,30 @@
 ///|
 pub struct PubsubService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn PubsubService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> PubsubService {
   PubsubService::{
     base_url: "https://pubsub.googleapis.com",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn PubsubService::auth_headers(self : PubsubService) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+async fn PubsubService::auth_headers(
+  self : PubsubService,
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| pubsub.projects.schemas.commit

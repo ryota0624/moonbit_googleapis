@@ -5,30 +5,30 @@
 ///|
 pub struct CloudtasksService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn CloudtasksService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> CloudtasksService {
   CloudtasksService::{
     base_url: "https://cloudtasks.googleapis.com",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn CloudtasksService::auth_headers(
+async fn CloudtasksService::auth_headers(
   self : CloudtasksService,
-) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| cloudtasks.projects.locations.get

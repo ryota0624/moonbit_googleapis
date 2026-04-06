@@ -5,28 +5,30 @@
 ///|
 pub struct DriveService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn DriveService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> DriveService {
   DriveService::{
     base_url: "https://www.googleapis.com/drive/v3",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn DriveService::auth_headers(self : DriveService) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+async fn DriveService::auth_headers(
+  self : DriveService,
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| drive.about.get

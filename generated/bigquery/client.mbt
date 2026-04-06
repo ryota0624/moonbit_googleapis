@@ -5,28 +5,30 @@
 ///|
 pub struct BigqueryService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn BigqueryService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> BigqueryService {
   BigqueryService::{
     base_url: "https://bigquery.googleapis.com/bigquery/v2",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn BigqueryService::auth_headers(self : BigqueryService) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+async fn BigqueryService::auth_headers(
+  self : BigqueryService,
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| bigquery.datasets.delete

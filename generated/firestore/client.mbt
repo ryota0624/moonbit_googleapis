@@ -5,30 +5,30 @@
 ///|
 pub struct FirestoreService {
   base_url : String
-  access_token : String
+  get_token : async () -> String
   client : &@http.HttpClient
 }
 
 ///|
 pub fn FirestoreService::new(
   client : &@http.HttpClient,
-  access_token : String,
+  get_token : async () -> String,
 ) -> FirestoreService {
   FirestoreService::{
     base_url: "https://firestore.googleapis.com",
-    access_token,
+    get_token,
     client,
   }
 }
 
 ///|
-fn FirestoreService::auth_headers(
+async fn FirestoreService::auth_headers(
   self : FirestoreService,
-) -> Map[String, String] {
-  {
-    "Authorization": "Bearer " + self.access_token,
-    "Accept": "application/json",
+) -> Map[String, String] raise @http.HttpError {
+  let token = (self.get_token)() catch {
+    e => raise @http.HttpError::NetworkError(e.to_string())
   }
+  { "Authorization": "Bearer " + token, "Accept": "application/json" }
 }
 
 ///| firestore.projects.databases.bulkDeleteDocuments
