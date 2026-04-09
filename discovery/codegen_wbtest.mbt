@@ -119,6 +119,17 @@ test "generate_types and generate_client snapshot" {
     #|            "mimeType": { "type": "string", "required": true, "location": "body" },
     #|            "parents": { "type": "array", "location": "body" }
     #|          }
+    #|        },
+    #|        "copy": {
+    #|          "id": "drive.files.copy",
+    #|          "path": "files/{fileId}/copy",
+    #|          "httpMethod": "POST",
+    #|          "description": "Copies a file",
+    #|          "request": { "$ref": "File" },
+    #|          "response": { "$ref": "File" },
+    #|          "parameters": {
+    #|            "fileId": { "type": "string", "required": true, "location": "path" }
+    #|          }
     #|        }
     #|      }
     #|    }
@@ -135,12 +146,12 @@ test "generate_types and generate_client snapshot" {
       #|  mime_type : String?
       #|  type_ : String?
       #|  ref_ : String?
-      #|} derive(Eq, Show, FromJson(rename_fields="camelCase", fields(type_(rename="type"), ref_(rename="ref"))))
+      #|} derive(Eq, Show, FromJson(rename_fields="camelCase", fields(type_(rename="type"), ref_(rename="ref"))), ToJson(rename_fields="camelCase", fields(type_(rename="type"), ref_(rename="ref"))))
       #|
       #|///| Schema FileList
       #|pub(all) struct FileList {
       #|  files : Array[File]?
-      #|} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+      #|} derive(Eq, Show, FromJson(rename_fields="camelCase"), ToJson(rename_fields="camelCase"))
       #|
       #|
       #|---
@@ -158,6 +169,35 @@ test "generate_types and generate_client snapshot" {
       #|  DriveService::{
       #|    base_url: "https://www.googleapis.com",
       #|    client,
+      #|  }
+      #|}
+      #|
+      #|///| drive.files.copy
+      #|///| Copies a file
+      #|pub async fn DriveService::files_copy(
+      #|  self : DriveService,
+      #|  file_id : String,
+      #|  request : File,
+      #|) -> File raise @http.HttpError {
+      #|  let body = request.to_json().stringify()
+      #|  let h : Map[String, String] = {}
+      #|  h.set("Content-Type", "application/json")
+      #|  let path = "/" + "files" + "/" + file_id + "/" + "copy"
+      #|  let url = self.base_url + path
+      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::POST, h, body=Some(body))
+      #|  let resp = self.client.request(req) catch {
+      #|    e => raise e
+      #|  }
+      #|  if resp.status_code >= 400 {
+      #|    raise @http.HttpError::network_message(
+      #|      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+      #|    )
+      #|  }
+      #|  let json = @json.parse(resp.body) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
+      #|  @json.from_json(json) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
       #|  }
       #|}
       #|

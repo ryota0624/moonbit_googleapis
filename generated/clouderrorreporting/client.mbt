@@ -116,9 +116,9 @@ pub async fn ClouderrorreportingService::projects_events_list(
 pub async fn ClouderrorreportingService::projects_events_report(
   self : ClouderrorreportingService,
   project_name : String,
+  request : ReportedErrorEvent,
 ) -> ReportErrorEventResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1beta1" + "/" + project_name + "/" + "events:report"
@@ -261,9 +261,9 @@ pub async fn ClouderrorreportingService::projects_groups_get(
 pub async fn ClouderrorreportingService::projects_groups_update(
   self : ClouderrorreportingService,
   name : String,
+  request : ErrorGroup,
 ) -> ErrorGroup raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1beta1" + "/" + name
@@ -497,9 +497,9 @@ pub async fn ClouderrorreportingService::projects_locations_groups_get(
 pub async fn ClouderrorreportingService::projects_locations_groups_update(
   self : ClouderrorreportingService,
   name : String,
+  request : ErrorGroup,
 ) -> ErrorGroup raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1beta1" + "/" + name

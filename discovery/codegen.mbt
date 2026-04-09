@@ -577,6 +577,13 @@ fn write_rest_method(
     let ty = param_type_to_moonbit(pb.1.type_)
     b.write_string("  \{arg} : \{ty},\n")
   }
+  match rest_m.request {
+    Some({ ref_: Some(r) }) => {
+      let request_type = ref_to_type_name(r)
+      b.write_string("  request : \{request_type},\n")
+    }
+    _ => ()
+  }
   for qp in query_pairs {
     let arg = safe_field_name(qp.0)
     let ty = param_type_to_moonbit(qp.1.type_)
@@ -595,7 +602,7 @@ fn write_rest_method(
   b.write_string(") -> \{ret_ty} raise @http.HttpError {\n")
   let path_expr = path_expr_from_template(rest_m.path)
   let use_query = query_pairs.length() > 0
-  let use_body = is_mutating_http(http_u)
+  let use_body = is_mutating_http(http_u) || rest_m.request is Some(_)
   if use_query {
     b.write_string("  let qp : Array[(String, String)] = Array::new()\n")
     for qp in query_pairs {
@@ -605,16 +612,22 @@ fn write_rest_method(
     b.write_string("  let qs = build_query_string(qp)\n")
   }
   if use_body {
-    b.write_string("  let meta : Map[String, Json] = Map::new()\n")
-    for bp in body_req {
-      let arg = safe_field_name(bp.0)
-      write_body_field_required(b, bp.0, bp.1, arg)
+    match rest_m.request {
+      Some({ ref_: Some(_) }) =>
+        b.write_string("  let body = request.to_json().stringify()\n")
+      _ => {
+        b.write_string("  let meta : Map[String, Json] = Map::new()\n")
+        for bp in body_req {
+          let arg = safe_field_name(bp.0)
+          write_body_field_required(b, bp.0, bp.1, arg)
+        }
+        for bp in body_opt {
+          let arg = safe_field_name(bp.0)
+          write_body_field_match(b, bp.0, bp.1, arg)
+        }
+        b.write_string("  let body = Json::object(meta).stringify()\n")
+      }
     }
-    for bp in body_opt {
-      let arg = safe_field_name(bp.0)
-      write_body_field_match(b, bp.0, bp.1, arg)
-    }
-    b.write_string("  let body = Json::object(meta).stringify()\n")
     b.write_string("  let h : Map[String, String] = {}\n")
     b.write_string("  h.set(\"Content-Type\", \"application/json\")\n")
   }
@@ -870,22 +883,27 @@ fn write_schema_struct(
   b.write_string("}")
   if renamed.is_empty() {
     b.write_string(
-      " derive(Eq, Show, FromJson(rename_fields=\"camelCase\"))\n\n",
+      " derive(Eq, Show, FromJson(rename_fields=\"camelCase\"), ToJson(rename_fields=\"camelCase\"))\n\n",
     )
   } else {
-    b.write_string(
-      " derive(Eq, Show, FromJson(rename_fields=\"camelCase\", fields(",
-    )
-    for i in 0..<renamed.length() {
-      if i > 0 {
-        b.write_string(", ")
+    let fields_part = {
+      let fb = StringBuilder::new()
+      fb.write_string(", fields(")
+      for i in 0..<renamed.length() {
+        if i > 0 {
+          fb.write_string(", ")
+        }
+        let pair = renamed[i]
+        let safe = pair.0
+        let json_key = pair.1
+        fb.write_string("\{safe}(rename=\"\{json_key}\")")
       }
-      let pair = renamed[i]
-      let safe = pair.0
-      let json_key = pair.1
-      b.write_string("\{safe}(rename=\"\{json_key}\")")
+      fb.write_string(")")
+      fb.to_string()
     }
-    b.write_string(")))\n\n")
+    b.write_string(
+      " derive(Eq, Show, FromJson(rename_fields=\"camelCase\"\{fields_part}), ToJson(rename_fields=\"camelCase\"\{fields_part}))\n\n",
+    )
   }
 }
 

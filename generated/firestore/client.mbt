@@ -20,9 +20,9 @@ pub fn FirestoreService::new(client : @core.GoogleClient) -> FirestoreService {
 pub async fn FirestoreService::projects_databases_bulk_delete_documents(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1BulkDeleteDocumentsRequest,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":bulkDeleteDocuments"
@@ -54,9 +54,9 @@ pub async fn FirestoreService::projects_databases_bulk_delete_documents(
 pub async fn FirestoreService::projects_databases_clone(
   self : FirestoreService,
   parent : String,
+  request : GoogleFirestoreAdminV1CloneDatabaseRequest,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "databases:clone"
@@ -88,6 +88,7 @@ pub async fn FirestoreService::projects_databases_clone(
 pub async fn FirestoreService::projects_databases_create(
   self : FirestoreService,
   parent : String,
+  request : GoogleFirestoreAdminV1Database,
   database_id? : String? = None,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -96,8 +97,7 @@ pub async fn FirestoreService::projects_databases_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "databases"
@@ -169,9 +169,9 @@ pub async fn FirestoreService::projects_databases_delete(
 pub async fn FirestoreService::projects_databases_export_documents(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1ExportDocumentsRequest,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":exportDocuments"
@@ -228,9 +228,9 @@ pub async fn FirestoreService::projects_databases_get(
 pub async fn FirestoreService::projects_databases_import_documents(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1ImportDocumentsRequest,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":importDocuments"
@@ -298,6 +298,7 @@ pub async fn FirestoreService::projects_databases_list(
 pub async fn FirestoreService::projects_databases_patch(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1Database,
   update_mask? : String? = None,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -306,8 +307,7 @@ pub async fn FirestoreService::projects_databases_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -343,9 +343,9 @@ pub async fn FirestoreService::projects_databases_patch(
 pub async fn FirestoreService::projects_databases_restore(
   self : FirestoreService,
   parent : String,
+  request : GoogleFirestoreAdminV1RestoreDatabaseRequest,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "databases:restore"
@@ -377,9 +377,9 @@ pub async fn FirestoreService::projects_databases_restore(
 pub async fn FirestoreService::projects_databases_backup_schedules_create(
   self : FirestoreService,
   parent : String,
+  request : GoogleFirestoreAdminV1BackupSchedule,
 ) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "backupSchedules"
@@ -486,6 +486,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_list(
 pub async fn FirestoreService::projects_databases_backup_schedules_patch(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1BackupSchedule,
   update_mask? : String? = None,
 ) -> GoogleFirestoreAdminV1BackupSchedule raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -494,8 +495,7 @@ pub async fn FirestoreService::projects_databases_backup_schedules_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -602,6 +602,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_list(
 pub async fn FirestoreService::projects_databases_collection_groups_fields_patch(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1Field,
   update_mask? : String? = None,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -610,8 +611,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_patch
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -647,9 +647,9 @@ pub async fn FirestoreService::projects_databases_collection_groups_fields_patch
 pub async fn FirestoreService::projects_databases_collection_groups_indexes_create(
   self : FirestoreService,
   parent : String,
+  request : GoogleFirestoreAdminV1Index,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "indexes"
@@ -777,9 +777,9 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_list
 pub async fn FirestoreService::projects_databases_documents_batch_get(
   self : FirestoreService,
   database : String,
+  request : BatchGetDocumentsRequest,
 ) -> BatchGetDocumentsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:batchGet"
@@ -811,9 +811,9 @@ pub async fn FirestoreService::projects_databases_documents_batch_get(
 pub async fn FirestoreService::projects_databases_documents_batch_write(
   self : FirestoreService,
   database : String,
+  request : BatchWriteRequest,
 ) -> BatchWriteResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:batchWrite"
@@ -845,9 +845,9 @@ pub async fn FirestoreService::projects_databases_documents_batch_write(
 pub async fn FirestoreService::projects_databases_documents_begin_transaction(
   self : FirestoreService,
   database : String,
+  request : BeginTransactionRequest,
 ) -> BeginTransactionResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:beginTransaction"
@@ -879,9 +879,9 @@ pub async fn FirestoreService::projects_databases_documents_begin_transaction(
 pub async fn FirestoreService::projects_databases_documents_commit(
   self : FirestoreService,
   database : String,
+  request : CommitRequest,
 ) -> CommitResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:commit"
@@ -914,6 +914,7 @@ pub async fn FirestoreService::projects_databases_documents_create_document(
   self : FirestoreService,
   parent : String,
   collection_id : String,
+  request : Document,
   document_id? : String? = None,
   mask_field_paths? : String? = None,
 ) -> Document raise @http.HttpError {
@@ -927,8 +928,7 @@ pub async fn FirestoreService::projects_databases_documents_create_document(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + collection_id
@@ -1006,9 +1006,9 @@ pub async fn FirestoreService::projects_databases_documents_delete(
 pub async fn FirestoreService::projects_databases_documents_execute_pipeline(
   self : FirestoreService,
   database : String,
+  request : ExecutePipelineRequest,
 ) -> ExecutePipelineResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:executePipeline"
@@ -1153,9 +1153,9 @@ pub async fn FirestoreService::projects_databases_documents_list(
 pub async fn FirestoreService::projects_databases_documents_list_collection_ids(
   self : FirestoreService,
   parent : String,
+  request : ListCollectionIdsRequest,
 ) -> ListCollectionIdsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + ":listCollectionIds"
@@ -1254,9 +1254,9 @@ pub async fn FirestoreService::projects_databases_documents_list_documents(
 pub async fn FirestoreService::projects_databases_documents_listen(
   self : FirestoreService,
   database : String,
+  request : ListenRequest,
 ) -> ListenResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:listen"
@@ -1288,9 +1288,9 @@ pub async fn FirestoreService::projects_databases_documents_listen(
 pub async fn FirestoreService::projects_databases_documents_partition_query(
   self : FirestoreService,
   parent : String,
+  request : PartitionQueryRequest,
 ) -> PartitionQueryResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + ":partitionQuery"
@@ -1322,6 +1322,7 @@ pub async fn FirestoreService::projects_databases_documents_partition_query(
 pub async fn FirestoreService::projects_databases_documents_patch(
   self : FirestoreService,
   name : String,
+  request : Document,
   current_document_exists? : Bool? = None,
   current_document_update_time? : String? = None,
   mask_field_paths? : String? = None,
@@ -1346,8 +1347,7 @@ pub async fn FirestoreService::projects_databases_documents_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -1383,9 +1383,9 @@ pub async fn FirestoreService::projects_databases_documents_patch(
 pub async fn FirestoreService::projects_databases_documents_rollback(
   self : FirestoreService,
   database : String,
+  request : RollbackRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:rollback"
@@ -1417,9 +1417,9 @@ pub async fn FirestoreService::projects_databases_documents_rollback(
 pub async fn FirestoreService::projects_databases_documents_run_aggregation_query(
   self : FirestoreService,
   parent : String,
+  request : RunAggregationQueryRequest,
 ) -> RunAggregationQueryResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + ":runAggregationQuery"
@@ -1451,9 +1451,9 @@ pub async fn FirestoreService::projects_databases_documents_run_aggregation_quer
 pub async fn FirestoreService::projects_databases_documents_run_query(
   self : FirestoreService,
   parent : String,
+  request : RunQueryRequest,
 ) -> RunQueryResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + ":runQuery"
@@ -1485,9 +1485,9 @@ pub async fn FirestoreService::projects_databases_documents_run_query(
 pub async fn FirestoreService::projects_databases_documents_write(
   self : FirestoreService,
   database : String,
+  request : WriteRequest,
 ) -> WriteResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + database + "/" + "documents:write"
@@ -1519,9 +1519,9 @@ pub async fn FirestoreService::projects_databases_documents_write(
 pub async fn FirestoreService::projects_databases_operations_cancel(
   self : FirestoreService,
   name : String,
+  request : GoogleLongrunningCancelOperationRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":cancel"
@@ -1655,6 +1655,7 @@ pub async fn FirestoreService::projects_databases_operations_list(
 pub async fn FirestoreService::projects_databases_user_creds_create(
   self : FirestoreService,
   parent : String,
+  request : GoogleFirestoreAdminV1UserCreds,
   user_creds_id? : String? = None,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1663,8 +1664,7 @@ pub async fn FirestoreService::projects_databases_user_creds_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "userCreds"
@@ -1725,9 +1725,9 @@ pub async fn FirestoreService::projects_databases_user_creds_delete(
 pub async fn FirestoreService::projects_databases_user_creds_disable(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1DisableUserCredsRequest,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":disable"
@@ -1759,9 +1759,9 @@ pub async fn FirestoreService::projects_databases_user_creds_disable(
 pub async fn FirestoreService::projects_databases_user_creds_enable(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1EnableUserCredsRequest,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":enable"
@@ -1843,9 +1843,9 @@ pub async fn FirestoreService::projects_databases_user_creds_list(
 pub async fn FirestoreService::projects_databases_user_creds_reset_password(
   self : FirestoreService,
   name : String,
+  request : GoogleFirestoreAdminV1ResetUserPasswordRequest,
 ) -> GoogleFirestoreAdminV1UserCreds raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":resetPassword"

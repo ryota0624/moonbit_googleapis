@@ -70,9 +70,9 @@ pub async fn LoggingService::billing_accounts_get_settings(
 pub async fn LoggingService::billing_accounts_exclusions_create(
   self : LoggingService,
   parent : String,
+  request : LogExclusion,
 ) -> LogExclusion raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
@@ -195,6 +195,7 @@ pub async fn LoggingService::billing_accounts_exclusions_list(
 pub async fn LoggingService::billing_accounts_exclusions_patch(
   self : LoggingService,
   name : String,
+  request : LogExclusion,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -203,8 +204,7 @@ pub async fn LoggingService::billing_accounts_exclusions_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -316,6 +316,7 @@ pub async fn LoggingService::billing_accounts_locations_list(
 pub async fn LoggingService::billing_accounts_locations_buckets_create(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -324,8 +325,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
@@ -361,6 +361,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create(
 pub async fn LoggingService::billing_accounts_locations_buckets_create_async(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -369,8 +370,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_create_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
@@ -497,6 +497,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_list(
 pub async fn LoggingService::billing_accounts_locations_buckets_patch(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -505,8 +506,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -542,9 +542,9 @@ pub async fn LoggingService::billing_accounts_locations_buckets_patch(
 pub async fn LoggingService::billing_accounts_locations_buckets_undelete(
   self : LoggingService,
   name : String,
+  request : UndeleteBucketRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
@@ -576,6 +576,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_undelete(
 pub async fn LoggingService::billing_accounts_locations_buckets_update_async(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -584,8 +585,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_update_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
@@ -621,6 +621,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_update_async(
 pub async fn LoggingService::billing_accounts_locations_buckets_links_create(
   self : LoggingService,
   parent : String,
+  request : Link,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -629,8 +630,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
@@ -757,6 +757,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_links_list(
 pub async fn LoggingService::billing_accounts_locations_buckets_views_create(
   self : LoggingService,
   parent : String,
+  request : LogView,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -765,8 +766,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
@@ -893,6 +893,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_list(
 pub async fn LoggingService::billing_accounts_locations_buckets_views_patch(
   self : LoggingService,
   name : String,
+  request : LogView,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -901,8 +902,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -984,9 +984,9 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(
 pub async fn LoggingService::billing_accounts_locations_operations_cancel(
   self : LoggingService,
   name : String,
+  request : CancelOperationRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
@@ -1141,6 +1141,7 @@ pub async fn LoggingService::billing_accounts_locations_recent_queries_list(
 pub async fn LoggingService::billing_accounts_locations_saved_queries_create(
   self : LoggingService,
   parent : String,
+  request : SavedQuery,
   saved_query_id? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1149,8 +1150,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "savedQueries"
@@ -1282,6 +1282,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_list(
 pub async fn LoggingService::billing_accounts_locations_saved_queries_patch(
   self : LoggingService,
   name : String,
+  request : SavedQuery,
   update_mask? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1290,8 +1291,7 @@ pub async fn LoggingService::billing_accounts_locations_saved_queries_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -1398,6 +1398,7 @@ pub async fn LoggingService::billing_accounts_logs_list(
 pub async fn LoggingService::billing_accounts_sinks_create(
   self : LoggingService,
   parent : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
 ) -> LogSink raise @http.HttpError {
@@ -1412,8 +1413,7 @@ pub async fn LoggingService::billing_accounts_sinks_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
@@ -1545,6 +1545,7 @@ pub async fn LoggingService::billing_accounts_sinks_list(
 pub async fn LoggingService::billing_accounts_sinks_patch(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -1564,8 +1565,7 @@ pub async fn LoggingService::billing_accounts_sinks_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -1601,6 +1601,7 @@ pub async fn LoggingService::billing_accounts_sinks_patch(
 pub async fn LoggingService::billing_accounts_sinks_update(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -1620,8 +1621,7 @@ pub async fn LoggingService::billing_accounts_sinks_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -1656,9 +1656,9 @@ pub async fn LoggingService::billing_accounts_sinks_update(
 /// Copies a set of log entries from a log bucket to a Cloud Storage bucket.
 pub async fn LoggingService::entries_copy(
   self : LoggingService,
+  request : CopyLogEntriesRequest,
 ) -> Operation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + "entries:copy"
@@ -1689,9 +1689,9 @@ pub async fn LoggingService::entries_copy(
 /// Lists log entries. Use this method to retrieve log entries that originated from a project/folder/organization/billing account. For ways to export log entries, see Routing overview (https://docs.cloud.google.com/logging/docs/routing/overview).
 pub async fn LoggingService::entries_list(
   self : LoggingService,
+  request : ListLogEntriesRequest,
 ) -> ListLogEntriesResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + "entries:list"
@@ -1722,9 +1722,9 @@ pub async fn LoggingService::entries_list(
 /// Streaming read of log entries as they are received. Until the stream is terminated, it will continue reading logs.
 pub async fn LoggingService::entries_tail(
   self : LoggingService,
+  request : TailLogEntriesRequest,
 ) -> TailLogEntriesResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + "entries:tail"
@@ -1755,9 +1755,9 @@ pub async fn LoggingService::entries_tail(
 /// Writes log entries to Logging. This API method is the only way to send log entries to Logging. This method is used, directly or indirectly, by the Logging agent (fluentd) and all logging libraries configured to use Logging. A single request may contain log entries for a maximum of 1000 different resource names (projects, organizations, billing accounts or folders), where the resource name for a log entry is determined from its logName field.
 pub async fn LoggingService::entries_write(
   self : LoggingService,
+  request : WriteLogEntriesRequest,
 ) -> WriteLogEntriesResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + "entries:write"
@@ -1789,9 +1789,9 @@ pub async fn LoggingService::entries_write(
 pub async fn LoggingService::exclusions_create(
   self : LoggingService,
   parent : String,
+  request : LogExclusion,
 ) -> LogExclusion raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
@@ -1914,6 +1914,7 @@ pub async fn LoggingService::exclusions_list(
 pub async fn LoggingService::exclusions_patch(
   self : LoggingService,
   name : String,
+  request : LogExclusion,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1922,8 +1923,7 @@ pub async fn LoggingService::exclusions_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -2009,6 +2009,7 @@ pub async fn LoggingService::folders_get_settings(
 pub async fn LoggingService::folders_update_settings(
   self : LoggingService,
   name : String,
+  request : Settings,
   update_mask? : String? = None,
 ) -> Settings raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2017,8 +2018,7 @@ pub async fn LoggingService::folders_update_settings(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "settings"
@@ -2054,9 +2054,9 @@ pub async fn LoggingService::folders_update_settings(
 pub async fn LoggingService::folders_exclusions_create(
   self : LoggingService,
   parent : String,
+  request : LogExclusion,
 ) -> LogExclusion raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
@@ -2179,6 +2179,7 @@ pub async fn LoggingService::folders_exclusions_list(
 pub async fn LoggingService::folders_exclusions_patch(
   self : LoggingService,
   name : String,
+  request : LogExclusion,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2187,8 +2188,7 @@ pub async fn LoggingService::folders_exclusions_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -2300,6 +2300,7 @@ pub async fn LoggingService::folders_locations_list(
 pub async fn LoggingService::folders_locations_buckets_create(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2308,8 +2309,7 @@ pub async fn LoggingService::folders_locations_buckets_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
@@ -2345,6 +2345,7 @@ pub async fn LoggingService::folders_locations_buckets_create(
 pub async fn LoggingService::folders_locations_buckets_create_async(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2353,8 +2354,7 @@ pub async fn LoggingService::folders_locations_buckets_create_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
@@ -2481,6 +2481,7 @@ pub async fn LoggingService::folders_locations_buckets_list(
 pub async fn LoggingService::folders_locations_buckets_patch(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2489,8 +2490,7 @@ pub async fn LoggingService::folders_locations_buckets_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -2526,9 +2526,9 @@ pub async fn LoggingService::folders_locations_buckets_patch(
 pub async fn LoggingService::folders_locations_buckets_undelete(
   self : LoggingService,
   name : String,
+  request : UndeleteBucketRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
@@ -2560,6 +2560,7 @@ pub async fn LoggingService::folders_locations_buckets_undelete(
 pub async fn LoggingService::folders_locations_buckets_update_async(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2568,8 +2569,7 @@ pub async fn LoggingService::folders_locations_buckets_update_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
@@ -2605,6 +2605,7 @@ pub async fn LoggingService::folders_locations_buckets_update_async(
 pub async fn LoggingService::folders_locations_buckets_links_create(
   self : LoggingService,
   parent : String,
+  request : Link,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2613,8 +2614,7 @@ pub async fn LoggingService::folders_locations_buckets_links_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
@@ -2741,6 +2741,7 @@ pub async fn LoggingService::folders_locations_buckets_links_list(
 pub async fn LoggingService::folders_locations_buckets_views_create(
   self : LoggingService,
   parent : String,
+  request : LogView,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2749,8 +2750,7 @@ pub async fn LoggingService::folders_locations_buckets_views_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
@@ -2836,9 +2836,9 @@ pub async fn LoggingService::folders_locations_buckets_views_get(
 pub async fn LoggingService::folders_locations_buckets_views_get_iam_policy(
   self : LoggingService,
   resource : String,
+  request : GetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
@@ -2911,6 +2911,7 @@ pub async fn LoggingService::folders_locations_buckets_views_list(
 pub async fn LoggingService::folders_locations_buckets_views_patch(
   self : LoggingService,
   name : String,
+  request : LogView,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2919,8 +2920,7 @@ pub async fn LoggingService::folders_locations_buckets_views_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -2956,9 +2956,9 @@ pub async fn LoggingService::folders_locations_buckets_views_patch(
 pub async fn LoggingService::folders_locations_buckets_views_set_iam_policy(
   self : LoggingService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
@@ -2990,9 +2990,9 @@ pub async fn LoggingService::folders_locations_buckets_views_set_iam_policy(
 pub async fn LoggingService::folders_locations_buckets_views_test_iam_permissions(
   self : LoggingService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
@@ -3070,6 +3070,7 @@ pub async fn LoggingService::folders_locations_buckets_views_logs_list(
 pub async fn LoggingService::folders_locations_log_scopes_create(
   self : LoggingService,
   parent : String,
+  request : LogScope,
   log_scope_id? : String? = None,
 ) -> LogScope raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -3078,8 +3079,7 @@ pub async fn LoggingService::folders_locations_log_scopes_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "logScopes"
@@ -3206,6 +3206,7 @@ pub async fn LoggingService::folders_locations_log_scopes_list(
 pub async fn LoggingService::folders_locations_log_scopes_patch(
   self : LoggingService,
   name : String,
+  request : LogScope,
   update_mask? : String? = None,
 ) -> LogScope raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -3214,8 +3215,7 @@ pub async fn LoggingService::folders_locations_log_scopes_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -3251,9 +3251,9 @@ pub async fn LoggingService::folders_locations_log_scopes_patch(
 pub async fn LoggingService::folders_locations_operations_cancel(
   self : LoggingService,
   name : String,
+  request : CancelOperationRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
@@ -3408,6 +3408,7 @@ pub async fn LoggingService::folders_locations_recent_queries_list(
 pub async fn LoggingService::folders_locations_saved_queries_create(
   self : LoggingService,
   parent : String,
+  request : SavedQuery,
   saved_query_id? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -3416,8 +3417,7 @@ pub async fn LoggingService::folders_locations_saved_queries_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "savedQueries"
@@ -3549,6 +3549,7 @@ pub async fn LoggingService::folders_locations_saved_queries_list(
 pub async fn LoggingService::folders_locations_saved_queries_patch(
   self : LoggingService,
   name : String,
+  request : SavedQuery,
   update_mask? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -3557,8 +3558,7 @@ pub async fn LoggingService::folders_locations_saved_queries_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -3665,6 +3665,7 @@ pub async fn LoggingService::folders_logs_list(
 pub async fn LoggingService::folders_sinks_create(
   self : LoggingService,
   parent : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
 ) -> LogSink raise @http.HttpError {
@@ -3679,8 +3680,7 @@ pub async fn LoggingService::folders_sinks_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
@@ -3812,6 +3812,7 @@ pub async fn LoggingService::folders_sinks_list(
 pub async fn LoggingService::folders_sinks_patch(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -3831,8 +3832,7 @@ pub async fn LoggingService::folders_sinks_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -3868,6 +3868,7 @@ pub async fn LoggingService::folders_sinks_patch(
 pub async fn LoggingService::folders_sinks_update(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -3887,8 +3888,7 @@ pub async fn LoggingService::folders_sinks_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -4000,6 +4000,7 @@ pub async fn LoggingService::locations_list(
 pub async fn LoggingService::locations_buckets_create(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -4008,8 +4009,7 @@ pub async fn LoggingService::locations_buckets_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
@@ -4045,6 +4045,7 @@ pub async fn LoggingService::locations_buckets_create(
 pub async fn LoggingService::locations_buckets_create_async(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -4053,8 +4054,7 @@ pub async fn LoggingService::locations_buckets_create_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
@@ -4181,6 +4181,7 @@ pub async fn LoggingService::locations_buckets_list(
 pub async fn LoggingService::locations_buckets_patch(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -4189,8 +4190,7 @@ pub async fn LoggingService::locations_buckets_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -4226,9 +4226,9 @@ pub async fn LoggingService::locations_buckets_patch(
 pub async fn LoggingService::locations_buckets_undelete(
   self : LoggingService,
   name : String,
+  request : UndeleteBucketRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
@@ -4260,6 +4260,7 @@ pub async fn LoggingService::locations_buckets_undelete(
 pub async fn LoggingService::locations_buckets_update_async(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -4268,8 +4269,7 @@ pub async fn LoggingService::locations_buckets_update_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
@@ -4305,6 +4305,7 @@ pub async fn LoggingService::locations_buckets_update_async(
 pub async fn LoggingService::locations_buckets_links_create(
   self : LoggingService,
   parent : String,
+  request : Link,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -4313,8 +4314,7 @@ pub async fn LoggingService::locations_buckets_links_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
@@ -4441,6 +4441,7 @@ pub async fn LoggingService::locations_buckets_links_list(
 pub async fn LoggingService::locations_buckets_views_create(
   self : LoggingService,
   parent : String,
+  request : LogView,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -4449,8 +4450,7 @@ pub async fn LoggingService::locations_buckets_views_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
@@ -4536,9 +4536,9 @@ pub async fn LoggingService::locations_buckets_views_get(
 pub async fn LoggingService::locations_buckets_views_get_iam_policy(
   self : LoggingService,
   resource : String,
+  request : GetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
@@ -4611,6 +4611,7 @@ pub async fn LoggingService::locations_buckets_views_list(
 pub async fn LoggingService::locations_buckets_views_patch(
   self : LoggingService,
   name : String,
+  request : LogView,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -4619,8 +4620,7 @@ pub async fn LoggingService::locations_buckets_views_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -4656,9 +4656,9 @@ pub async fn LoggingService::locations_buckets_views_patch(
 pub async fn LoggingService::locations_buckets_views_set_iam_policy(
   self : LoggingService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
@@ -4690,9 +4690,9 @@ pub async fn LoggingService::locations_buckets_views_set_iam_policy(
 pub async fn LoggingService::locations_buckets_views_test_iam_permissions(
   self : LoggingService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
@@ -4724,9 +4724,9 @@ pub async fn LoggingService::locations_buckets_views_test_iam_permissions(
 pub async fn LoggingService::locations_operations_cancel(
   self : LoggingService,
   name : String,
+  request : CancelOperationRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
@@ -4996,6 +4996,7 @@ pub async fn LoggingService::organizations_get_settings(
 pub async fn LoggingService::organizations_update_cmek_settings(
   self : LoggingService,
   name : String,
+  request : CmekSettings,
   update_mask? : String? = None,
 ) -> CmekSettings raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5004,8 +5005,7 @@ pub async fn LoggingService::organizations_update_cmek_settings(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
@@ -5041,6 +5041,7 @@ pub async fn LoggingService::organizations_update_cmek_settings(
 pub async fn LoggingService::organizations_update_settings(
   self : LoggingService,
   name : String,
+  request : Settings,
   update_mask? : String? = None,
 ) -> Settings raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5049,8 +5050,7 @@ pub async fn LoggingService::organizations_update_settings(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "settings"
@@ -5086,9 +5086,9 @@ pub async fn LoggingService::organizations_update_settings(
 pub async fn LoggingService::organizations_exclusions_create(
   self : LoggingService,
   parent : String,
+  request : LogExclusion,
 ) -> LogExclusion raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
@@ -5211,6 +5211,7 @@ pub async fn LoggingService::organizations_exclusions_list(
 pub async fn LoggingService::organizations_exclusions_patch(
   self : LoggingService,
   name : String,
+  request : LogExclusion,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5219,8 +5220,7 @@ pub async fn LoggingService::organizations_exclusions_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -5332,6 +5332,7 @@ pub async fn LoggingService::organizations_locations_list(
 pub async fn LoggingService::organizations_locations_buckets_create(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5340,8 +5341,7 @@ pub async fn LoggingService::organizations_locations_buckets_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
@@ -5377,6 +5377,7 @@ pub async fn LoggingService::organizations_locations_buckets_create(
 pub async fn LoggingService::organizations_locations_buckets_create_async(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5385,8 +5386,7 @@ pub async fn LoggingService::organizations_locations_buckets_create_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
@@ -5513,6 +5513,7 @@ pub async fn LoggingService::organizations_locations_buckets_list(
 pub async fn LoggingService::organizations_locations_buckets_patch(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5521,8 +5522,7 @@ pub async fn LoggingService::organizations_locations_buckets_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -5558,9 +5558,9 @@ pub async fn LoggingService::organizations_locations_buckets_patch(
 pub async fn LoggingService::organizations_locations_buckets_undelete(
   self : LoggingService,
   name : String,
+  request : UndeleteBucketRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
@@ -5592,6 +5592,7 @@ pub async fn LoggingService::organizations_locations_buckets_undelete(
 pub async fn LoggingService::organizations_locations_buckets_update_async(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5600,8 +5601,7 @@ pub async fn LoggingService::organizations_locations_buckets_update_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
@@ -5637,6 +5637,7 @@ pub async fn LoggingService::organizations_locations_buckets_update_async(
 pub async fn LoggingService::organizations_locations_buckets_links_create(
   self : LoggingService,
   parent : String,
+  request : Link,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5645,8 +5646,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
@@ -5773,6 +5773,7 @@ pub async fn LoggingService::organizations_locations_buckets_links_list(
 pub async fn LoggingService::organizations_locations_buckets_views_create(
   self : LoggingService,
   parent : String,
+  request : LogView,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5781,8 +5782,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
@@ -5868,9 +5868,9 @@ pub async fn LoggingService::organizations_locations_buckets_views_get(
 pub async fn LoggingService::organizations_locations_buckets_views_get_iam_policy(
   self : LoggingService,
   resource : String,
+  request : GetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
@@ -5943,6 +5943,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_list(
 pub async fn LoggingService::organizations_locations_buckets_views_patch(
   self : LoggingService,
   name : String,
+  request : LogView,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -5951,8 +5952,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -5988,9 +5988,9 @@ pub async fn LoggingService::organizations_locations_buckets_views_patch(
 pub async fn LoggingService::organizations_locations_buckets_views_set_iam_policy(
   self : LoggingService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
@@ -6022,9 +6022,9 @@ pub async fn LoggingService::organizations_locations_buckets_views_set_iam_polic
 pub async fn LoggingService::organizations_locations_buckets_views_test_iam_permissions(
   self : LoggingService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
@@ -6102,6 +6102,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_logs_list(
 pub async fn LoggingService::organizations_locations_log_scopes_create(
   self : LoggingService,
   parent : String,
+  request : LogScope,
   log_scope_id? : String? = None,
 ) -> LogScope raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -6110,8 +6111,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "logScopes"
@@ -6238,6 +6238,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_list(
 pub async fn LoggingService::organizations_locations_log_scopes_patch(
   self : LoggingService,
   name : String,
+  request : LogScope,
   update_mask? : String? = None,
 ) -> LogScope raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -6246,8 +6247,7 @@ pub async fn LoggingService::organizations_locations_log_scopes_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -6283,9 +6283,9 @@ pub async fn LoggingService::organizations_locations_log_scopes_patch(
 pub async fn LoggingService::organizations_locations_operations_cancel(
   self : LoggingService,
   name : String,
+  request : CancelOperationRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
@@ -6440,6 +6440,7 @@ pub async fn LoggingService::organizations_locations_recent_queries_list(
 pub async fn LoggingService::organizations_locations_saved_queries_create(
   self : LoggingService,
   parent : String,
+  request : SavedQuery,
   saved_query_id? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -6448,8 +6449,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "savedQueries"
@@ -6581,6 +6581,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_list(
 pub async fn LoggingService::organizations_locations_saved_queries_patch(
   self : LoggingService,
   name : String,
+  request : SavedQuery,
   update_mask? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -6589,8 +6590,7 @@ pub async fn LoggingService::organizations_locations_saved_queries_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -6697,6 +6697,7 @@ pub async fn LoggingService::organizations_logs_list(
 pub async fn LoggingService::organizations_sinks_create(
   self : LoggingService,
   parent : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
 ) -> LogSink raise @http.HttpError {
@@ -6711,8 +6712,7 @@ pub async fn LoggingService::organizations_sinks_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
@@ -6844,6 +6844,7 @@ pub async fn LoggingService::organizations_sinks_list(
 pub async fn LoggingService::organizations_sinks_patch(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -6863,8 +6864,7 @@ pub async fn LoggingService::organizations_sinks_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -6900,6 +6900,7 @@ pub async fn LoggingService::organizations_sinks_patch(
 pub async fn LoggingService::organizations_sinks_update(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -6919,8 +6920,7 @@ pub async fn LoggingService::organizations_sinks_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -7006,9 +7006,9 @@ pub async fn LoggingService::projects_get_settings(
 pub async fn LoggingService::projects_exclusions_create(
   self : LoggingService,
   parent : String,
+  request : LogExclusion,
 ) -> LogExclusion raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "exclusions"
@@ -7131,6 +7131,7 @@ pub async fn LoggingService::projects_exclusions_list(
 pub async fn LoggingService::projects_exclusions_patch(
   self : LoggingService,
   name : String,
+  request : LogExclusion,
   update_mask? : String? = None,
 ) -> LogExclusion raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -7139,8 +7140,7 @@ pub async fn LoggingService::projects_exclusions_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -7252,6 +7252,7 @@ pub async fn LoggingService::projects_locations_list(
 pub async fn LoggingService::projects_locations_buckets_create(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -7260,8 +7261,7 @@ pub async fn LoggingService::projects_locations_buckets_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets"
@@ -7297,6 +7297,7 @@ pub async fn LoggingService::projects_locations_buckets_create(
 pub async fn LoggingService::projects_locations_buckets_create_async(
   self : LoggingService,
   parent : String,
+  request : LogBucket,
   bucket_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -7305,8 +7306,7 @@ pub async fn LoggingService::projects_locations_buckets_create_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "buckets:createAsync"
@@ -7433,6 +7433,7 @@ pub async fn LoggingService::projects_locations_buckets_list(
 pub async fn LoggingService::projects_locations_buckets_patch(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> LogBucket raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -7441,8 +7442,7 @@ pub async fn LoggingService::projects_locations_buckets_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -7478,9 +7478,9 @@ pub async fn LoggingService::projects_locations_buckets_patch(
 pub async fn LoggingService::projects_locations_buckets_undelete(
   self : LoggingService,
   name : String,
+  request : UndeleteBucketRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":undelete"
@@ -7512,6 +7512,7 @@ pub async fn LoggingService::projects_locations_buckets_undelete(
 pub async fn LoggingService::projects_locations_buckets_update_async(
   self : LoggingService,
   name : String,
+  request : LogBucket,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -7520,8 +7521,7 @@ pub async fn LoggingService::projects_locations_buckets_update_async(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":updateAsync"
@@ -7557,6 +7557,7 @@ pub async fn LoggingService::projects_locations_buckets_update_async(
 pub async fn LoggingService::projects_locations_buckets_links_create(
   self : LoggingService,
   parent : String,
+  request : Link,
   link_id? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -7565,8 +7566,7 @@ pub async fn LoggingService::projects_locations_buckets_links_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "links"
@@ -7693,6 +7693,7 @@ pub async fn LoggingService::projects_locations_buckets_links_list(
 pub async fn LoggingService::projects_locations_buckets_views_create(
   self : LoggingService,
   parent : String,
+  request : LogView,
   view_id? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -7701,8 +7702,7 @@ pub async fn LoggingService::projects_locations_buckets_views_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "views"
@@ -7788,9 +7788,9 @@ pub async fn LoggingService::projects_locations_buckets_views_get(
 pub async fn LoggingService::projects_locations_buckets_views_get_iam_policy(
   self : LoggingService,
   resource : String,
+  request : GetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
@@ -7863,6 +7863,7 @@ pub async fn LoggingService::projects_locations_buckets_views_list(
 pub async fn LoggingService::projects_locations_buckets_views_patch(
   self : LoggingService,
   name : String,
+  request : LogView,
   update_mask? : String? = None,
 ) -> LogView raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -7871,8 +7872,7 @@ pub async fn LoggingService::projects_locations_buckets_views_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -7908,9 +7908,9 @@ pub async fn LoggingService::projects_locations_buckets_views_patch(
 pub async fn LoggingService::projects_locations_buckets_views_set_iam_policy(
   self : LoggingService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
@@ -7942,9 +7942,9 @@ pub async fn LoggingService::projects_locations_buckets_views_set_iam_policy(
 pub async fn LoggingService::projects_locations_buckets_views_test_iam_permissions(
   self : LoggingService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
@@ -8022,6 +8022,7 @@ pub async fn LoggingService::projects_locations_buckets_views_logs_list(
 pub async fn LoggingService::projects_locations_log_scopes_create(
   self : LoggingService,
   parent : String,
+  request : LogScope,
   log_scope_id? : String? = None,
 ) -> LogScope raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -8030,8 +8031,7 @@ pub async fn LoggingService::projects_locations_log_scopes_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "logScopes"
@@ -8158,6 +8158,7 @@ pub async fn LoggingService::projects_locations_log_scopes_list(
 pub async fn LoggingService::projects_locations_log_scopes_patch(
   self : LoggingService,
   name : String,
+  request : LogScope,
   update_mask? : String? = None,
 ) -> LogScope raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -8166,8 +8167,7 @@ pub async fn LoggingService::projects_locations_log_scopes_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -8203,9 +8203,9 @@ pub async fn LoggingService::projects_locations_log_scopes_patch(
 pub async fn LoggingService::projects_locations_operations_cancel(
   self : LoggingService,
   name : String,
+  request : CancelOperationRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":cancel"
@@ -8360,6 +8360,7 @@ pub async fn LoggingService::projects_locations_recent_queries_list(
 pub async fn LoggingService::projects_locations_saved_queries_create(
   self : LoggingService,
   parent : String,
+  request : SavedQuery,
   saved_query_id? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -8368,8 +8369,7 @@ pub async fn LoggingService::projects_locations_saved_queries_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "savedQueries"
@@ -8501,6 +8501,7 @@ pub async fn LoggingService::projects_locations_saved_queries_list(
 pub async fn LoggingService::projects_locations_saved_queries_patch(
   self : LoggingService,
   name : String,
+  request : SavedQuery,
   update_mask? : String? = None,
 ) -> SavedQuery raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -8509,8 +8510,7 @@ pub async fn LoggingService::projects_locations_saved_queries_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -8617,9 +8617,9 @@ pub async fn LoggingService::projects_logs_list(
 pub async fn LoggingService::projects_metrics_create(
   self : LoggingService,
   parent : String,
+  request : LogMetric,
 ) -> LogMetric raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "metrics"
@@ -8742,9 +8742,9 @@ pub async fn LoggingService::projects_metrics_list(
 pub async fn LoggingService::projects_metrics_update(
   self : LoggingService,
   metric_name : String,
+  request : LogMetric,
 ) -> LogMetric raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + metric_name
@@ -8776,6 +8776,7 @@ pub async fn LoggingService::projects_metrics_update(
 pub async fn LoggingService::projects_sinks_create(
   self : LoggingService,
   parent : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
 ) -> LogSink raise @http.HttpError {
@@ -8790,8 +8791,7 @@ pub async fn LoggingService::projects_sinks_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
@@ -8923,6 +8923,7 @@ pub async fn LoggingService::projects_sinks_list(
 pub async fn LoggingService::projects_sinks_patch(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -8942,8 +8943,7 @@ pub async fn LoggingService::projects_sinks_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -8979,6 +8979,7 @@ pub async fn LoggingService::projects_sinks_patch(
 pub async fn LoggingService::projects_sinks_update(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -8998,8 +8999,7 @@ pub async fn LoggingService::projects_sinks_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -9035,6 +9035,7 @@ pub async fn LoggingService::projects_sinks_update(
 pub async fn LoggingService::sinks_create(
   self : LoggingService,
   parent : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
 ) -> LogSink raise @http.HttpError {
@@ -9049,8 +9050,7 @@ pub async fn LoggingService::sinks_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "sinks"
@@ -9182,6 +9182,7 @@ pub async fn LoggingService::sinks_list(
 pub async fn LoggingService::sinks_update(
   self : LoggingService,
   sink_name : String,
+  request : LogSink,
   custom_writer_identity? : String? = None,
   unique_writer_identity? : Bool? = None,
   update_mask? : String? = None,
@@ -9201,8 +9202,7 @@ pub async fn LoggingService::sinks_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + sink_name
@@ -9288,6 +9288,7 @@ pub async fn LoggingService::v2_get_settings(
 pub async fn LoggingService::v2_update_cmek_settings(
   self : LoggingService,
   name : String,
+  request : CmekSettings,
   update_mask? : String? = None,
 ) -> CmekSettings raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -9296,8 +9297,7 @@ pub async fn LoggingService::v2_update_cmek_settings(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "cmekSettings"
@@ -9333,6 +9333,7 @@ pub async fn LoggingService::v2_update_cmek_settings(
 pub async fn LoggingService::v2_update_settings(
   self : LoggingService,
   name : String,
+  request : Settings,
   update_mask? : String? = None,
 ) -> Settings raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -9341,8 +9342,7 @@ pub async fn LoggingService::v2_update_settings(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "settings"

@@ -3,7 +3,12 @@
 pub(all) struct SetIamPolicyRequest {
   policy : Policy?
   update_mask : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Policy
@@ -11,7 +16,12 @@ pub(all) struct Policy {
   version : Int?
   bindings : Array[Binding]?
   etag : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Binding
@@ -19,7 +29,12 @@ pub(all) struct Binding {
   role : String?
   members : Array[String]?
   condition : Expr?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Expr
@@ -28,31 +43,56 @@ pub(all) struct Expr {
   title : String?
   description : String?
   location : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema GetIamPolicyRequest
 pub(all) struct GetIamPolicyRequest {
   options : GetPolicyOptions?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema GetPolicyOptions
 pub(all) struct GetPolicyOptions {
   requested_policy_version : Int?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema TestIamPermissionsRequest
 pub(all) struct TestIamPermissionsRequest {
   permissions : Array[String]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema TestIamPermissionsResponse
 pub(all) struct TestIamPermissionsResponse {
   permissions : Array[String]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListOperationsResponse
@@ -67,6 +107,7 @@ pub(all) struct ListOperationsResponse {
     rename_fields="camelCase",
     fields(unreachable_(rename="unreachable")),
   ),
+  ToJson(rename_fields="camelCase", fields(unreachable_(rename="unreachable"))),
 )
 
 ///|
@@ -77,7 +118,12 @@ pub(all) struct Operation {
   done : Bool?
   error : Status?
   response : Json?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Status
@@ -85,7 +131,12 @@ pub(all) struct Status {
   code : Int?
   message : String?
   details : Array[Json]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema CancelOperationRequest
@@ -93,18 +144,29 @@ pub(all) struct CancelOperationRequest {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
 /// Schema Empty
-pub(all) struct Empty {} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+pub(all) struct Empty {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListLocationsResponse
 pub(all) struct ListLocationsResponse {
   locations : Array[Location]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Location
@@ -114,14 +176,24 @@ pub(all) struct Location {
   display_name : String?
   labels : Json?
   metadata : Json?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListBucketsResponse
 pub(all) struct ListBucketsResponse {
   buckets : Array[LogBucket]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogBucket
@@ -137,7 +209,12 @@ pub(all) struct LogBucket {
   restricted_fields : Array[String]?
   index_configs : Array[IndexConfig]?
   cmek_settings : CmekSettings?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema IndexConfig
@@ -149,6 +226,7 @@ pub(all) struct IndexConfig {
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
 )
 
 ///|
@@ -158,7 +236,12 @@ pub(all) struct CmekSettings {
   kms_key_name : String?
   kms_key_version_name : String?
   service_account_id : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema UndeleteBucketRequest
@@ -166,6 +249,7 @@ pub(all) struct UndeleteBucketRequest {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
@@ -173,7 +257,12 @@ pub(all) struct UndeleteBucketRequest {} derive (
 pub(all) struct ListViewsResponse {
   views : Array[LogView]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogView
@@ -183,14 +272,24 @@ pub(all) struct LogView {
   create_time : String?
   update_time : String?
   filter : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListLogScopesResponse
 pub(all) struct ListLogScopesResponse {
   log_scopes : Array[LogScope]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogScope
@@ -200,14 +299,24 @@ pub(all) struct LogScope {
   description : String?
   create_time : String?
   update_time : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListExclusionsResponse
 pub(all) struct ListExclusionsResponse {
   exclusions : Array[LogExclusion]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogExclusion
@@ -218,14 +327,24 @@ pub(all) struct LogExclusion {
   disabled : Bool?
   create_time : String?
   update_time : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListSinksResponse
 pub(all) struct ListSinksResponse {
   sinks : Array[LogSink]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogSink
@@ -244,21 +363,36 @@ pub(all) struct LogSink {
   bigquery_options : BigQueryOptions?
   create_time : String?
   update_time : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema BigQueryOptions
 pub(all) struct BigQueryOptions {
   use_partitioned_tables : Bool?
   uses_timestamp_column_partitioning : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListLinksResponse
 pub(all) struct ListLinksResponse {
   links : Array[Link]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Link
@@ -268,13 +402,23 @@ pub(all) struct Link {
   create_time : String?
   lifecycle_state : String?
   bigquery_dataset : BigQueryDataset?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema BigQueryDataset
 pub(all) struct BigQueryDataset {
   dataset_id : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Settings
@@ -286,7 +430,12 @@ pub(all) struct Settings {
   disable_default_sink : Bool?
   default_sink_config : DefaultSinkConfig?
   logging_service_account_id : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema DefaultSinkConfig
@@ -294,7 +443,12 @@ pub(all) struct DefaultSinkConfig {
   filter : String?
   exclusions : Array[LogExclusion]?
   mode : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListSavedQueriesResponse
@@ -309,6 +463,7 @@ pub(all) struct ListSavedQueriesResponse {
     rename_fields="camelCase",
     fields(unreachable_(rename="unreachable")),
   ),
+  ToJson(rename_fields="camelCase", fields(unreachable_(rename="unreachable"))),
 )
 
 ///|
@@ -322,7 +477,12 @@ pub(all) struct SavedQuery {
   create_time : String?
   update_time : String?
   visibility : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LoggingQuery
@@ -331,20 +491,35 @@ pub(all) struct LoggingQuery {
   summary_fields : Array[SummaryField]?
   summary_field_start : Int?
   summary_field_end : Int?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema SummaryField
 pub(all) struct SummaryField {
   field : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema OpsAnalyticsQuery
 pub(all) struct OpsAnalyticsQuery {
   sql_query_text : String?
   query_builder : QueryBuilderConfig?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema QueryBuilderConfig
@@ -355,7 +530,12 @@ pub(all) struct QueryBuilderConfig {
   limit : String?
   order_bys : Array[SortOrderParameter]?
   search_term : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema FilterPredicate
@@ -363,7 +543,12 @@ pub(all) struct FilterPredicate {
   operator_type : String?
   leaf_predicate : FilterExpression?
   child_predicates : Array[FilterPredicate]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema FilterExpression
@@ -373,7 +558,12 @@ pub(all) struct FilterExpression {
   field_source_value : FieldSource?
   comparator : String?
   is_negation : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema FieldSource
@@ -384,7 +574,12 @@ pub(all) struct FieldSource {
   is_json : Bool?
   column_type : String?
   parent_path : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ProjectedField
@@ -400,6 +595,7 @@ pub(all) struct ProjectedField {
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(alias_(rename="alias"))),
+  ToJson(rename_fields="camelCase", fields(alias_(rename="alias"))),
 )
 
 ///|
@@ -411,6 +607,7 @@ pub(all) struct FunctionApplication {
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
 )
 
 ///|
@@ -418,7 +615,12 @@ pub(all) struct FunctionApplication {
 pub(all) struct SortOrderParameter {
   field_source : FieldSource?
   sort_order_direction : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListRecentQueriesResponse
@@ -433,6 +635,7 @@ pub(all) struct ListRecentQueriesResponse {
     rename_fields="camelCase",
     fields(unreachable_(rename="unreachable")),
   ),
+  ToJson(rename_fields="camelCase", fields(unreachable_(rename="unreachable"))),
 )
 
 ///|
@@ -442,7 +645,12 @@ pub(all) struct RecentQuery {
   logging_query : LoggingQuery?
   ops_analytics_query : OpsAnalyticsQuery?
   last_run_time : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema CopyLogEntriesRequest
@@ -450,7 +658,12 @@ pub(all) struct CopyLogEntriesRequest {
   name : String?
   filter : String?
   destination : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema WriteLogEntriesRequest
@@ -461,7 +674,12 @@ pub(all) struct WriteLogEntriesRequest {
   entries : Array[LogEntry]?
   partial_success : Bool?
   dry_run : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema MonitoredResource
@@ -472,6 +690,7 @@ pub(all) struct MonitoredResource {
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
 )
 
 ///|
@@ -500,7 +719,12 @@ pub(all) struct LogEntry {
   apphub_destination : AppHub?
   apphub_source : AppHub?
   otel : Json?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema HttpRequest
@@ -520,14 +744,24 @@ pub(all) struct HttpRequest {
   cache_validated_with_origin_server : Bool?
   cache_fill_bytes : String?
   protocol : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema MonitoredResourceMetadata
 pub(all) struct MonitoredResourceMetadata {
   system_labels : Json?
   user_labels : Json?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogEntryOperation
@@ -536,7 +770,12 @@ pub(all) struct LogEntryOperation {
   producer : String?
   first : Bool?
   last : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogEntrySourceLocation
@@ -544,7 +783,12 @@ pub(all) struct LogEntrySourceLocation {
   file : String?
   line : String?
   function : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogSplit
@@ -552,13 +796,23 @@ pub(all) struct LogSplit {
   uid : String?
   index : Int?
   total_splits : Int?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogErrorGroup
 pub(all) struct LogErrorGroup {
   id : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema AppHub
@@ -566,7 +820,12 @@ pub(all) struct AppHub {
   application : AppHubApplication?
   service : AppHubService?
   workload : AppHubWorkload?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema AppHubApplication
@@ -574,7 +833,12 @@ pub(all) struct AppHubApplication {
   container : String?
   location : String?
   id : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema AppHubService
@@ -582,7 +846,12 @@ pub(all) struct AppHubService {
   id : String?
   environment_type : String?
   criticality_type : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema AppHubWorkload
@@ -590,7 +859,12 @@ pub(all) struct AppHubWorkload {
   id : String?
   environment_type : String?
   criticality_type : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema WriteLogEntriesResponse
@@ -598,6 +872,7 @@ pub(all) struct WriteLogEntriesResponse {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
@@ -609,21 +884,36 @@ pub(all) struct ListLogEntriesRequest {
   order_by : String?
   page_size : Int?
   page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListLogEntriesResponse
 pub(all) struct ListLogEntriesResponse {
   entries : Array[LogEntry]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListMonitoredResourceDescriptorsResponse
 pub(all) struct ListMonitoredResourceDescriptorsResponse {
   resource_descriptors : Array[MonitoredResourceDescriptor]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema MonitoredResourceDescriptor
@@ -638,6 +928,7 @@ pub(all) struct MonitoredResourceDescriptor {
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
 )
 
 ///|
@@ -646,14 +937,24 @@ pub(all) struct LabelDescriptor {
   key : String?
   value_type : String?
   description : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListLogsResponse
 pub(all) struct ListLogsResponse {
   log_names : Array[String]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema TailLogEntriesRequest
@@ -661,28 +962,48 @@ pub(all) struct TailLogEntriesRequest {
   resource_names : Array[String]?
   filter : String?
   buffer_window : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema TailLogEntriesResponse
 pub(all) struct TailLogEntriesResponse {
   entries : Array[LogEntry]?
   suppression_info : Array[SuppressionInfo]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema SuppressionInfo
 pub(all) struct SuppressionInfo {
   reason : String?
   suppressed_count : Int?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListLogMetricsResponse
 pub(all) struct ListLogMetricsResponse {
   metrics : Array[LogMetric]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LogMetric
@@ -700,7 +1021,12 @@ pub(all) struct LogMetric {
   create_time : String?
   update_time : String?
   version : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema MetricDescriptor
@@ -720,6 +1046,7 @@ pub(all) struct MetricDescriptor {
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
 )
 
 ///|
@@ -729,7 +1056,12 @@ pub(all) struct MetricDescriptorMetadata {
   sample_period : String?
   ingest_delay : String?
   time_series_resource_hierarchy_level : Array[String]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema BucketOptions
@@ -737,7 +1069,12 @@ pub(all) struct BucketOptions {
   linear_buckets : Linear?
   exponential_buckets : Exponential?
   explicit_buckets : Explicit?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Linear
@@ -745,7 +1082,12 @@ pub(all) struct Linear {
   num_finite_buckets : Int?
   width : Double?
   offset : Double?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Exponential
@@ -753,13 +1095,23 @@ pub(all) struct Exponential {
   num_finite_buckets : Int?
   growth_factor : Double?
   scale : Double?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Explicit
 pub(all) struct Explicit {
   bounds : Array[Double]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema RequestLog
@@ -802,6 +1154,7 @@ pub(all) struct RequestLog {
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(method_(rename="method"))),
+  ToJson(rename_fields="camelCase", fields(method_(rename="method"))),
 )
 
 ///|
@@ -811,7 +1164,12 @@ pub(all) struct LogLine {
   severity : String?
   log_message : String?
   source_location : SourceLocation?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema SourceLocation
@@ -819,14 +1177,24 @@ pub(all) struct SourceLocation {
   file : String?
   line : String?
   function_name : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema SourceReference
 pub(all) struct SourceReference {
   repository : String?
   revision_id : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema CopyLogEntriesMetadata
@@ -841,13 +1209,23 @@ pub(all) struct CopyLogEntriesMetadata {
   source : String?
   destination : String?
   verb : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema CopyLogEntriesResponse
 pub(all) struct CopyLogEntriesResponse {
   log_entries_copied_count : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema BucketMetadata
@@ -857,7 +1235,12 @@ pub(all) struct BucketMetadata {
   state : String?
   create_bucket_request : CreateBucketRequest?
   update_bucket_request : UpdateBucketRequest?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema CreateBucketRequest
@@ -865,7 +1248,12 @@ pub(all) struct CreateBucketRequest {
   parent : String?
   bucket_id : String?
   bucket : LogBucket?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema UpdateBucketRequest
@@ -873,7 +1261,12 @@ pub(all) struct UpdateBucketRequest {
   name : String?
   bucket : LogBucket?
   update_mask : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LinkMetadata
@@ -883,7 +1276,12 @@ pub(all) struct LinkMetadata {
   state : String?
   create_link_request : CreateLinkRequest?
   delete_link_request : DeleteLinkRequest?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema CreateLinkRequest
@@ -891,16 +1289,31 @@ pub(all) struct CreateLinkRequest {
   parent : String?
   link : Link?
   link_id : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema DeleteLinkRequest
 pub(all) struct DeleteLinkRequest {
   name : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LocationMetadata
 pub(all) struct LocationMetadata {
   log_analytics_enabled : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)

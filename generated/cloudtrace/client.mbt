@@ -20,9 +20,9 @@ pub fn CloudtraceService::new(client : @core.GoogleClient) -> CloudtraceService 
 pub async fn CloudtraceService::projects_traces_batch_write(
   self : CloudtraceService,
   name : String,
+  request : BatchWriteSpansRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + "traces:batchWrite"
@@ -54,9 +54,9 @@ pub async fn CloudtraceService::projects_traces_batch_write(
 pub async fn CloudtraceService::projects_traces_spans_create_span(
   self : CloudtraceService,
   name : String,
+  request : Span,
 ) -> Span raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
