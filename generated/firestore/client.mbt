@@ -1010,7 +1010,7 @@ pub async fn FirestoreService::projects_databases_documents_execute_pipeline(
   self : FirestoreService,
   database : String,
   request : ExecutePipelineRequest,
-) -> ExecutePipelineResponse raise @http.HttpError {
+) -> Array[ExecutePipelineResponse] raise @http.HttpError {
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
@@ -1267,7 +1267,7 @@ pub async fn FirestoreService::projects_databases_documents_listen(
   self : FirestoreService,
   database : String,
   request : ListenRequest,
-) -> ListenResponse raise @http.HttpError {
+) -> Array[ListenResponse] raise @http.HttpError {
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
@@ -1436,7 +1436,7 @@ pub async fn FirestoreService::projects_databases_documents_run_aggregation_quer
   self : FirestoreService,
   parent : String,
   request : RunAggregationQueryRequest,
-) -> RunAggregationQueryResponse raise @http.HttpError {
+) -> Array[RunAggregationQueryResponse] raise @http.HttpError {
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
@@ -1470,7 +1470,7 @@ pub async fn FirestoreService::projects_databases_documents_run_query(
   self : FirestoreService,
   parent : String,
   request : RunQueryRequest,
-) -> RunQueryResponse raise @http.HttpError {
+) -> Array[RunQueryResponse] raise @http.HttpError {
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
@@ -1504,7 +1504,7 @@ pub async fn FirestoreService::projects_databases_documents_write(
   self : FirestoreService,
   database : String,
   request : WriteRequest,
-) -> WriteResponse raise @http.HttpError {
+) -> Array[WriteResponse] raise @http.HttpError {
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")

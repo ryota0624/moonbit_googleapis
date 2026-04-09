@@ -56,6 +56,53 @@ test "param_type_to_moonbit" {
 }
 
 ///|
+test "write_rest_method uses Array return for server streaming" {
+  let b = StringBuilder::new()
+  let rest_m = RestMethod::{
+    id: "firestore.projects.databases.documents.runQuery",
+    path: "runQuery",
+    http_method: "GET",
+    description: None,
+    parameters: None,
+    request: None,
+    response: Some(MethodMedia::{ ref_: Some("RunQueryResponse") }),
+    server_streaming: Some(true),
+  }
+  write_rest_method(
+    b, "FirestoreService", "projects_databases_documents_run_query", rest_m,
+  )
+  inspect(
+    b.to_string(),
+    content=(
+      #|///| firestore.projects.databases.documents.runQuery
+      #|pub async fn FirestoreService::projects_databases_documents_run_query(
+      #|  self : FirestoreService,
+      #|) -> Array[RunQueryResponse] raise @http.HttpError {
+      #|  let path = "/" + "runQuery"
+      #|  let url = self.base_url + path
+      #|  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
+      #|  let resp = self.client.request(req) catch {
+      #|    e => raise e
+      #|  }
+      #|  if resp.status_code >= 400 {
+      #|    raise @http.HttpError::network_message(
+      #|      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+      #|    )
+      #|  }
+      #|  let json = @json.parse(resp.body) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
+      #|  @json.from_json(json) catch {
+      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  }
+      #|}
+      #|
+      #|
+    ),
+  )
+}
+
+///|
 test "generate_types and generate_client snapshot" {
   let json =
     #|{

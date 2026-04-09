@@ -28,14 +28,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
+        with:
+          submodules: true
 
       - name: Set up MoonBit
         run: |
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> $GITHUB_PATH
 
+      - name: Install buf CLI
+        run: |
+          BIN="/usr/local/bin"
+          curl -sSL "https://github.com/bufbuild/buf/releases/latest/download/buf-$(uname -s)-$(uname -m)" -o "${BIN}/buf"
+          chmod +x "${BIN}/buf"
+
       - name: Update MoonBit dependencies
         run: |
-            moon version --all
-            moon update
-            
+          moon version --all
+          moon update
+

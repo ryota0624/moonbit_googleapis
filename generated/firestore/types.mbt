@@ -1,8 +1,21 @@
 ///|
-/// Schema DocumentTransform
-pub(all) struct DocumentTransform {
-  document : String?
-  field_transforms : Array[FieldTransform]?
+/// Schema Value
+pub(all) struct Value {
+  field_reference_value : String?
+  function_value : Function?
+  integer_value : String?
+  boolean_value : Bool?
+  string_value : String?
+  map_value : MapValue?
+  geo_point_value : LatLng?
+  array_value : ArrayValue?
+  pipeline_value : Pipeline?
+  double_value : Double?
+  null_value : String?
+  variable_reference_value : String?
+  reference_value : String?
+  bytes_value : String?
+  timestamp_value : String?
 } derive (
   Eq,
   Show,
@@ -11,9 +24,9 @@ pub(all) struct DocumentTransform {
 )
 
 ///|
-/// Schema Sum
-pub(all) struct Sum {
-  field : FieldReference?
+/// Schema GoogleFirestoreAdminV1ExportDocumentsResponse
+pub(all) struct GoogleFirestoreAdminV1ExportDocumentsResponse {
+  output_uri_prefix : String?
 } derive (
   Eq,
   Show,
@@ -22,10 +35,15 @@ pub(all) struct Sum {
 )
 
 ///|
-/// Schema QueryTarget
-pub(all) struct QueryTarget {
-  parent : String?
-  structured_query : StructuredQuery?
+/// Schema FieldTransform
+pub(all) struct FieldTransform {
+  minimum : Value?
+  field_path : String?
+  maximum : Value?
+  append_missing_elements : ArrayValue?
+  increment : Value?
+  remove_all_from_array : ArrayValue?
+  set_to_server_value : String?
 } derive (
   Eq,
   Show,
@@ -46,14 +64,269 @@ pub(all) struct BatchWriteRequest {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1BackupSchedule
-pub(all) struct GoogleFirestoreAdminV1BackupSchedule {
-  retention : String?
-  create_time : String?
-  daily_recurrence : GoogleFirestoreAdminV1DailyRecurrence?
-  weekly_recurrence : GoogleFirestoreAdminV1WeeklyRecurrence?
-  update_time : String?
+/// Schema GoogleFirestoreAdminV1Stats
+pub(all) struct GoogleFirestoreAdminV1Stats {
+  size_bytes : String?
+  document_count : String?
+  index_count : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema StructuredPipeline
+pub(all) struct StructuredPipeline {
+  pipeline : Pipeline?
+  options : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1RestoreDatabaseRequest
+pub(all) struct GoogleFirestoreAdminV1RestoreDatabaseRequest {
+  backup : String?
+  encryption_config : GoogleFirestoreAdminV1EncryptionConfig?
+  tags : Json?
+  database_id : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1BulkDeleteDocumentsMetadata
+pub(all) struct GoogleFirestoreAdminV1BulkDeleteDocumentsMetadata {
+  namespace_ids : Array[String]?
+  start_time : String?
+  progress_documents : GoogleFirestoreAdminV1Progress?
+  progress_bytes : GoogleFirestoreAdminV1Progress?
+  collection_ids : Array[String]?
+  end_time : String?
+  operation_state : String?
+  snapshot_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema FindNearest
+pub(all) struct FindNearest {
+  vector_field : FieldReference?
+  distance_measure : String?
+  query_vector : Value?
+  distance_result_field : String?
+  distance_threshold : Double?
+  limit : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema LatLng
+pub(all) struct LatLng {
+  latitude : Double?
+  longitude : Double?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1IndexOperationMetadata
+pub(all) struct GoogleFirestoreAdminV1IndexOperationMetadata {
+  start_time : String?
+  progress_documents : GoogleFirestoreAdminV1Progress?
+  progress_bytes : GoogleFirestoreAdminV1Progress?
+  state : String?
+  end_time : String?
+  index : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Function
+pub(all) struct Function {
   name : String?
+  options : Json?
+  args : Array[Value]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ExplainOptions
+pub(all) struct ExplainOptions {
+  analyze : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1UpdateDatabaseMetadata
+pub(all) struct GoogleFirestoreAdminV1UpdateDatabaseMetadata {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1ListIndexesResponse
+pub(all) struct GoogleFirestoreAdminV1ListIndexesResponse {
+  indexes : Array[GoogleFirestoreAdminV1Index]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1Progress
+pub(all) struct GoogleFirestoreAdminV1Progress {
+  estimated_work : String?
+  completed_work : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListCollectionIdsResponse
+pub(all) struct ListCollectionIdsResponse {
+  collection_ids : Array[String]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1ListBackupsResponse
+pub(all) struct GoogleFirestoreAdminV1ListBackupsResponse {
+  unreachable_ : Array[String]?
+  backups : Array[GoogleFirestoreAdminV1Backup]?
+} derive (
+  Eq,
+  Show,
+  FromJson(
+    rename_fields="camelCase",
+    fields(unreachable_(rename="unreachable")),
+  ),
+  ToJson(rename_fields="camelCase", fields(unreachable_(rename="unreachable"))),
+)
+
+///|
+/// Schema BeginTransactionResponse
+pub(all) struct BeginTransactionResponse {
+  transaction : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BitSequence
+pub(all) struct BitSequence {
+  bitmap : String?
+  padding : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ReadWrite
+pub(all) struct ReadWrite {
+  retry_transaction : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CompositeFilter
+pub(all) struct CompositeFilter {
+  filters : Array[Filter]?
+  op : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DocumentRemove
+pub(all) struct DocumentRemove {
+  removed_target_ids : Array[Int]?
+  read_time : String?
+  document : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleLongrunningOperation
+pub(all) struct GoogleLongrunningOperation {
+  name : String?
+  done : Bool?
+  response : Json?
+  metadata : Json?
+  error : Status?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1SearchIndexOptions
+pub(all) struct GoogleFirestoreAdminV1SearchIndexOptions {
+  text_language : String?
+  text_language_override_field_path : String?
 } derive (
   Eq,
   Show,
@@ -74,10 +347,103 @@ pub(all) struct ExplainMetrics {
 )
 
 ///|
+/// Schema GoogleFirestoreAdminV1FieldOperationMetadata
+pub(all) struct GoogleFirestoreAdminV1FieldOperationMetadata {
+  end_time : String?
+  ttl_config_delta : GoogleFirestoreAdminV1TtlConfigDelta?
+  progress_documents : GoogleFirestoreAdminV1Progress?
+  progress_bytes : GoogleFirestoreAdminV1Progress?
+  start_time : String?
+  field : String?
+  index_config_deltas : Array[GoogleFirestoreAdminV1IndexConfigDelta]?
+  state : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema RunQueryRequest
+pub(all) struct RunQueryRequest {
+  new_transaction : TransactionOptions?
+  explain_options : ExplainOptions?
+  structured_query : StructuredQuery?
+  transaction : String?
+  read_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1SourceEncryptionOptions
+pub(all) struct GoogleFirestoreAdminV1SourceEncryptionOptions {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema RunAggregationQueryRequest
+pub(all) struct RunAggregationQueryRequest {
+  new_transaction : TransactionOptions?
+  transaction : String?
+  read_time : String?
+  explain_options : ExplainOptions?
+  structured_aggregation_query : StructuredAggregationQuery?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CommitRequest
+pub(all) struct CommitRequest {
+  writes : Array[Write]?
+  transaction : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BloomFilter
+pub(all) struct BloomFilter {
+  bits : BitSequence?
+  hash_count : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TransactionOptions
+pub(all) struct TransactionOptions {
+  read_only : ReadOnly?
+  read_write : ReadWrite?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema PartitionQueryResponse
 pub(all) struct PartitionQueryResponse {
-  next_page_token : String?
   partitions : Array[Cursor]?
+  next_page_token : String?
 } derive (
   Eq,
   Show,
@@ -86,9 +452,14 @@ pub(all) struct PartitionQueryResponse {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1ResourceIdentity
-pub(all) struct GoogleFirestoreAdminV1ResourceIdentity {
-  principal : String?
+/// Schema Write
+pub(all) struct Write {
+  current_document : Precondition?
+  update : Document?
+  delete : String?
+  update_transforms : Array[FieldTransform]?
+  update_mask : DocumentMask?
+  transform : DocumentTransform?
 } derive (
   Eq,
   Show,
@@ -97,21 +468,13 @@ pub(all) struct GoogleFirestoreAdminV1ResourceIdentity {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1CreateDatabaseMetadata
-pub(all) struct GoogleFirestoreAdminV1CreateDatabaseMetadata {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ExecutePipelineResponse
-pub(all) struct ExecutePipelineResponse {
-  transaction : String?
-  results : Array[Document]?
-  explain_stats : ExplainStats?
-  execution_time : String?
+/// Schema GoogleFirestoreAdminV1IndexField
+pub(all) struct GoogleFirestoreAdminV1IndexField {
+  order : String?
+  array_config : String?
+  search_config : GoogleFirestoreAdminV1SearchConfig?
+  field_path : String?
+  vector_config : GoogleFirestoreAdminV1VectorConfig?
 } derive (
   Eq,
   Show,
@@ -120,9 +483,18 @@ pub(all) struct ExecutePipelineResponse {
 )
 
 ///|
-/// Schema Count
-pub(all) struct Count {
-  up_to : String?
+/// Schema GoogleFirestoreAdminV1FlatIndex
+pub(all) struct GoogleFirestoreAdminV1FlatIndex {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Projection
+pub(all) struct Projection {
+  fields : Array[FieldReference]?
 } derive (
   Eq,
   Show,
@@ -131,91 +503,10 @@ pub(all) struct Count {
 )
 
 ///|
-/// Schema ListenResponse
-pub(all) struct ListenResponse {
-  document_delete : DocumentDelete?
-  target_change : TargetChange?
-  document_change : DocumentChange?
-  filter : ExistenceFilter?
-  document_remove : DocumentRemove?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema WriteRequest
-pub(all) struct WriteRequest {
-  stream_id : String?
-  writes : Array[Write]?
-  stream_token : String?
-  labels : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ResetUserPasswordRequest
-pub(all) struct GoogleFirestoreAdminV1ResetUserPasswordRequest {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ImportDocumentsMetadata
-pub(all) struct GoogleFirestoreAdminV1ImportDocumentsMetadata {
-  start_time : String?
-  operation_state : String?
-  collection_ids : Array[String]?
-  progress_documents : GoogleFirestoreAdminV1Progress?
-  namespace_ids : Array[String]?
-  progress_bytes : GoogleFirestoreAdminV1Progress?
-  input_uri_prefix : String?
-  end_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1BackupSource
-pub(all) struct GoogleFirestoreAdminV1BackupSource {
-  backup : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1SearchTextIndexSpec
-pub(all) struct GoogleFirestoreAdminV1SearchTextIndexSpec {
-  index_type : String?
-  match_type : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1CloneDatabaseRequest
-pub(all) struct GoogleFirestoreAdminV1CloneDatabaseRequest {
-  tags : Json?
-  encryption_config : GoogleFirestoreAdminV1EncryptionConfig?
-  database_id : String?
-  pitr_snapshot : GoogleFirestoreAdminV1PitrSnapshot?
+/// Schema UnaryFilter
+pub(all) struct UnaryFilter {
+  op : String?
+  field : FieldReference?
 } derive (
   Eq,
   Show,
@@ -236,13 +527,9 @@ pub(all) struct GoogleFirestoreAdminV1TtlConfig {
 )
 
 ///|
-/// Schema GoogleLongrunningOperation
-pub(all) struct GoogleLongrunningOperation {
-  metadata : Json?
-  response : Json?
-  name : String?
-  done : Bool?
-  error : Status?
+/// Schema DocumentMask
+pub(all) struct DocumentMask {
+  field_paths : Array[String]?
 } derive (
   Eq,
   Show,
@@ -251,11 +538,9 @@ pub(all) struct GoogleLongrunningOperation {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1Stats
-pub(all) struct GoogleFirestoreAdminV1Stats {
-  document_count : String?
-  index_count : String?
-  size_bytes : String?
+/// Schema ArrayValue
+pub(all) struct ArrayValue {
+  values : Array[Value]?
 } derive (
   Eq,
   Show,
@@ -264,27 +549,8 @@ pub(all) struct GoogleFirestoreAdminV1Stats {
 )
 
 ///|
-/// Schema StructuredQuery
-pub(all) struct StructuredQuery {
-  offset : Int?
-  find_nearest : FindNearest?
-  from : Array[CollectionSelector]?
-  end_at : Cursor?
-  where_ : Filter?
-  select : Projection?
-  order_by : Array[Order]?
-  start_at : Cursor?
-  limit : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(where_(rename="where"))),
-  ToJson(rename_fields="camelCase", fields(where_(rename="where"))),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1FlatIndex
-pub(all) struct GoogleFirestoreAdminV1FlatIndex {} derive (
+/// Schema GoogleFirestoreAdminV1ResetUserPasswordRequest
+pub(all) struct GoogleFirestoreAdminV1ResetUserPasswordRequest {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -292,11 +558,12 @@ pub(all) struct GoogleFirestoreAdminV1FlatIndex {} derive (
 )
 
 ///|
-/// Schema ExistenceFilter
-pub(all) struct ExistenceFilter {
-  target_id : Int?
-  unchanged_names : BloomFilter?
-  count : Int?
+/// Schema RunAggregationQueryResponse
+pub(all) struct RunAggregationQueryResponse {
+  explain_metrics : ExplainMetrics?
+  result : AggregationResult?
+  transaction : String?
+  read_time : String?
 } derive (
   Eq,
   Show,
@@ -305,10 +572,13 @@ pub(all) struct ExistenceFilter {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1BulkDeleteDocumentsRequest
-pub(all) struct GoogleFirestoreAdminV1BulkDeleteDocumentsRequest {
-  collection_ids : Array[String]?
-  namespace_ids : Array[String]?
+/// Schema PartitionQueryRequest
+pub(all) struct PartitionQueryRequest {
+  structured_query : StructuredQuery?
+  read_time : String?
+  partition_count : String?
+  page_token : String?
+  page_size : Int?
 } derive (
   Eq,
   Show,
@@ -317,10 +587,9 @@ pub(all) struct GoogleFirestoreAdminV1BulkDeleteDocumentsRequest {
 )
 
 ///|
-/// Schema BloomFilter
-pub(all) struct BloomFilter {
-  hash_count : Int?
-  bits : BitSequence?
+/// Schema Pipeline
+pub(all) struct Pipeline {
+  stages : Array[Stage]?
 } derive (
   Eq,
   Show,
@@ -341,10 +610,10 @@ pub(all) struct ListDocumentsResponse {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1TtlConfigDelta
-pub(all) struct GoogleFirestoreAdminV1TtlConfigDelta {
+/// Schema GoogleFirestoreAdminV1IndexConfigDelta
+pub(all) struct GoogleFirestoreAdminV1IndexConfigDelta {
   change_type : String?
-  expiration_offset : String?
+  index : GoogleFirestoreAdminV1Index?
 } derive (
   Eq,
   Show,
@@ -353,10 +622,131 @@ pub(all) struct GoogleFirestoreAdminV1TtlConfigDelta {
 )
 
 ///|
-/// Schema Precondition
-pub(all) struct Precondition {
-  exists : Bool?
+/// Schema GoogleFirestoreAdminV1ResourceIdentity
+pub(all) struct GoogleFirestoreAdminV1ResourceIdentity {
+  principal : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CommitResponse
+pub(all) struct CommitResponse {
+  write_results : Array[WriteResult]?
+  commit_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1ListUserCredsResponse
+pub(all) struct GoogleFirestoreAdminV1ListUserCredsResponse {
+  user_creds : Array[GoogleFirestoreAdminV1UserCreds]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1CloneDatabaseRequest
+pub(all) struct GoogleFirestoreAdminV1CloneDatabaseRequest {
+  encryption_config : GoogleFirestoreAdminV1EncryptionConfig?
+  tags : Json?
+  database_id : String?
+  pitr_snapshot : GoogleFirestoreAdminV1PitrSnapshot?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1IndexConfig
+pub(all) struct GoogleFirestoreAdminV1IndexConfig {
+  ancestor_field : String?
+  reverting : Bool?
+  indexes : Array[GoogleFirestoreAdminV1Index]?
+  uses_ancestor_config : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1DisableUserCredsRequest
+pub(all) struct GoogleFirestoreAdminV1DisableUserCredsRequest {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema RunQueryResponse
+pub(all) struct RunQueryResponse {
+  transaction : String?
+  read_time : String?
+  skipped_results : Int?
+  document : Document?
+  explain_metrics : ExplainMetrics?
+  done : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1Database
+pub(all) struct GoogleFirestoreAdminV1Database {
+  type_ : String?
+  database_edition : String?
   update_time : String?
+  key_prefix : String?
+  tags : Json?
+  earliest_version_time : String?
+  location_id : String?
+  version_retention_period : String?
+  source_info : GoogleFirestoreAdminV1SourceInfo?
+  free_tier : Bool?
+  point_in_time_recovery_enablement : String?
+  delete_protection_state : String?
+  app_engine_integration_mode : String?
+  delete_time : String?
+  cmek_config : GoogleFirestoreAdminV1CmekConfig?
+  name : String?
+  firestore_data_access_mode : String?
+  mongodb_compatible_data_access_mode : String?
+  previous_id : String?
+  concurrency_mode : String?
+  create_time : String?
+  etag : String?
+  realtime_updates_mode : String?
+  uid : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1ListFieldsResponse
+pub(all) struct GoogleFirestoreAdminV1ListFieldsResponse {
+  fields : Array[GoogleFirestoreAdminV1Field]?
+  next_page_token : String?
 } derive (
   Eq,
   Show,
@@ -365,11 +755,32 @@ pub(all) struct Precondition {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1ImportDocumentsRequest
-pub(all) struct GoogleFirestoreAdminV1ImportDocumentsRequest {
-  collection_ids : Array[String]?
-  input_uri_prefix : String?
-  namespace_ids : Array[String]?
+/// Schema CollectionSelector
+pub(all) struct CollectionSelector {
+  collection_id : String?
+  all_descendants : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema FieldReference
+pub(all) struct FieldReference {
+  field_path : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1WeeklyRecurrence
+pub(all) struct GoogleFirestoreAdminV1WeeklyRecurrence {
+  day : String?
 } derive (
   Eq,
   Show,
@@ -380,6 +791,340 @@ pub(all) struct GoogleFirestoreAdminV1ImportDocumentsRequest {
 ///|
 /// Schema GoogleFirestoreAdminV1GoogleDefaultEncryptionOptions
 pub(all) struct GoogleFirestoreAdminV1GoogleDefaultEncryptionOptions {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1PitrSnapshot
+pub(all) struct GoogleFirestoreAdminV1PitrSnapshot {
+  database_uid : String?
+  database : String?
+  snapshot_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BatchGetDocumentsResponse
+pub(all) struct BatchGetDocumentsResponse {
+  transaction : String?
+  read_time : String?
+  found : Document?
+  missing : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DocumentChange
+pub(all) struct DocumentChange {
+  document : Document?
+  target_ids : Array[Int]?
+  removed_target_ids : Array[Int]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1BackupSource
+pub(all) struct GoogleFirestoreAdminV1BackupSource {
+  backup : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1SearchGeoSpec
+pub(all) struct GoogleFirestoreAdminV1SearchGeoSpec {
+  geo_json_indexing_disabled : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema MapValue
+pub(all) struct MapValue {
+  fields : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TargetChange
+pub(all) struct TargetChange {
+  cause : Status?
+  resume_token : String?
+  target_change_type : String?
+  target_ids : Array[Int]?
+  read_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1LocationMetadata
+pub(all) struct GoogleFirestoreAdminV1LocationMetadata {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Cursor
+pub(all) struct Cursor {
+  values : Array[Value]?
+  before : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BatchWriteResponse
+pub(all) struct BatchWriteResponse {
+  status : Array[Status]?
+  write_results : Array[WriteResult]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1SearchConfig
+pub(all) struct GoogleFirestoreAdminV1SearchConfig {
+  geo_spec : GoogleFirestoreAdminV1SearchGeoSpec?
+  text_spec : GoogleFirestoreAdminV1SearchTextSpec?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema StructuredQuery
+pub(all) struct StructuredQuery {
+  offset : Int?
+  order_by : Array[Order]?
+  find_nearest : FindNearest?
+  limit : Int?
+  from : Array[CollectionSelector]?
+  end_at : Cursor?
+  start_at : Cursor?
+  select : Projection?
+  where_ : Filter?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(where_(rename="where"))),
+  ToJson(rename_fields="camelCase", fields(where_(rename="where"))),
+)
+
+///|
+/// Schema ReadOnly
+pub(all) struct ReadOnly {
+  read_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DocumentsTarget
+pub(all) struct DocumentsTarget {
+  documents : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1BulkDeleteDocumentsRequest
+pub(all) struct GoogleFirestoreAdminV1BulkDeleteDocumentsRequest {
+  collection_ids : Array[String]?
+  namespace_ids : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ExecutePipelineResponse
+pub(all) struct ExecutePipelineResponse {
+  explain_stats : ExplainStats?
+  transaction : String?
+  results : Array[Document]?
+  execution_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema QueryTarget
+pub(all) struct QueryTarget {
+  structured_query : StructuredQuery?
+  parent : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1CustomerManagedEncryptionOptions
+pub(all) struct GoogleFirestoreAdminV1CustomerManagedEncryptionOptions {
+  kms_key_name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Target
+pub(all) struct Target {
+  read_time : String?
+  target_id : Int?
+  once : Bool?
+  documents : DocumentsTarget?
+  expected_count : Int?
+  resume_token : String?
+  query : QueryTarget?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1SearchTextIndexSpec
+pub(all) struct GoogleFirestoreAdminV1SearchTextIndexSpec {
+  match_type : String?
+  index_type : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Stage
+pub(all) struct Stage {
+  args : Array[Value]?
+  name : String?
+  options : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1RestoreDatabaseMetadata
+pub(all) struct GoogleFirestoreAdminV1RestoreDatabaseMetadata {
+  backup : String?
+  start_time : String?
+  database : String?
+  end_time : String?
+  operation_state : String?
+  progress_percentage : GoogleFirestoreAdminV1Progress?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BatchGetDocumentsRequest
+pub(all) struct BatchGetDocumentsRequest {
+  new_transaction : TransactionOptions?
+  documents : Array[String]?
+  transaction : String?
+  read_time : String?
+  mask : DocumentMask?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DocumentDelete
+pub(all) struct DocumentDelete {
+  document : String?
+  removed_target_ids : Array[Int]?
+  read_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Status
+pub(all) struct Status {
+  code : Int?
+  message : String?
+  details : Array[Json]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListLocationsResponse
+pub(all) struct ListLocationsResponse {
+  locations : Array[Location]?
+  next_page_token : String?
+} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -403,132 +1148,17 @@ pub(all) struct GoogleLongrunningListOperationsResponse {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1DisableUserCredsRequest
-pub(all) struct GoogleFirestoreAdminV1DisableUserCredsRequest {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TransactionOptions
-pub(all) struct TransactionOptions {
-  read_only : ReadOnly?
-  read_write : ReadWrite?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1CloneDatabaseMetadata
-pub(all) struct GoogleFirestoreAdminV1CloneDatabaseMetadata {
-  start_time : String?
-  operation_state : String?
-  progress_percentage : GoogleFirestoreAdminV1Progress?
-  end_time : String?
-  database : String?
-  pitr_snapshot : GoogleFirestoreAdminV1PitrSnapshot?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CollectionSelector
-pub(all) struct CollectionSelector {
-  collection_id : String?
-  all_descendants : Bool?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1PitrSnapshot
-pub(all) struct GoogleFirestoreAdminV1PitrSnapshot {
-  database : String?
-  snapshot_time : String?
-  database_uid : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
 /// Schema GoogleFirestoreAdminV1ExportDocumentsMetadata
 pub(all) struct GoogleFirestoreAdminV1ExportDocumentsMetadata {
+  operation_state : String?
+  progress_documents : GoogleFirestoreAdminV1Progress?
   output_uri_prefix : String?
   start_time : String?
-  operation_state : String?
-  snapshot_time : String?
-  namespace_ids : Array[String]?
-  end_time : String?
   collection_ids : Array[String]?
-  progress_documents : GoogleFirestoreAdminV1Progress?
+  snapshot_time : String?
+  end_time : String?
+  namespace_ids : Array[String]?
   progress_bytes : GoogleFirestoreAdminV1Progress?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CommitResponse
-pub(all) struct CommitResponse {
-  commit_time : String?
-  write_results : Array[WriteResult]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema FieldFilter
-pub(all) struct FieldFilter {
-  field : FieldReference?
-  op : String?
-  value : Value?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema DocumentRemove
-pub(all) struct DocumentRemove {
-  document : String?
-  removed_target_ids : Array[Int]?
-  read_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BatchGetDocumentsRequest
-pub(all) struct BatchGetDocumentsRequest {
-  new_transaction : TransactionOptions?
-  transaction : String?
-  mask : DocumentMask?
-  read_time : String?
-  documents : Array[String]?
 } derive (
   Eq,
   Show,
@@ -549,142 +1179,15 @@ pub(all) struct GoogleFirestoreAdminV1CmekConfig {
 )
 
 ///|
-/// Schema FindNearest
-pub(all) struct FindNearest {
-  vector_field : FieldReference?
-  query_vector : Value?
-  limit : Int?
-  distance_measure : String?
-  distance_result_field : String?
-  distance_threshold : Double?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ExplainStats
-pub(all) struct ExplainStats {
-  data : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1BulkDeleteDocumentsMetadata
-pub(all) struct GoogleFirestoreAdminV1BulkDeleteDocumentsMetadata {
-  end_time : String?
-  progress_bytes : GoogleFirestoreAdminV1Progress?
-  progress_documents : GoogleFirestoreAdminV1Progress?
-  namespace_ids : Array[String]?
-  collection_ids : Array[String]?
+/// Schema GoogleFirestoreAdminV1Backup
+pub(all) struct GoogleFirestoreAdminV1Backup {
+  expire_time : String?
+  stats : GoogleFirestoreAdminV1Stats?
+  database : String?
   snapshot_time : String?
-  start_time : String?
-  operation_state : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListCollectionIdsResponse
-pub(all) struct ListCollectionIdsResponse {
-  collection_ids : Array[String]?
-  next_page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1RestoreDatabaseRequest
-pub(all) struct GoogleFirestoreAdminV1RestoreDatabaseRequest {
-  database_id : String?
-  backup : String?
-  tags : Json?
-  encryption_config : GoogleFirestoreAdminV1EncryptionConfig?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Pipeline
-pub(all) struct Pipeline {
-  stages : Array[Stage]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Write
-pub(all) struct Write {
-  update : Document?
-  update_transforms : Array[FieldTransform]?
-  delete : String?
-  transform : DocumentTransform?
-  update_mask : DocumentMask?
-  current_document : Precondition?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema FieldReference
-pub(all) struct FieldReference {
-  field_path : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1Index
-pub(all) struct GoogleFirestoreAdminV1Index {
-  shard_count : Int?
-  query_scope : String?
-  name : String?
-  search_index_options : GoogleFirestoreAdminV1SearchIndexOptions?
-  fields : Array[GoogleFirestoreAdminV1IndexField]?
-  unique : Bool?
-  multikey : Bool?
+  database_uid : String?
   state : String?
-  density : String?
-  api_scope : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1IndexField
-pub(all) struct GoogleFirestoreAdminV1IndexField {
-  search_config : GoogleFirestoreAdminV1SearchConfig?
-  order : String?
-  vector_config : GoogleFirestoreAdminV1VectorConfig?
-  array_config : String?
-  field_path : String?
+  name : String?
 } derive (
   Eq,
   Show,
@@ -708,10 +1211,11 @@ pub(all) struct GoogleFirestoreAdminV1ListDatabasesResponse {
 )
 
 ///|
-/// Schema CompositeFilter
-pub(all) struct CompositeFilter {
-  filters : Array[Filter]?
-  op : String?
+/// Schema GoogleFirestoreAdminV1Field
+pub(all) struct GoogleFirestoreAdminV1Field {
+  name : String?
+  index_config : GoogleFirestoreAdminV1IndexConfig?
+  ttl_config : GoogleFirestoreAdminV1TtlConfig?
 } derive (
   Eq,
   Show,
@@ -720,103 +1224,11 @@ pub(all) struct CompositeFilter {
 )
 
 ///|
-/// Schema Order
-pub(all) struct Order {
-  field : FieldReference?
-  direction : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Aggregation
-pub(all) struct Aggregation {
-  count : Count?
-  avg : Avg?
-  alias_ : String?
-  sum : Sum?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(alias_(rename="alias"))),
-  ToJson(rename_fields="camelCase", fields(alias_(rename="alias"))),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1VectorConfig
-pub(all) struct GoogleFirestoreAdminV1VectorConfig {
-  dimension : Int?
-  flat : GoogleFirestoreAdminV1FlatIndex?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ListFieldsResponse
-pub(all) struct GoogleFirestoreAdminV1ListFieldsResponse {
-  fields : Array[GoogleFirestoreAdminV1Field]?
-  next_page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1UpdateDatabaseMetadata
-pub(all) struct GoogleFirestoreAdminV1UpdateDatabaseMetadata {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Empty
-pub(all) struct Empty {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema RollbackRequest
-pub(all) struct RollbackRequest {
-  transaction : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema WriteResponse
-pub(all) struct WriteResponse {
-  stream_id : String?
-  write_results : Array[WriteResult]?
-  stream_token : String?
-  commit_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BitSequence
-pub(all) struct BitSequence {
-  padding : Int?
-  bitmap : String?
+/// Schema GoogleFirestoreAdminV1ImportDocumentsRequest
+pub(all) struct GoogleFirestoreAdminV1ImportDocumentsRequest {
+  namespace_ids : Array[String]?
+  collection_ids : Array[String]?
+  input_uri_prefix : String?
 } derive (
   Eq,
   Show,
@@ -837,13 +1249,14 @@ pub(all) struct GoogleFirestoreAdminV1SourceInfo {
 )
 
 ///|
-/// Schema RunQueryRequest
-pub(all) struct RunQueryRequest {
-  transaction : String?
-  new_transaction : TransactionOptions?
-  explain_options : ExplainOptions?
-  structured_query : StructuredQuery?
-  read_time : String?
+/// Schema GoogleFirestoreAdminV1UserCreds
+pub(all) struct GoogleFirestoreAdminV1UserCreds {
+  update_time : String?
+  name : String?
+  state : String?
+  create_time : String?
+  secure_password : String?
+  resource_identity : GoogleFirestoreAdminV1ResourceIdentity?
 } derive (
   Eq,
   Show,
@@ -852,33 +1265,9 @@ pub(all) struct RunQueryRequest {
 )
 
 ///|
-/// Schema Projection
-pub(all) struct Projection {
-  fields : Array[FieldReference]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema StructuredAggregationQuery
-pub(all) struct StructuredAggregationQuery {
-  structured_query : StructuredQuery?
-  aggregations : Array[Aggregation]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1IndexConfigDelta
-pub(all) struct GoogleFirestoreAdminV1IndexConfigDelta {
-  index : GoogleFirestoreAdminV1Index?
-  change_type : String?
+/// Schema ExplainStats
+pub(all) struct ExplainStats {
+  data : Json?
 } derive (
   Eq,
   Show,
@@ -898,50 +1287,11 @@ pub(all) struct BeginTransactionRequest {
 )
 
 ///|
-/// Schema ListenRequest
-pub(all) struct ListenRequest {
-  remove_target : Int?
-  labels : Json?
-  add_target : Target?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Function
-pub(all) struct Function {
-  name : String?
-  args : Array[Value]?
-  options : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1IndexConfig
-pub(all) struct GoogleFirestoreAdminV1IndexConfig {
-  indexes : Array[GoogleFirestoreAdminV1Index]?
-  uses_ancestor_config : Bool?
-  ancestor_field : String?
-  reverting : Bool?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema UnaryFilter
-pub(all) struct UnaryFilter {
-  op : String?
+/// Schema FieldFilter
+pub(all) struct FieldFilter {
   field : FieldReference?
+  op : String?
+  value : Value?
 } derive (
   Eq,
   Show,
@@ -950,10 +1300,12 @@ pub(all) struct UnaryFilter {
 )
 
 ///|
-/// Schema LatLng
-pub(all) struct LatLng {
-  latitude : Double?
-  longitude : Double?
+/// Schema WriteRequest
+pub(all) struct WriteRequest {
+  labels : Json?
+  stream_id : String?
+  writes : Array[Write]?
+  stream_token : String?
 } derive (
   Eq,
   Show,
@@ -962,15 +1314,12 @@ pub(all) struct LatLng {
 )
 
 ///|
-/// Schema FieldTransform
-pub(all) struct FieldTransform {
-  set_to_server_value : String?
-  field_path : String?
-  append_missing_elements : ArrayValue?
-  remove_all_from_array : ArrayValue?
-  maximum : Value?
-  increment : Value?
-  minimum : Value?
+/// Schema WriteResponse
+pub(all) struct WriteResponse {
+  commit_time : String?
+  stream_id : String?
+  stream_token : String?
+  write_results : Array[WriteResult]?
 } derive (
   Eq,
   Show,
@@ -979,16 +1328,49 @@ pub(all) struct FieldTransform {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1FieldOperationMetadata
-pub(all) struct GoogleFirestoreAdminV1FieldOperationMetadata {
-  field : String?
-  index_config_deltas : Array[GoogleFirestoreAdminV1IndexConfigDelta]?
-  ttl_config_delta : GoogleFirestoreAdminV1TtlConfigDelta?
-  start_time : String?
+/// Schema Filter
+pub(all) struct Filter {
+  composite_filter : CompositeFilter?
+  field_filter : FieldFilter?
+  unary_filter : UnaryFilter?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Empty
+pub(all) struct Empty {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1CreateDatabaseMetadata
+pub(all) struct GoogleFirestoreAdminV1CreateDatabaseMetadata {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1Index
+pub(all) struct GoogleFirestoreAdminV1Index {
+  density : String?
+  name : String?
+  query_scope : String?
   state : String?
-  progress_bytes : GoogleFirestoreAdminV1Progress?
-  progress_documents : GoogleFirestoreAdminV1Progress?
-  end_time : String?
+  shard_count : Int?
+  search_index_options : GoogleFirestoreAdminV1SearchIndexOptions?
+  fields : Array[GoogleFirestoreAdminV1IndexField]?
+  unique : Bool?
+  api_scope : String?
+  multikey : Bool?
 } derive (
   Eq,
   Show,
@@ -997,21 +1379,12 @@ pub(all) struct GoogleFirestoreAdminV1FieldOperationMetadata {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1DailyRecurrence
-pub(all) struct GoogleFirestoreAdminV1DailyRecurrence {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BatchGetDocumentsResponse
-pub(all) struct BatchGetDocumentsResponse {
-  missing : String?
-  transaction : String?
-  found : Document?
-  read_time : String?
+/// Schema GoogleFirestoreAdminV1ExportDocumentsRequest
+pub(all) struct GoogleFirestoreAdminV1ExportDocumentsRequest {
+  namespace_ids : Array[String]?
+  collection_ids : Array[String]?
+  output_uri_prefix : String?
+  snapshot_time : String?
 } derive (
   Eq,
   Show,
@@ -1020,9 +1393,10 @@ pub(all) struct BatchGetDocumentsResponse {
 )
 
 ///|
-/// Schema DocumentMask
-pub(all) struct DocumentMask {
-  field_paths : Array[String]?
+/// Schema StructuredAggregationQuery
+pub(all) struct StructuredAggregationQuery {
+  aggregations : Array[Aggregation]?
+  structured_query : StructuredQuery?
 } derive (
   Eq,
   Show,
@@ -1042,14 +1416,9 @@ pub(all) struct Avg {
 )
 
 ///|
-/// Schema RunQueryResponse
-pub(all) struct RunQueryResponse {
-  read_time : String?
-  skipped_results : Int?
-  done : Bool?
-  explain_metrics : ExplainMetrics?
+/// Schema RollbackRequest
+pub(all) struct RollbackRequest {
   transaction : String?
-  document : Document?
 } derive (
   Eq,
   Show,
@@ -1058,10 +1427,10 @@ pub(all) struct RunQueryResponse {
 )
 
 ///|
-/// Schema StructuredPipeline
-pub(all) struct StructuredPipeline {
-  pipeline : Pipeline?
-  options : Json?
+/// Schema Order
+pub(all) struct Order {
+  direction : String?
+  field : FieldReference?
 } derive (
   Eq,
   Show,
@@ -1070,61 +1439,12 @@ pub(all) struct StructuredPipeline {
 )
 
 ///|
-/// Schema PartitionQueryRequest
-pub(all) struct PartitionQueryRequest {
-  page_token : String?
-  structured_query : StructuredQuery?
-  read_time : String?
-  partition_count : String?
-  page_size : Int?
+/// Schema ListenRequest
+pub(all) struct ListenRequest {
+  add_target : Target?
+  labels : Json?
+  remove_target : Int?
 } derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListCollectionIdsRequest
-pub(all) struct ListCollectionIdsRequest {
-  page_size : Int?
-  read_time : String?
-  page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Value
-pub(all) struct Value {
-  integer_value : String?
-  field_reference_value : String?
-  reference_value : String?
-  string_value : String?
-  bytes_value : String?
-  double_value : Double?
-  geo_point_value : LatLng?
-  array_value : ArrayValue?
-  pipeline_value : Pipeline?
-  timestamp_value : String?
-  variable_reference_value : String?
-  function_value : Function?
-  map_value : MapValue?
-  boolean_value : Bool?
-  null_value : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1DeleteDatabaseMetadata
-pub(all) struct GoogleFirestoreAdminV1DeleteDatabaseMetadata {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -1143,88 +1463,142 @@ pub(all) struct GoogleFirestoreAdminV1SearchTextSpec {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1SearchIndexOptions
-pub(all) struct GoogleFirestoreAdminV1SearchIndexOptions {
-  text_language : String?
-  text_language_override_field_path : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BatchWriteResponse
-pub(all) struct BatchWriteResponse {
-  write_results : Array[WriteResult]?
-  status : Array[Status]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ListIndexesResponse
-pub(all) struct GoogleFirestoreAdminV1ListIndexesResponse {
-  indexes : Array[GoogleFirestoreAdminV1Index]?
-  next_page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Filter
-pub(all) struct Filter {
-  composite_filter : CompositeFilter?
-  unary_filter : UnaryFilter?
-  field_filter : FieldFilter?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema RunAggregationQueryResponse
-pub(all) struct RunAggregationQueryResponse {
-  result : AggregationResult?
-  read_time : String?
+/// Schema ExecutePipelineRequest
+pub(all) struct ExecutePipelineRequest {
+  structured_pipeline : StructuredPipeline?
+  new_transaction : TransactionOptions?
   transaction : String?
-  explain_metrics : ExplainMetrics?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1RestoreDatabaseMetadata
-pub(all) struct GoogleFirestoreAdminV1RestoreDatabaseMetadata {
-  end_time : String?
-  database : String?
-  progress_percentage : GoogleFirestoreAdminV1Progress?
-  backup : String?
-  start_time : String?
-  operation_state : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ReadOnly
-pub(all) struct ReadOnly {
   read_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListCollectionIdsRequest
+pub(all) struct ListCollectionIdsRequest {
+  page_size : Int?
+  page_token : String?
+  read_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Document
+pub(all) struct Document {
+  update_time : String?
+  name : String?
+  create_time : String?
+  fields : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1ListBackupSchedulesResponse
+pub(all) struct GoogleFirestoreAdminV1ListBackupSchedulesResponse {
+  backup_schedules : Array[GoogleFirestoreAdminV1BackupSchedule]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListenResponse
+pub(all) struct ListenResponse {
+  document_change : DocumentChange?
+  target_change : TargetChange?
+  document_delete : DocumentDelete?
+  filter : ExistenceFilter?
+  document_remove : DocumentRemove?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Location
+pub(all) struct Location {
+  location_id : String?
+  display_name : String?
+  labels : Json?
+  name : String?
+  metadata : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1DailyRecurrence
+pub(all) struct GoogleFirestoreAdminV1DailyRecurrence {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1ImportDocumentsMetadata
+pub(all) struct GoogleFirestoreAdminV1ImportDocumentsMetadata {
+  input_uri_prefix : String?
+  end_time : String?
+  operation_state : String?
+  collection_ids : Array[String]?
+  progress_documents : GoogleFirestoreAdminV1Progress?
+  progress_bytes : GoogleFirestoreAdminV1Progress?
+  start_time : String?
+  namespace_ids : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema WriteResult
+pub(all) struct WriteResult {
+  transform_results : Array[Value]?
+  update_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1TtlConfigDelta
+pub(all) struct GoogleFirestoreAdminV1TtlConfigDelta {
+  change_type : String?
+  expiration_offset : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Sum
+pub(all) struct Sum {
+  field : FieldReference?
 } derive (
   Eq,
   Show,
@@ -1242,13 +1616,23 @@ pub(all) struct GoogleLongrunningCancelOperationRequest {} derive (
 )
 
 ///|
-/// Schema RunAggregationQueryRequest
-pub(all) struct RunAggregationQueryRequest {
-  new_transaction : TransactionOptions?
-  structured_aggregation_query : StructuredAggregationQuery?
-  transaction : String?
-  read_time : String?
-  explain_options : ExplainOptions?
+/// Schema Aggregation
+pub(all) struct Aggregation {
+  sum : Sum?
+  avg : Avg?
+  alias_ : String?
+  count : Count?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(alias_(rename="alias"))),
+  ToJson(rename_fields="camelCase", fields(alias_(rename="alias"))),
+)
+
+///|
+/// Schema Count
+pub(all) struct Count {
+  up_to : String?
 } derive (
   Eq,
   Show,
@@ -1257,9 +1641,10 @@ pub(all) struct RunAggregationQueryRequest {
 )
 
 ///|
-/// Schema DocumentsTarget
-pub(all) struct DocumentsTarget {
-  documents : Array[String]?
+/// Schema Precondition
+pub(all) struct Precondition {
+  exists : Bool?
+  update_time : String?
 } derive (
   Eq,
   Show,
@@ -1268,8 +1653,11 @@ pub(all) struct DocumentsTarget {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1LocationMetadata
-pub(all) struct GoogleFirestoreAdminV1LocationMetadata {} derive (
+/// Schema GoogleFirestoreAdminV1VectorConfig
+pub(all) struct GoogleFirestoreAdminV1VectorConfig {
+  dimension : Int?
+  flat : GoogleFirestoreAdminV1FlatIndex?
+} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -1277,12 +1665,43 @@ pub(all) struct GoogleFirestoreAdminV1LocationMetadata {} derive (
 )
 
 ///|
-/// Schema ExecutePipelineRequest
-pub(all) struct ExecutePipelineRequest {
-  transaction : String?
-  structured_pipeline : StructuredPipeline?
-  new_transaction : TransactionOptions?
-  read_time : String?
+/// Schema GoogleFirestoreAdminV1EnableUserCredsRequest
+pub(all) struct GoogleFirestoreAdminV1EnableUserCredsRequest {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1BackupSchedule
+pub(all) struct GoogleFirestoreAdminV1BackupSchedule {
+  daily_recurrence : GoogleFirestoreAdminV1DailyRecurrence?
+  update_time : String?
+  name : String?
+  retention : String?
+  weekly_recurrence : GoogleFirestoreAdminV1WeeklyRecurrence?
+  create_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GoogleFirestoreAdminV1DeleteDatabaseMetadata
+pub(all) struct GoogleFirestoreAdminV1DeleteDatabaseMetadata {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AggregationResult
+pub(all) struct AggregationResult {
+  aggregate_fields : Json?
 } derive (
   Eq,
   Show,
@@ -1302,154 +1721,11 @@ pub(all) struct PlanSummary {
 )
 
 ///|
-/// Schema GoogleFirestoreAdminV1UserCreds
-pub(all) struct GoogleFirestoreAdminV1UserCreds {
-  name : String?
-  state : String?
-  resource_identity : GoogleFirestoreAdminV1ResourceIdentity?
-  update_time : String?
-  create_time : String?
-  secure_password : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1CustomerManagedEncryptionOptions
-pub(all) struct GoogleFirestoreAdminV1CustomerManagedEncryptionOptions {
-  kms_key_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1SourceEncryptionOptions
-pub(all) struct GoogleFirestoreAdminV1SourceEncryptionOptions {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1SearchConfig
-pub(all) struct GoogleFirestoreAdminV1SearchConfig {
-  text_spec : GoogleFirestoreAdminV1SearchTextSpec?
-  geo_spec : GoogleFirestoreAdminV1SearchGeoSpec?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema AggregationResult
-pub(all) struct AggregationResult {
-  aggregate_fields : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ListUserCredsResponse
-pub(all) struct GoogleFirestoreAdminV1ListUserCredsResponse {
-  user_creds : Array[GoogleFirestoreAdminV1UserCreds]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BeginTransactionResponse
-pub(all) struct BeginTransactionResponse {
-  transaction : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ListBackupsResponse
-pub(all) struct GoogleFirestoreAdminV1ListBackupsResponse {
-  backups : Array[GoogleFirestoreAdminV1Backup]?
-  unreachable_ : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(
-    rename_fields="camelCase",
-    fields(unreachable_(rename="unreachable")),
-  ),
-  ToJson(rename_fields="camelCase", fields(unreachable_(rename="unreachable"))),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1Progress
-pub(all) struct GoogleFirestoreAdminV1Progress {
-  completed_work : String?
-  estimated_work : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ExplainOptions
-pub(all) struct ExplainOptions {
-  analyze : Bool?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Cursor
-pub(all) struct Cursor {
-  values : Array[Value]?
-  before : Bool?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema DocumentChange
-pub(all) struct DocumentChange {
-  removed_target_ids : Array[Int]?
-  document : Document?
-  target_ids : Array[Int]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CommitRequest
-pub(all) struct CommitRequest {
-  transaction : String?
-  writes : Array[Write]?
+/// Schema ExistenceFilter
+pub(all) struct ExistenceFilter {
+  target_id : Int?
+  count : Int?
+  unchanged_names : BloomFilter?
 } derive (
   Eq,
   Show,
@@ -1460,9 +1736,9 @@ pub(all) struct CommitRequest {
 ///|
 /// Schema ExecutionStats
 pub(all) struct ExecutionStats {
-  read_operations : String?
   results_returned : String?
   execution_duration : String?
+  read_operations : String?
   debug_stats : Json?
 } derive (
   Eq,
@@ -1472,142 +1748,14 @@ pub(all) struct ExecutionStats {
 )
 
 ///|
-/// Schema Target
-pub(all) struct Target {
-  documents : DocumentsTarget?
-  query : QueryTarget?
-  read_time : String?
-  target_id : Int?
-  once : Bool?
-  resume_token : String?
-  expected_count : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TargetChange
-pub(all) struct TargetChange {
-  read_time : String?
-  cause : Status?
-  target_change_type : String?
-  target_ids : Array[Int]?
-  resume_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1Backup
-pub(all) struct GoogleFirestoreAdminV1Backup {
-  snapshot_time : String?
-  stats : GoogleFirestoreAdminV1Stats?
-  database_uid : String?
+/// Schema GoogleFirestoreAdminV1CloneDatabaseMetadata
+pub(all) struct GoogleFirestoreAdminV1CloneDatabaseMetadata {
   database : String?
-  expire_time : String?
-  name : String?
-  state : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema DocumentDelete
-pub(all) struct DocumentDelete {
-  removed_target_ids : Array[Int]?
-  read_time : String?
-  document : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ExportDocumentsResponse
-pub(all) struct GoogleFirestoreAdminV1ExportDocumentsResponse {
-  output_uri_prefix : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1SearchGeoSpec
-pub(all) struct GoogleFirestoreAdminV1SearchGeoSpec {
-  geo_json_indexing_disabled : Bool?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Status
-pub(all) struct Status {
-  code : Int?
-  message : String?
-  details : Array[Json]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1EnableUserCredsRequest
-pub(all) struct GoogleFirestoreAdminV1EnableUserCredsRequest {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ListBackupSchedulesResponse
-pub(all) struct GoogleFirestoreAdminV1ListBackupSchedulesResponse {
-  backup_schedules : Array[GoogleFirestoreAdminV1BackupSchedule]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1WeeklyRecurrence
-pub(all) struct GoogleFirestoreAdminV1WeeklyRecurrence {
-  day : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1IndexOperationMetadata
-pub(all) struct GoogleFirestoreAdminV1IndexOperationMetadata {
-  start_time : String?
   end_time : String?
-  index : String?
-  state : String?
-  progress_bytes : GoogleFirestoreAdminV1Progress?
-  progress_documents : GoogleFirestoreAdminV1Progress?
+  operation_state : String?
+  progress_percentage : GoogleFirestoreAdminV1Progress?
+  pitr_snapshot : GoogleFirestoreAdminV1PitrSnapshot?
+  start_time : String?
 } derive (
   Eq,
   Show,
@@ -1616,132 +1764,10 @@ pub(all) struct GoogleFirestoreAdminV1IndexOperationMetadata {
 )
 
 ///|
-/// Schema Location
-pub(all) struct Location {
-  name : String?
-  metadata : Json?
-  labels : Json?
-  display_name : String?
-  location_id : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema MapValue
-pub(all) struct MapValue {
-  fields : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1Field
-pub(all) struct GoogleFirestoreAdminV1Field {
-  index_config : GoogleFirestoreAdminV1IndexConfig?
-  ttl_config : GoogleFirestoreAdminV1TtlConfig?
-  name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ArrayValue
-pub(all) struct ArrayValue {
-  values : Array[Value]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Stage
-pub(all) struct Stage {
-  options : Json?
-  args : Array[Value]?
-  name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1ExportDocumentsRequest
-pub(all) struct GoogleFirestoreAdminV1ExportDocumentsRequest {
-  output_uri_prefix : String?
-  namespace_ids : Array[String]?
-  collection_ids : Array[String]?
-  snapshot_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleFirestoreAdminV1Database
-pub(all) struct GoogleFirestoreAdminV1Database {
-  database_edition : String?
-  delete_time : String?
-  uid : String?
-  type_ : String?
-  point_in_time_recovery_enablement : String?
-  firestore_data_access_mode : String?
-  update_time : String?
-  earliest_version_time : String?
-  etag : String?
-  source_info : GoogleFirestoreAdminV1SourceInfo?
-  free_tier : Bool?
-  version_retention_period : String?
-  cmek_config : GoogleFirestoreAdminV1CmekConfig?
-  name : String?
-  concurrency_mode : String?
-  previous_id : String?
-  location_id : String?
-  tags : Json?
-  key_prefix : String?
-  delete_protection_state : String?
-  mongodb_compatible_data_access_mode : String?
-  app_engine_integration_mode : String?
-  realtime_updates_mode : String?
-  create_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema WriteResult
-pub(all) struct WriteResult {
-  update_time : String?
-  transform_results : Array[Value]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ReadWrite
-pub(all) struct ReadWrite {
-  retry_transaction : String?
+/// Schema DocumentTransform
+pub(all) struct DocumentTransform {
+  document : String?
+  field_transforms : Array[FieldTransform]?
 } derive (
   Eq,
   Show,
@@ -1755,32 +1781,6 @@ pub(all) struct GoogleFirestoreAdminV1EncryptionConfig {
   use_source_encryption : GoogleFirestoreAdminV1SourceEncryptionOptions?
   customer_managed_encryption : GoogleFirestoreAdminV1CustomerManagedEncryptionOptions?
   google_default_encryption : GoogleFirestoreAdminV1GoogleDefaultEncryptionOptions?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListLocationsResponse
-pub(all) struct ListLocationsResponse {
-  next_page_token : String?
-  locations : Array[Location]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Document
-pub(all) struct Document {
-  name : String?
-  fields : Json?
-  create_time : String?
-  update_time : String?
 } derive (
   Eq,
   Show,

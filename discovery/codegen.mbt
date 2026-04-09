@@ -629,15 +629,19 @@ fn write_body_field_required(
 }
 
 ///|
-/// Returns `(moonbit_return_type, parse_json_body)`.
-fn method_return_type(rest_m : RestMethod) -> (String, Bool) {
-  match rest_m.response {
+fn method_return_type(rest_m : RestMethod) -> String {
+  let base = match rest_m.response {
     Some(media) =>
       match media.ref_ {
-        Some(r) => (ref_to_type_name(r), true)
-        None => ("@http.HttpResponse", false)
+        Some(r) => ref_to_type_name(r)
+        None => "Json"
       }
-    None => ("@http.HttpResponse", false)
+    None => "Json"
+  }
+  if rest_m.server_streaming.unwrap_or(false) {
+    "Array[" + base + "]"
+  } else {
+    base
   }
 }
 
@@ -667,7 +671,7 @@ fn write_rest_method(
   }
   let body_req = sorted_body_required_pairs(body_req)
   let body_opt = sorted_param_pairs(body_opt)
-  let (ret_ty, parse_json) = method_return_type(rest_m)
+  let ret_ty = method_return_type(rest_m)
   b.write_string("///| \{rest_m.id}\n")
   match rest_m.description {
     Some(d) => b.write_string("///| \{d}\n")
@@ -763,18 +767,14 @@ fn write_rest_method(
   b.write_string(
     "  if resp.status_code >= 400 {\n    raise @http.HttpError::network_message(\n      \"HTTP \" + resp.status_code.to_string() + \": \" + resp.body,\n    )\n  }\n",
   )
-  if parse_json {
-    b.write_string("  let json = @json.parse(resp.body) catch {\n")
-    b.write_string(
-      "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
-    )
-    b.write_string("  @json.from_json(json) catch {\n")
-    b.write_string(
-      "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
-    )
-  } else {
-    b.write_string("  resp\n")
-  }
+  b.write_string("  let json = @json.parse(resp.body) catch {\n")
+  b.write_string(
+    "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
+  )
+  b.write_string("  @json.from_json(json) catch {\n")
+  b.write_string(
+    "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
+  )
   b.write_string("}\n\n")
 }
 

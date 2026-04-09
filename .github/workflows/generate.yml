@@ -20,8 +20,22 @@ env:
 jobs:
   generate:
     runs-on: self-hosted
+    env:
+      STREAMING_APIS: >-
+        firestore:google.firestore.v1
+        pubsub:google.pubsub.v1
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install buf CLI
+        uses: bufbuild/buf-setup-action@v1
+
+      - name: Build proto image
+        run: |
+          cd googleapis
+          buf build . --exclude-path preview --output json -o /tmp/googleapis-image.json
 
       - name: Generate all API clients
         run: |
@@ -30,7 +44,19 @@ jobs:
             version="${entry##*:}"
             echo "=== Generating $api ($version) ==="
             curl -sS -o "/tmp/${api}.json" "https://www.googleapis.com/discovery/v1/apis/${api}/${version}/rest"
-            moon run discovery/ --target native -- "/tmp/${api}.json" --output "generated/${api}"
+
+            STREAMING_FLAG=""
+            for sentry in $STREAMING_APIS; do
+              sapi="${sentry%%:*}"
+              sproto="${sentry##*:}"
+              if [ "$api" = "$sapi" ]; then
+                ./scripts/extract_streaming.sh "$sproto" "/tmp/${api}_streaming.json"
+                STREAMING_FLAG="--server-streaming /tmp/${api}_streaming.json"
+                break
+              fi
+            done
+
+            moon run discovery/ --target native -- "/tmp/${api}.json" --output "generated/${api}" $STREAMING_FLAG
             moon fmt "generated/${api}"
           done
 

@@ -68,6 +68,7 @@ pub struct RestMethod {
   parameters : Map[String, MethodParameter]?
   request : MethodMedia?
   response : MethodMedia?
+  server_streaming : Bool?
 } derive(@json.FromJson)
 
 pub struct RestResource {

@@ -45,6 +45,7 @@ pub struct RestMethod {
   parameters : Map[String, MethodParameter]?
   request : MethodMedia?
   response : MethodMedia?
+  server_streaming : Bool?
 } derive(FromJson(rename_fields="camelCase"))
 
 ///|
