@@ -265,14 +265,17 @@ pub async fn LoggingService::billing_accounts_locations_get(
 pub async fn LoggingService::billing_accounts_locations_list(
   self : LoggingService,
   name : String,
-  extra_location_types? : String? = None,
+  extra_location_types? : Array[String]? = None,
   filter? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListLocationsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match extra_location_types {
-    Some(v) => qp.push(("extraLocationTypes", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("extraLocationTypes", url_encode(v)))
+      }
     None => ()
   }
   match filter {
@@ -940,7 +943,7 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -952,7 +955,10 @@ pub async fn LoggingService::billing_accounts_locations_buckets_views_logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -1354,7 +1360,7 @@ pub async fn LoggingService::billing_accounts_logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -1366,7 +1372,10 @@ pub async fn LoggingService::billing_accounts_logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -2249,14 +2258,17 @@ pub async fn LoggingService::folders_locations_get(
 pub async fn LoggingService::folders_locations_list(
   self : LoggingService,
   name : String,
-  extra_location_types? : String? = None,
+  extra_location_types? : Array[String]? = None,
   filter? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListLocationsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match extra_location_types {
-    Some(v) => qp.push(("extraLocationTypes", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("extraLocationTypes", url_encode(v)))
+      }
     None => ()
   }
   match filter {
@@ -3026,7 +3038,7 @@ pub async fn LoggingService::folders_locations_buckets_views_logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -3038,7 +3050,10 @@ pub async fn LoggingService::folders_locations_buckets_views_logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -3621,7 +3636,7 @@ pub async fn LoggingService::folders_logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -3633,7 +3648,10 @@ pub async fn LoggingService::folders_logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -3949,14 +3967,17 @@ pub async fn LoggingService::locations_get(
 pub async fn LoggingService::locations_list(
   self : LoggingService,
   name : String,
-  extra_location_types? : String? = None,
+  extra_location_types? : Array[String]? = None,
   filter? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListLocationsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match extra_location_types {
-    Some(v) => qp.push(("extraLocationTypes", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("extraLocationTypes", url_encode(v)))
+      }
     None => ()
   }
   match filter {
@@ -4862,7 +4883,7 @@ pub async fn LoggingService::logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -4874,7 +4895,10 @@ pub async fn LoggingService::logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -5281,14 +5305,17 @@ pub async fn LoggingService::organizations_locations_get(
 pub async fn LoggingService::organizations_locations_list(
   self : LoggingService,
   name : String,
-  extra_location_types? : String? = None,
+  extra_location_types? : Array[String]? = None,
   filter? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListLocationsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match extra_location_types {
-    Some(v) => qp.push(("extraLocationTypes", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("extraLocationTypes", url_encode(v)))
+      }
     None => ()
   }
   match filter {
@@ -6058,7 +6085,7 @@ pub async fn LoggingService::organizations_locations_buckets_views_logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -6070,7 +6097,10 @@ pub async fn LoggingService::organizations_locations_buckets_views_logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -6653,7 +6683,7 @@ pub async fn LoggingService::organizations_logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -6665,7 +6695,10 @@ pub async fn LoggingService::organizations_logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -7201,14 +7234,17 @@ pub async fn LoggingService::projects_locations_get(
 pub async fn LoggingService::projects_locations_list(
   self : LoggingService,
   name : String,
-  extra_location_types? : String? = None,
+  extra_location_types? : Array[String]? = None,
   filter? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListLocationsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match extra_location_types {
-    Some(v) => qp.push(("extraLocationTypes", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("extraLocationTypes", url_encode(v)))
+      }
     None => ()
   }
   match filter {
@@ -7978,7 +8014,7 @@ pub async fn LoggingService::projects_locations_buckets_views_logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -7990,7 +8026,10 @@ pub async fn LoggingService::projects_locations_buckets_views_logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -8573,7 +8612,7 @@ pub async fn LoggingService::projects_logs_list(
   parent : String,
   page_size? : Int? = None,
   page_token? : String? = None,
-  resource_names? : String? = None,
+  resource_names? : Array[String]? = None,
 ) -> ListLogsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match page_size {
@@ -8585,7 +8624,10 @@ pub async fn LoggingService::projects_logs_list(
     None => ()
   }
   match resource_names {
-    Some(v) => qp.push(("resourceNames", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("resourceNames", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)

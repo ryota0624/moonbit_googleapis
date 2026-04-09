@@ -47,6 +47,7 @@ pub struct MethodParameter {
   description : String?
   required : Bool?
   location : String?
+  repeated : Bool?
 } derive(@json.FromJson)
 
 pub struct RestDescription {

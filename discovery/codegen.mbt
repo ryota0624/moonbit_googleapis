@@ -215,6 +215,7 @@ fn synthetic_path_param() -> MethodParameter {
     description: None,
     required: Some(true),
     location: Some("path"),
+    repeated: None,
   }
 }
 
@@ -391,6 +392,28 @@ fn param_is_required(p : MethodParameter) -> Bool {
 }
 
 ///|
+fn param_is_repeated(p : MethodParameter) -> Bool {
+  match p.repeated {
+    Some(true) => true
+    _ => false
+  }
+}
+
+///|
+fn query_param_type_to_moonbit(p : MethodParameter) -> String {
+  let base_type = param_type_to_moonbit(p.type_)
+  if param_is_repeated(p) {
+    if base_type.has_prefix("Array[") {
+      base_type
+    } else {
+      "Array[\{base_type}]"
+    }
+  } else {
+    base_type
+  }
+}
+
+///|
 fn write_query_push_string(
   b : StringBuilder,
   moonbit_arg : String,
@@ -410,6 +433,25 @@ fn write_query_push_string(
 }
 
 ///|
+fn write_query_push_string_repeated(
+  b : StringBuilder,
+  moonbit_arg : String,
+  query_key : String,
+  encode : Bool,
+) -> Unit {
+  let qk = escape_moonbit_string_lit(query_key)
+  if encode {
+    b.write_string(
+      "  match \{moonbit_arg} {\n    Some(vs) => {\n      for v in vs {\n        qp.push((\"\{qk}\", url_encode(v)))\n      }\n    }\n    None => ()\n  }\n",
+    )
+  } else {
+    b.write_string(
+      "  match \{moonbit_arg} {\n    Some(vs) => {\n      for v in vs {\n        qp.push((\"\{qk}\", v.to_string()))\n      }\n    }\n    None => ()\n  }\n",
+    )
+  }
+}
+
+///|
 fn write_query_push_int(
   b : StringBuilder,
   moonbit_arg : String,
@@ -418,6 +460,18 @@ fn write_query_push_int(
   let qk = escape_moonbit_string_lit(query_key)
   b.write_string(
     "  match \{moonbit_arg} {\n    Some(v) => qp.push((\"\{qk}\", v.to_string()))\n    None => ()\n  }\n",
+  )
+}
+
+///|
+fn write_query_push_int_repeated(
+  b : StringBuilder,
+  moonbit_arg : String,
+  query_key : String,
+) -> Unit {
+  let qk = escape_moonbit_string_lit(query_key)
+  b.write_string(
+    "  match \{moonbit_arg} {\n    Some(vs) => {\n      for v in vs {\n        qp.push((\"\{qk}\", v.to_string()))\n      }\n    }\n    None => ()\n  }\n",
   )
 }
 
@@ -434,6 +488,18 @@ fn write_query_push_double(
 }
 
 ///|
+fn write_query_push_double_repeated(
+  b : StringBuilder,
+  moonbit_arg : String,
+  query_key : String,
+) -> Unit {
+  let qk = escape_moonbit_string_lit(query_key)
+  b.write_string(
+    "  match \{moonbit_arg} {\n    Some(vs) => {\n      for v in vs {\n        qp.push((\"\{qk}\", v.to_string()))\n      }\n    }\n    None => ()\n  }\n",
+  )
+}
+
+///|
 fn write_query_push_bool(
   b : StringBuilder,
   moonbit_arg : String,
@@ -446,6 +512,18 @@ fn write_query_push_bool(
 }
 
 ///|
+fn write_query_push_bool_repeated(
+  b : StringBuilder,
+  moonbit_arg : String,
+  query_key : String,
+) -> Unit {
+  let qk = escape_moonbit_string_lit(query_key)
+  b.write_string(
+    "  match \{moonbit_arg} {\n    Some(vs) => {\n      for v in vs {\n        qp.push((\"\{qk}\", if v { \"true\" } else { \"false\" }))\n      }\n    }\n    None => ()\n  }\n",
+  )
+}
+
+///|
 fn write_query_param_push(
   b : StringBuilder,
   api_key : String,
@@ -453,12 +531,38 @@ fn write_query_param_push(
   moonbit_arg : String,
 ) -> Unit {
   let ty = param_type_to_moonbit(p.type_)
+  let repeated = param_is_repeated(p)
   match ty {
-    "String" => write_query_push_string(b, moonbit_arg, api_key, true)
-    "Int" => write_query_push_int(b, moonbit_arg, api_key)
-    "Double" => write_query_push_double(b, moonbit_arg, api_key)
-    "Bool" => write_query_push_bool(b, moonbit_arg, api_key)
-    _ => write_query_push_string(b, moonbit_arg, api_key, true)
+    "String" =>
+      if repeated {
+        write_query_push_string_repeated(b, moonbit_arg, api_key, true)
+      } else {
+        write_query_push_string(b, moonbit_arg, api_key, true)
+      }
+    "Int" =>
+      if repeated {
+        write_query_push_int_repeated(b, moonbit_arg, api_key)
+      } else {
+        write_query_push_int(b, moonbit_arg, api_key)
+      }
+    "Double" =>
+      if repeated {
+        write_query_push_double_repeated(b, moonbit_arg, api_key)
+      } else {
+        write_query_push_double(b, moonbit_arg, api_key)
+      }
+    "Bool" =>
+      if repeated {
+        write_query_push_bool_repeated(b, moonbit_arg, api_key)
+      } else {
+        write_query_push_bool(b, moonbit_arg, api_key)
+      }
+    _ =>
+      if repeated {
+        write_query_push_string_repeated(b, moonbit_arg, api_key, true)
+      } else {
+        write_query_push_string(b, moonbit_arg, api_key, true)
+      }
   }
 }
 
@@ -586,7 +690,7 @@ fn write_rest_method(
   }
   for qp in query_pairs {
     let arg = safe_field_name(qp.0)
-    let ty = param_type_to_moonbit(qp.1.type_)
+    let ty = query_param_type_to_moonbit(qp.1)
     b.write_string("  \{arg}? : \{ty}? = None,\n")
   }
   for bp in body_req {

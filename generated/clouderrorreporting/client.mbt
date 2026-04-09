@@ -152,7 +152,7 @@ pub async fn ClouderrorreportingService::projects_group_stats_list(
   project_name : String,
   alignment? : String? = None,
   alignment_time? : String? = None,
-  group_id? : String? = None,
+  group_id? : Array[String]? = None,
   order? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -172,7 +172,10 @@ pub async fn ClouderrorreportingService::projects_group_stats_list(
     None => ()
   }
   match group_id {
-    Some(v) => qp.push(("groupId", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("groupId", url_encode(v)))
+      }
     None => ()
   }
   match order {
@@ -388,7 +391,7 @@ pub async fn ClouderrorreportingService::projects_locations_group_stats_list(
   project_name : String,
   alignment? : String? = None,
   alignment_time? : String? = None,
-  group_id? : String? = None,
+  group_id? : Array[String]? = None,
   order? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -408,7 +411,10 @@ pub async fn ClouderrorreportingService::projects_locations_group_stats_list(
     None => ()
   }
   match group_id {
-    Some(v) => qp.push(("groupId", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("groupId", url_encode(v)))
+      }
     None => ()
   }
   match order {

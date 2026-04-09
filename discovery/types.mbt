@@ -53,6 +53,7 @@ pub struct MethodParameter {
   description : String?
   required : Bool?
   location : String?
+  repeated : Bool?
 } derive(FromJson(rename_fields="camelCase", fields(type_(rename="type"))))
 
 ///|

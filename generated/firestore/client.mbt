@@ -916,7 +916,7 @@ pub async fn FirestoreService::projects_databases_documents_create_document(
   collection_id : String,
   request : Document,
   document_id? : String? = None,
-  mask_field_paths? : String? = None,
+  mask_field_paths? : Array[String]? = None,
 ) -> Document raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match document_id {
@@ -924,7 +924,10 @@ pub async fn FirestoreService::projects_databases_documents_create_document(
     None => ()
   }
   match mask_field_paths {
-    Some(v) => qp.push(("mask.fieldPaths", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("mask.fieldPaths", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -1040,13 +1043,16 @@ pub async fn FirestoreService::projects_databases_documents_execute_pipeline(
 pub async fn FirestoreService::projects_databases_documents_get(
   self : FirestoreService,
   name : String,
-  mask_field_paths? : String? = None,
+  mask_field_paths? : Array[String]? = None,
   read_time? : String? = None,
   transaction? : String? = None,
 ) -> Document raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match mask_field_paths {
-    Some(v) => qp.push(("mask.fieldPaths", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("mask.fieldPaths", url_encode(v)))
+      }
     None => ()
   }
   match read_time {
@@ -1087,7 +1093,7 @@ pub async fn FirestoreService::projects_databases_documents_list(
   self : FirestoreService,
   parent : String,
   collection_id : String,
-  mask_field_paths? : String? = None,
+  mask_field_paths? : Array[String]? = None,
   order_by? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -1097,7 +1103,10 @@ pub async fn FirestoreService::projects_databases_documents_list(
 ) -> ListDocumentsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match mask_field_paths {
-    Some(v) => qp.push(("mask.fieldPaths", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("mask.fieldPaths", url_encode(v)))
+      }
     None => ()
   }
   match order_by {
@@ -1188,7 +1197,7 @@ pub async fn FirestoreService::projects_databases_documents_list_documents(
   self : FirestoreService,
   parent : String,
   collection_id : String,
-  mask_field_paths? : String? = None,
+  mask_field_paths? : Array[String]? = None,
   order_by? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
@@ -1198,7 +1207,10 @@ pub async fn FirestoreService::projects_databases_documents_list_documents(
 ) -> ListDocumentsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match mask_field_paths {
-    Some(v) => qp.push(("mask.fieldPaths", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("mask.fieldPaths", url_encode(v)))
+      }
     None => ()
   }
   match order_by {
@@ -1325,8 +1337,8 @@ pub async fn FirestoreService::projects_databases_documents_patch(
   request : Document,
   current_document_exists? : Bool? = None,
   current_document_update_time? : String? = None,
-  mask_field_paths? : String? = None,
-  update_mask_field_paths? : String? = None,
+  mask_field_paths? : Array[String]? = None,
+  update_mask_field_paths? : Array[String]? = None,
 ) -> Document raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match current_document_exists {
@@ -1339,11 +1351,17 @@ pub async fn FirestoreService::projects_databases_documents_patch(
     None => ()
   }
   match mask_field_paths {
-    Some(v) => qp.push(("mask.fieldPaths", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("mask.fieldPaths", url_encode(v)))
+      }
     None => ()
   }
   match update_mask_field_paths {
-    Some(v) => qp.push(("updateMask.fieldPaths", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("updateMask.fieldPaths", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -1902,14 +1920,17 @@ pub async fn FirestoreService::projects_locations_get(
 pub async fn FirestoreService::projects_locations_list(
   self : FirestoreService,
   name : String,
-  extra_location_types? : String? = None,
+  extra_location_types? : Array[String]? = None,
   filter? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListLocationsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match extra_location_types {
-    Some(v) => qp.push(("extraLocationTypes", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("extraLocationTypes", url_encode(v)))
+      }
     None => ()
   }
   match filter {

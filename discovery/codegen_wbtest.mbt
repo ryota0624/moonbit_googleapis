@@ -94,7 +94,8 @@ test "generate_types and generate_client snapshot" {
     #|          "parameters": {
     #|            "pageSize": { "type": "integer", "location": "query" },
     #|            "pageToken": { "type": "string", "location": "query" },
-    #|            "q": { "type": "string", "location": "query" }
+    #|            "q": { "type": "string", "location": "query" },
+    #|            "labelIds": { "type": "string", "location": "query", "repeated": true }
     #|          }
     #|        },
     #|        "get": {
@@ -284,11 +285,20 @@ test "generate_types and generate_client snapshot" {
       #|///| Lists files
       #|pub async fn DriveService::files_list(
       #|  self : DriveService,
+      #|  label_ids? : Array[String]? = None,
       #|  page_size? : Int? = None,
       #|  page_token? : String? = None,
       #|  q? : String? = None,
       #|) -> FileList raise @http.HttpError {
       #|  let qp : Array[(String, String)] = Array::new()
+      #|  match label_ids {
+      #|    Some(vs) => {
+      #|      for v in vs {
+      #|        qp.push(("labelIds", url_encode(v)))
+      #|      }
+      #|    }
+      #|    None => ()
+      #|  }
       #|  match page_size {
       #|    Some(v) => qp.push(("pageSize", v.to_string()))
       #|    None => ()
