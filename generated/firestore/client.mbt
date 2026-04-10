@@ -9,8 +9,11 @@ pub struct FirestoreService {
 }
 
 ///|
-pub fn FirestoreService::new(client : @core.GoogleClient) -> FirestoreService {
-  FirestoreService::{ base_url: "https://firestore.googleapis.com", client }
+pub fn FirestoreService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://firestore.googleapis.com",
+) -> FirestoreService {
+  FirestoreService::{ base_url, client }
 }
 
 ///| firestore.projects.databases.bulkDeleteDocuments

@@ -1041,10 +1041,10 @@ pub fn generate_client(desc : RestDescription) -> String {
   b.write_string("}\n\n")
   b.write_string("///|\n")
   b.write_string(
-    "pub fn \{service_ty}::new(client : @core.GoogleClient) -> \{service_ty} {\n",
+    "pub fn \{service_ty}::new(client : @core.GoogleClient, base_url~ : String = \"\{base_lit}\") -> \{service_ty} {\n",
   )
   b.write_string("  " + service_ty + "::{\n")
-  b.write_string("    base_url: \"\{base_lit}\",\n")
+  b.write_string("    base_url,\n")
   b.write_string("    client,\n")
   b.write_string("  }\n")
   b.write_string("}\n\n")

@@ -57,7 +57,10 @@ async fn main {
   let project = @sys.get_env_var("GCP_PROJECT").unwrap()
   let client = @core.GoogleClient::new(fn() { token })
   let storage = @gcs.StorageService::new(client)
-  let buckets = storage.buckets_list(project=Some(project), max_results=Some(20))
+  let buckets = storage.buckets_list(
+    project=Some(project),
+    max_results=Some(20),
+  )
   match buckets.items {
     Some(items) =>
       for bucket in items {
@@ -79,7 +82,9 @@ async fn main {
   let firestore = @gfs.FirestoreService::new(client)
   let parent = "projects/" + project + "/databases/(default)/documents"
   let result = firestore.projects_databases_documents_list_documents(
-    parent, "my-collection", page_size=Some(10),
+    parent,
+    "my-collection",
+    page_size=Some(10),
   )
   match result.documents {
     Some(docs) =>
