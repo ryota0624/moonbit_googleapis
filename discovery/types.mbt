@@ -2,7 +2,15 @@
 pub suberror ParseError {
   JsonSyntax(String)
   WrongJsonType(String)
-} derive(Show)
+} derive(Debug)
+
+///|
+pub impl Show for ParseError with output(self, logger) {
+  match self {
+    JsonSyntax(s) => logger.write_string("JsonSyntax(\{s})")
+    WrongJsonType(s) => logger.write_string("WrongJsonType(\{s})")
+  }
+}
 
 ///|
 pub struct RestDescription {

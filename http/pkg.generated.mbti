@@ -1,6 +1,10 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "ryota0624/googleapis/http"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 pub async fn default_http_request(HttpRequest) -> HttpResponse raise HttpError
 
@@ -26,7 +30,8 @@ pub(all) enum HttpMethod {
   PUT
   DELETE
   PATCH
-} derive(Eq, Show)
+} derive(Eq, @debug.Debug)
+pub impl Show for HttpMethod
 
 pub(all) struct HttpRequest {
   url : String

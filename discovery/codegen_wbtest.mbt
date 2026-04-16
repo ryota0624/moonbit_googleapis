@@ -14,7 +14,7 @@ test "generate_moon_pkg" {
     #|  "ryota0624/googleapis/http" @http,
     #|}
     #|
-    #|warnings = "-0001"
+    #|warnings = "-0001-0027"
 
   assert_eq(generate_moon_pkg("ryota0624/googleapis", "drive"), want + "\n")
 }
@@ -383,7 +383,6 @@ test "generate_types and generate_client snapshot" {
       #|}
       #|
       #|
-
     ),
   )
 }

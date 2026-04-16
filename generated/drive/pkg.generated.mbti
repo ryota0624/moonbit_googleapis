@@ -13,29 +13,29 @@ import {
 
 // Types and methods
 pub(all) struct About {
-  user : User?
-  import_formats : Json?
-  kind : String?
-  folder_color_palette : Array[String]?
-  can_create_drives : Bool?
-  max_upload_size : String?
+  can_create_team_drives : Bool?
+  app_installed : Bool?
   max_import_sizes : Json?
+  kind : String?
+  import_formats : Json?
+  export_formats : Json?
   drive_themes : Array[Json]?
   storage_quota : Json?
-  app_installed : Bool?
+  can_create_drives : Bool?
   team_drive_themes : Array[Json]?
-  export_formats : Json?
-  can_create_team_drives : Bool?
+  folder_color_palette : Array[String]?
+  user : User?
+  max_upload_size : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AccessProposal {
-  roles_and_views : Array[AccessProposalRoleAndView]?
-  create_time : String?
   recipient_email_address : String?
-  proposal_id : String?
-  requester_email_address : String?
   request_message : String?
+  create_time : String?
+  roles_and_views : Array[AccessProposalRoleAndView]?
+  proposal_id : String?
   file_id : String?
+  requester_email_address : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AccessProposalRoleAndView {
@@ -44,30 +44,30 @@ pub(all) struct AccessProposalRoleAndView {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct App {
-  authorized : Bool?
-  use_by_default : Bool?
-  create_in_folder_template : String?
-  name : String?
-  kind : String?
-  open_url_template : String?
-  supports_offline_create : Bool?
-  supports_multi_open : Bool?
-  create_url : String?
-  id : String?
-  has_drive_wide_scope : Bool?
-  object_type : String?
-  secondary_file_extensions : Array[String]?
   long_description : String?
-  installed : Bool?
-  short_description : String?
-  primary_mime_types : Array[String]?
-  product_id : String?
-  product_url : String?
-  primary_file_extensions : Array[String]?
-  icons : Array[AppIcons]?
+  supports_offline_create : Bool?
   supports_import : Bool?
-  supports_create : Bool?
+  short_description : String?
+  product_url : String?
+  installed : Bool?
+  use_by_default : Bool?
+  kind : String?
+  primary_file_extensions : Array[String]?
+  name : String?
+  id : String?
+  create_in_folder_template : String?
+  create_url : String?
+  open_url_template : String?
+  has_drive_wide_scope : Bool?
+  authorized : Bool?
+  primary_mime_types : Array[String]?
+  supports_multi_open : Bool?
+  object_type : String?
   secondary_mime_types : Array[String]?
+  icons : Array[AppIcons]?
+  product_id : String?
+  supports_create : Bool?
+  secondary_file_extensions : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AppIcons {
@@ -79,20 +79,20 @@ pub(all) struct AppIcons {
 pub(all) struct AppList {
   kind : String?
   items : Array[App]?
-  default_app_ids : Array[String]?
   self_link : String?
+  default_app_ids : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Approval {
   create_time : String?
-  due_time : String?
-  status : String?
+  complete_time : String?
   target_file_id : String?
+  due_time : String?
   reviewer_responses : Array[ReviewerResponse]?
   approval_id : String?
-  initiator : User?
-  complete_time : String?
+  status : String?
   kind : String?
+  initiator : User?
   modify_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -103,36 +103,36 @@ pub(all) struct ApprovalList {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Change {
+  drive_id : String?
   file : File?
-  removed : Bool?
-  file_id : String?
+  time : String?
   drive : Drive?
+  kind : String?
   team_drive_id : String?
+  file_id : String?
   team_drive : TeamDrive?
   change_type : String?
-  kind : String?
-  time : String?
+  removed : Bool?
   type_ : String?
-  drive_id : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ChangeList {
-  changes : Array[Change]?
   new_start_page_token : String?
+  changes : Array[Change]?
   kind : String?
   next_page_token : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Channel {
-  expiration : String?
-  params : Json?
   id : String?
   resource_id : String?
-  resource_uri : String?
-  token : String?
-  address : String?
   type_ : String?
+  resource_uri : String?
+  params : Json?
+  token : String?
   kind : String?
+  expiration : String?
+  address : String?
   payload : Bool?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -142,46 +142,46 @@ pub(all) struct ClientEncryptionDetails {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Comment {
-  content : String?
   created_time : String?
-  author : User?
-  quoted_file_content : Json?
+  modified_time : String?
   resolved : Bool?
   replies : Array[Reply]?
-  assignee_email_address : String?
-  mentioned_email_addresses : Array[String]?
-  kind : String?
-  html_content : String?
+  content : String?
   deleted : Bool?
-  modified_time : String?
+  html_content : String?
+  quoted_file_content : Json?
+  author : User?
+  kind : String?
+  mentioned_email_addresses : Array[String]?
   id : String?
   anchor : String?
+  assignee_email_address : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CommentList {
   kind : String?
-  next_page_token : String?
   comments : Array[Comment]?
+  next_page_token : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ContentRestriction {
-  read_only : Bool?
-  restricting_user : User?
-  restriction_time : String?
-  system_restricted : Bool?
-  reason : String?
   type_ : String?
   owner_restricted : Bool?
+  read_only : Bool?
+  system_restricted : Bool?
+  reason : String?
+  restricting_user : User?
+  restriction_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DecryptionMetadata {
+  wrapped_key : String?
+  kacls_id : String?
+  jwt : String?
   kacls_name : String?
   encryption_resource_key_hash : String?
-  kacls_id : String?
-  key_format : String?
-  jwt : String?
-  wrapped_key : String?
   aes256_gcm_chunk_size : String?
+  key_format : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DownloadRestriction {
@@ -195,18 +195,18 @@ pub(all) struct DownloadRestrictionsMetadata {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Drive {
-  background_image_file : Json?
-  id : String?
-  org_unit_id : String?
   hidden : Bool?
-  capabilities : Json?
-  created_time : String?
+  id : String?
   name : String?
-  kind : String?
-  background_image_link : String?
+  background_image_file : Json?
+  color_rgb : String?
+  created_time : String?
+  org_unit_id : String?
+  capabilities : Json?
   theme_id : String?
   restrictions : Json?
-  color_rgb : String?
+  kind : String?
+  background_image_link : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DriveList {
@@ -280,71 +280,71 @@ pub async fn DriveService::teamdrives_list(Self, page_size? : Int?, page_token? 
 pub async fn DriveService::teamdrives_update(Self, String, TeamDrive, use_domain_admin_access? : Bool?) -> TeamDrive raise @http.HttpError
 
 pub(all) struct File {
-  viewed_by_me_time : String?
-  content_restrictions : Array[ContentRestriction]?
-  has_augmented_permissions : Bool?
-  modified_by_me_time : String?
-  file_extension : String?
-  trashed : Bool?
-  explicitly_trashed : Bool?
-  shared_with_me_time : String?
-  app_properties : Json?
-  sharing_user : User?
-  writers_can_share : Bool?
-  full_file_extension : String?
-  thumbnail_version : String?
-  mime_type : String?
-  inherited_permissions_disabled : Bool?
-  viewed_by_me : Bool?
   team_drive_id : String?
   client_encryption_details : ClientEncryptionDetails?
-  permissions : Array[Permission]?
-  sha1_checksum : String?
-  description : String?
-  icon_link : String?
-  copy_requires_writer_permission : Bool?
-  drive_id : String?
-  kind : String?
-  head_revision_id : String?
-  sha256_checksum : String?
-  viewers_can_copy_content : Bool?
-  capabilities : Json?
-  md5_checksum : String?
-  size : String?
-  content_hints : Json?
-  label_info : Json?
-  trashed_time : String?
-  video_media_metadata : Json?
+  resource_key : String?
+  last_modifying_user : User?
+  full_file_extension : String?
   folder_color_rgb : String?
+  viewed_by_me_time : String?
+  export_links : Json?
+  kind : String?
+  image_media_metadata : Json?
+  writers_can_share : Bool?
+  permissions : Array[Permission]?
+  permission_ids : Array[String]?
+  is_app_authorized : Bool?
+  web_content_link : String?
+  shared_with_me_time : String?
+  thumbnail_version : String?
+  content_hints : Json?
   starred : Bool?
-  properties : Json?
-  trashing_user : User?
-  parents : Array[String]?
   version : String?
-  modified_time : String?
-  id : String?
   thumbnail_link : String?
   spaces : Array[String]?
-  is_app_authorized : Bool?
-  modified_by_me : Bool?
-  name : String?
-  link_share_metadata : Json?
-  owners : Array[User]?
-  resource_key : String?
+  explicitly_trashed : Bool?
+  has_augmented_permissions : Bool?
+  size : String?
+  inherited_permissions_disabled : Bool?
+  trashing_user : User?
+  modified_by_me_time : String?
+  viewed_by_me : Bool?
+  download_restrictions : DownloadRestrictionsMetadata?
+  modified_time : String?
+  capabilities : Json?
+  icon_link : String?
+  viewers_can_copy_content : Bool?
+  owned_by_me : Bool?
   shared : Bool?
-  image_media_metadata : Json?
+  md5_checksum : String?
+  file_extension : String?
+  video_media_metadata : Json?
+  modified_by_me : Bool?
+  label_info : Json?
+  trashed : Bool?
+  id : String?
+  copy_requires_writer_permission : Bool?
   created_time : String?
   original_filename : String?
-  owned_by_me : Bool?
-  web_content_link : String?
-  has_thumbnail : Bool?
-  permission_ids : Array[String]?
-  download_restrictions : DownloadRestrictionsMetadata?
+  drive_id : String?
+  properties : Json?
+  sha256_checksum : String?
+  owners : Array[User]?
   quota_bytes_used : String?
-  shortcut_details : Json?
-  last_modifying_user : User?
-  export_links : Json?
+  link_share_metadata : Json?
+  mime_type : String?
+  sha1_checksum : String?
+  has_thumbnail : Bool?
+  trashed_time : String?
+  head_revision_id : String?
+  app_properties : Json?
   web_view_link : String?
+  shortcut_details : Json?
+  sharing_user : User?
+  name : String?
+  parents : Array[String]?
+  description : String?
+  content_restrictions : Array[ContentRestriction]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct FileList {
@@ -357,62 +357,62 @@ pub(all) struct FileList {
 pub(all) struct GenerateCseTokenResponse {
   current_kacls_name : String?
   file_id : String?
-  current_kacls_id : String?
-  kind : String?
   jwt : String?
+  kind : String?
+  current_kacls_id : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GeneratedIds {
+  kind : String?
   ids : Array[String]?
   space : String?
-  kind : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Label {
   fields : Json?
   id : String?
-  kind : String?
   revision_id : String?
+  kind : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelField {
-  text : Array[String]?
-  integer : Array[String]?
-  selection : Array[String]?
-  kind : String?
   id : String?
-  value_type : String?
   date_string : Array[String]?
+  text : Array[String]?
+  kind : String?
+  value_type : String?
+  selection : Array[String]?
   user : Array[User]?
+  integer : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelFieldModification {
+  kind : String?
+  set_text_values : Array[String]?
   field_id : String?
+  set_date_values : Array[String]?
   set_integer_values : Array[String]?
   unset_values : Bool?
-  kind : String?
-  set_date_values : Array[String]?
-  set_text_values : Array[String]?
   set_selection_values : Array[String]?
   set_user_values : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelList {
+  labels : Array[Label]?
   next_page_token : String?
   kind : String?
-  labels : Array[Label]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelModification {
   label_id : String?
-  kind : String?
   field_modifications : Array[LabelFieldModification]?
   remove_label : Bool?
+  kind : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListAccessProposalsResponse {
-  next_page_token : String?
   access_proposals : Array[AccessProposal]?
+  next_page_token : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ModifyLabelsRequest {
@@ -421,91 +421,91 @@ pub(all) struct ModifyLabelsRequest {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ModifyLabelsResponse {
-  kind : String?
   modified_labels : Array[Label]?
+  kind : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Operation {
-  response : Json?
   name : String?
-  error : Status?
-  metadata : Json?
   done : Bool?
+  metadata : Json?
+  response : Json?
+  error : Status?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Permission {
+  team_drive_permission_details : Array[Json]?
+  permission_details : Array[Json]?
+  display_name : String?
+  allow_file_discovery : Bool?
+  role : String?
+  deleted : Bool?
+  photo_link : String?
+  view : String?
+  pending_owner : Bool?
   expiration_time : String?
   domain : String?
-  display_name : String?
-  view : String?
-  inherited_permissions_disabled : Bool?
-  team_drive_permission_details : Array[Json]?
-  photo_link : String?
-  role : String?
-  type_ : String?
   kind : String?
-  email_address : String?
+  inherited_permissions_disabled : Bool?
+  type_ : String?
   id : String?
-  allow_file_discovery : Bool?
-  deleted : Bool?
-  permission_details : Array[Json]?
-  pending_owner : Bool?
+  email_address : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct PermissionList {
-  permissions : Array[Permission]?
   next_page_token : String?
   kind : String?
+  permissions : Array[Permission]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Reply {
-  author : User?
-  created_time : String?
   action : String?
-  assignee_email_address : String?
-  content : String?
   deleted : Bool?
-  id : String?
-  modified_time : String?
   html_content : String?
-  kind : String?
+  assignee_email_address : String?
+  id : String?
+  content : String?
   mentioned_email_addresses : Array[String]?
+  kind : String?
+  created_time : String?
+  modified_time : String?
+  author : User?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ReplyList {
   kind : String?
-  replies : Array[Reply]?
   next_page_token : String?
+  replies : Array[Reply]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ResolveAccessProposalRequest {
   role : Array[String]?
   action : String?
-  send_notification : Bool?
   view : String?
+  send_notification : Bool?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ReviewerResponse {
-  reviewer : User?
   kind : String?
+  reviewer : User?
   response : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Revision {
-  kind : String?
-  last_modifying_user : User?
-  modified_time : String?
-  id : String?
-  export_links : Json?
-  published : Bool?
-  keep_forever : Bool?
-  published_link : String?
-  published_outside_domain : Bool?
-  publish_auto : Bool?
-  size : String?
   mime_type : String?
   md5_checksum : String?
+  published_link : String?
+  last_modifying_user : User?
+  published : Bool?
+  publish_auto : Bool?
+  modified_time : String?
   original_filename : String?
+  keep_forever : Bool?
+  size : String?
+  id : String?
+  export_links : Json?
+  kind : String?
+  published_outside_domain : Bool?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RevisionList {
@@ -520,23 +520,23 @@ pub(all) struct StartPageToken {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Status {
-  code : Int?
-  message : String?
   details : Array[Json]?
+  message : String?
+  code : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TeamDrive {
-  restrictions : Json?
-  color_rgb : String?
   kind : String?
-  name : String?
   background_image_link : String?
-  theme_id : String?
+  restrictions : Json?
   capabilities : Json?
+  theme_id : String?
   created_time : String?
-  id : String?
   org_unit_id : String?
   background_image_file : Json?
+  color_rgb : String?
+  id : String?
+  name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TeamDriveList {
@@ -547,11 +547,11 @@ pub(all) struct TeamDriveList {
 
 pub(all) struct User {
   me : Bool?
-  email_address : String?
   permission_id : String?
   photo_link : String?
-  display_name : String?
   kind : String?
+  email_address : String?
+  display_name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 // Type aliases

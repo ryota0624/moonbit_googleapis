@@ -46,8 +46,8 @@ pub(all) struct Empty {
 pub(all) struct Link {
   span_id : String?
   type_ : String?
-  trace_id : String?
   attributes : Attributes?
+  trace_id : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Links {
@@ -56,10 +56,10 @@ pub(all) struct Links {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct MessageEvent {
-  compressed_size_bytes : String?
-  uncompressed_size_bytes : String?
-  type_ : String?
   id : String?
+  uncompressed_size_bytes : String?
+  compressed_size_bytes : String?
+  type_ : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Module {
@@ -68,30 +68,30 @@ pub(all) struct Module {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Span {
-  child_span_count : Int?
-  start_time : String?
-  stack_trace : StackTrace?
-  attributes : Attributes?
-  name : String?
-  same_process_as_parent_span : Bool?
   parent_span_id : String?
-  display_name : TruncatableString?
-  links : Links?
-  span_id : String?
   span_kind : String?
-  status : Status?
+  name : String?
   time_events : TimeEvents?
+  attributes : Attributes?
   end_time : String?
+  same_process_as_parent_span : Bool?
+  span_id : String?
+  links : Links?
+  display_name : TruncatableString?
+  start_time : String?
+  child_span_count : Int?
+  stack_trace : StackTrace?
+  status : Status?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StackFrame {
-  column_number : String?
-  line_number : String?
   function_name : TruncatableString?
   file_name : TruncatableString?
-  original_function_name : TruncatableString?
-  load_module : Module?
+  line_number : String?
   source_version : TruncatableString?
+  original_function_name : TruncatableString?
+  column_number : String?
+  load_module : Module?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StackFrames {
@@ -100,31 +100,31 @@ pub(all) struct StackFrames {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StackTrace {
-  stack_trace_hash_id : String?
   stack_frames : StackFrames?
+  stack_trace_hash_id : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Status {
-  message : String?
   code : Int?
   details : Array[Json]?
+  message : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TimeEvent {
   time : String?
-  annotation : Annotation?
   message_event : MessageEvent?
+  annotation : Annotation?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TimeEvents {
+  dropped_message_events_count : Int?
   time_event : Array[TimeEvent]?
   dropped_annotations_count : Int?
-  dropped_message_events_count : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TruncatableString {
-  value : String?
   truncated_byte_count : Int?
+  value : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 // Type aliases

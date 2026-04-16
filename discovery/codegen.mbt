@@ -1130,6 +1130,6 @@ pub fn generate_moon_pkg(module_name : String, api_name : String) -> String {
   b.write_string("  \"\{module_name}/core\" @core,\n")
   b.write_string("  \"\{module_name}/http\" @http,\n")
   b.write_string("}\n\n")
-  b.write_string("warnings = \"-0001\"\n")
+  b.write_string("warnings = \"-0001-0027\"\n")
   b.to_string()
 }

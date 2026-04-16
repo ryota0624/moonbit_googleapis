@@ -5,4 +5,4 @@ import {
   "ryota0624/googleapis/http" @http,
 }
 
-warnings = "-0001"
+warnings = "-0001-0027"

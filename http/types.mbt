@@ -5,7 +5,20 @@ pub(all) enum HttpMethod {
   PUT
   DELETE
   PATCH
-} derive(Show, Eq)
+} derive(Debug, Eq)
+
+///|
+pub impl Show for HttpMethod with output(self, logger) {
+  logger.write_string(
+    match self {
+      GET => "GET"
+      POST => "POST"
+      PUT => "PUT"
+      DELETE => "DELETE"
+      PATCH => "PATCH"
+    },
+  )
+}
 
 ///|
 pub(all) struct HttpRequest {

@@ -2,6 +2,7 @@
 package "ryota0624/googleapis/discovery"
 
 import {
+  "moonbitlang/core/debug",
   "moonbitlang/core/json",
 }
 
@@ -26,7 +27,8 @@ pub fn to_snake_case(String) -> String
 pub suberror ParseError {
   JsonSyntax(String)
   WrongJsonType(String)
-} derive(Show)
+} derive(@debug.Debug)
+pub impl Show for ParseError
 
 // Types and methods
 pub struct JsonSchema {
