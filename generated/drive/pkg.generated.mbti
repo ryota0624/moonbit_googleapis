@@ -13,192 +13,207 @@ import {
 
 // Types and methods
 pub(all) struct About {
-  max_upload_size : String?
-  drive_themes : Array[Json]?
-  team_drive_themes : Array[Json]?
-  can_create_team_drives : Bool?
-  import_formats : Json?
-  folder_color_palette : Array[String]?
-  export_formats : Json?
-  app_installed : Bool?
-  kind : String?
-  max_import_sizes : Json?
   user : User?
-  storage_quota : Json?
+  import_formats : Json?
+  kind : String?
+  folder_color_palette : Array[String]?
   can_create_drives : Bool?
-} derive(Eq, Show, @json.FromJson)
+  max_upload_size : String?
+  max_import_sizes : Json?
+  drive_themes : Array[Json]?
+  storage_quota : Json?
+  app_installed : Bool?
+  team_drive_themes : Array[Json]?
+  export_formats : Json?
+  can_create_team_drives : Bool?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AccessProposal {
+  roles_and_views : Array[AccessProposalRoleAndView]?
   create_time : String?
-  file_id : String?
-  request_message : String?
+  recipient_email_address : String?
   proposal_id : String?
   requester_email_address : String?
-  roles_and_views : Array[AccessProposalRoleAndView]?
-  recipient_email_address : String?
-} derive(Eq, Show, @json.FromJson)
+  request_message : String?
+  file_id : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AccessProposalRoleAndView {
   role : String?
   view : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct App {
-  secondary_mime_types : Array[String]?
   authorized : Bool?
-  supports_multi_open : Bool?
-  supports_create : Bool?
-  short_description : String?
-  product_url : String?
-  id : String?
-  name : String?
-  long_description : String?
-  kind : String?
   use_by_default : Bool?
-  product_id : String?
-  open_url_template : String?
-  create_url : String?
-  supports_import : Bool?
   create_in_folder_template : String?
-  has_drive_wide_scope : Bool?
-  primary_mime_types : Array[String]?
-  secondary_file_extensions : Array[String]?
-  icons : Array[AppIcons]?
-  object_type : String?
-  primary_file_extensions : Array[String]?
-  installed : Bool?
+  name : String?
+  kind : String?
+  open_url_template : String?
   supports_offline_create : Bool?
-} derive(Eq, Show, @json.FromJson)
+  supports_multi_open : Bool?
+  create_url : String?
+  id : String?
+  has_drive_wide_scope : Bool?
+  object_type : String?
+  secondary_file_extensions : Array[String]?
+  long_description : String?
+  installed : Bool?
+  short_description : String?
+  primary_mime_types : Array[String]?
+  product_id : String?
+  product_url : String?
+  primary_file_extensions : Array[String]?
+  icons : Array[AppIcons]?
+  supports_import : Bool?
+  supports_create : Bool?
+  secondary_mime_types : Array[String]?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AppIcons {
-  category : String?
   size : Int?
+  category : String?
   icon_url : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AppList {
-  default_app_ids : Array[String]?
-  self_link : String?
   kind : String?
   items : Array[App]?
-} derive(Eq, Show, @json.FromJson)
+  default_app_ids : Array[String]?
+  self_link : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Approval {
-  status : String?
-  kind : String?
   create_time : String?
-  modify_time : String?
   due_time : String?
+  status : String?
   target_file_id : String?
-  approval_id : String?
   reviewer_responses : Array[ReviewerResponse]?
-  complete_time : String?
+  approval_id : String?
   initiator : User?
-} derive(Eq, Show, @json.FromJson)
+  complete_time : String?
+  kind : String?
+  modify_time : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ApprovalList {
   kind : String?
-  items : Array[Approval]?
   next_page_token : String?
-} derive(Eq, Show, @json.FromJson)
+  items : Array[Approval]?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Change {
   file : File?
-  time : String?
-  file_id : String?
-  type_ : String?
-  drive : Drive?
-  team_drive : TeamDrive?
   removed : Bool?
+  file_id : String?
+  drive : Drive?
   team_drive_id : String?
-  drive_id : String?
+  team_drive : TeamDrive?
   change_type : String?
   kind : String?
-} derive(Eq, Show, @json.FromJson)
+  time : String?
+  type_ : String?
+  drive_id : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ChangeList {
-  new_start_page_token : String?
   changes : Array[Change]?
+  new_start_page_token : String?
   kind : String?
   next_page_token : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Channel {
-  payload : Bool?
-  token : String?
-  resource_id : String?
-  kind : String?
-  address : String?
-  id : String?
-  resource_uri : String?
   expiration : String?
-  type_ : String?
   params : Json?
-} derive(Eq, Show, @json.FromJson)
+  id : String?
+  resource_id : String?
+  resource_uri : String?
+  token : String?
+  address : String?
+  type_ : String?
+  kind : String?
+  payload : Bool?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct ClientEncryptionDetails {
+  encryption_state : String?
+  decryption_metadata : DecryptionMetadata?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Comment {
+  content : String?
+  created_time : String?
+  author : User?
+  quoted_file_content : Json?
+  resolved : Bool?
   replies : Array[Reply]?
-  modified_time : String?
+  assignee_email_address : String?
   mentioned_email_addresses : Array[String]?
   kind : String?
-  quoted_file_content : Json?
   html_content : String?
   deleted : Bool?
-  content : String?
-  author : User?
-  assignee_email_address : String?
+  modified_time : String?
   id : String?
   anchor : String?
-  created_time : String?
-  resolved : Bool?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CommentList {
   kind : String?
-  comments : Array[Comment]?
   next_page_token : String?
-} derive(Eq, Show, @json.FromJson)
+  comments : Array[Comment]?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ContentRestriction {
-  type_ : String?
-  reason : String?
+  read_only : Bool?
   restricting_user : User?
   restriction_time : String?
-  owner_restricted : Bool?
-  read_only : Bool?
   system_restricted : Bool?
-} derive(Eq, Show, @json.FromJson)
+  reason : String?
+  type_ : String?
+  owner_restricted : Bool?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct DecryptionMetadata {
+  kacls_name : String?
+  encryption_resource_key_hash : String?
+  kacls_id : String?
+  key_format : String?
+  jwt : String?
+  wrapped_key : String?
+  aes256_gcm_chunk_size : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DownloadRestriction {
   restricted_for_readers : Bool?
   restricted_for_writers : Bool?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DownloadRestrictionsMetadata {
   item_download_restriction : DownloadRestriction?
   effective_download_restriction_with_context : DownloadRestriction?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Drive {
-  background_image_link : String?
-  color_rgb : String?
-  created_time : String?
-  org_unit_id : String?
-  kind : String?
-  capabilities : Json?
   background_image_file : Json?
-  name : String?
   id : String?
-  restrictions : Json?
+  org_unit_id : String?
   hidden : Bool?
+  capabilities : Json?
+  created_time : String?
+  name : String?
+  kind : String?
+  background_image_link : String?
   theme_id : String?
-} derive(Eq, Show, @json.FromJson)
+  restrictions : Json?
+  color_rgb : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DriveList {
   next_page_token : String?
   kind : String?
   drives : Array[Drive]?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub struct DriveService {
   base_url : String
@@ -207,327 +222,337 @@ pub struct DriveService {
 pub async fn DriveService::about_get(Self) -> About raise @http.HttpError
 pub async fn DriveService::accessproposals_get(Self, String, String) -> AccessProposal raise @http.HttpError
 pub async fn DriveService::accessproposals_list(Self, String, page_size? : Int?, page_token? : String?) -> ListAccessProposalsResponse raise @http.HttpError
-pub async fn DriveService::accessproposals_resolve(Self, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::accessproposals_resolve(Self, String, String, ResolveAccessProposalRequest) -> Json raise @http.HttpError
 pub async fn DriveService::approvals_get(Self, String, String) -> Approval raise @http.HttpError
 pub async fn DriveService::approvals_list(Self, String, page_size? : Int?, page_token? : String?) -> ApprovalList raise @http.HttpError
 pub async fn DriveService::apps_get(Self, String) -> App raise @http.HttpError
 pub async fn DriveService::apps_list(Self, app_filter_extensions? : String?, app_filter_mime_types? : String?, language_code? : String?) -> AppList raise @http.HttpError
 pub async fn DriveService::changes_get_start_page_token(Self, drive_id? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> StartPageToken raise @http.HttpError
 pub async fn DriveService::changes_list(Self, drive_id? : String?, include_corpus_removals? : Bool?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_removed? : Bool?, include_team_drive_items? : Bool?, page_size? : Int?, page_token? : String?, restrict_to_my_drive? : Bool?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> ChangeList raise @http.HttpError
-pub async fn DriveService::changes_watch(Self, drive_id? : String?, include_corpus_removals? : Bool?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_removed? : Bool?, include_team_drive_items? : Bool?, page_size? : Int?, page_token? : String?, restrict_to_my_drive? : Bool?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> Channel raise @http.HttpError
-pub async fn DriveService::channels_stop(Self) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::comments_create(Self, String) -> Comment raise @http.HttpError
-pub async fn DriveService::comments_delete(Self, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::changes_watch(Self, Channel, drive_id? : String?, include_corpus_removals? : Bool?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_removed? : Bool?, include_team_drive_items? : Bool?, page_size? : Int?, page_token? : String?, restrict_to_my_drive? : Bool?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> Channel raise @http.HttpError
+pub async fn DriveService::channels_stop(Self, Channel) -> Json raise @http.HttpError
+pub async fn DriveService::comments_create(Self, String, Comment) -> Comment raise @http.HttpError
+pub async fn DriveService::comments_delete(Self, String, String) -> Json raise @http.HttpError
 pub async fn DriveService::comments_get(Self, String, String, include_deleted? : Bool?) -> Comment raise @http.HttpError
 pub async fn DriveService::comments_list(Self, String, include_deleted? : Bool?, page_size? : Int?, page_token? : String?, start_modified_time? : String?) -> CommentList raise @http.HttpError
-pub async fn DriveService::comments_update(Self, String, String) -> Comment raise @http.HttpError
-pub async fn DriveService::drives_create(Self, request_id? : String?) -> Drive raise @http.HttpError
-pub async fn DriveService::drives_delete(Self, String, allow_item_deletion? : Bool?, use_domain_admin_access? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::comments_update(Self, String, String, Comment) -> Comment raise @http.HttpError
+pub async fn DriveService::drives_create(Self, Drive, request_id? : String?) -> Drive raise @http.HttpError
+pub async fn DriveService::drives_delete(Self, String, allow_item_deletion? : Bool?, use_domain_admin_access? : Bool?) -> Json raise @http.HttpError
 pub async fn DriveService::drives_get(Self, String, use_domain_admin_access? : Bool?) -> Drive raise @http.HttpError
 pub async fn DriveService::drives_hide(Self, String) -> Drive raise @http.HttpError
 pub async fn DriveService::drives_list(Self, page_size? : Int?, page_token? : String?, q? : String?, use_domain_admin_access? : Bool?) -> DriveList raise @http.HttpError
 pub async fn DriveService::drives_unhide(Self, String) -> Drive raise @http.HttpError
-pub async fn DriveService::drives_update(Self, String, use_domain_admin_access? : Bool?) -> Drive raise @http.HttpError
-pub async fn DriveService::files_copy(Self, String, enforce_single_parent? : Bool?, ignore_default_visibility? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> File raise @http.HttpError
-pub async fn DriveService::files_create(Self, enforce_single_parent? : Bool?, ignore_default_visibility? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
-pub async fn DriveService::files_delete(Self, String, enforce_single_parent? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::drives_update(Self, String, Drive, use_domain_admin_access? : Bool?) -> Drive raise @http.HttpError
+pub async fn DriveService::files_copy(Self, String, File, enforce_single_parent? : Bool?, ignore_default_visibility? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> File raise @http.HttpError
+pub async fn DriveService::files_create(Self, File, enforce_single_parent? : Bool?, ignore_default_visibility? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
+pub async fn DriveService::files_delete(Self, String, enforce_single_parent? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> Json raise @http.HttpError
 pub async fn DriveService::files_download(Self, String, mime_type? : String?, revision_id? : String?) -> Operation raise @http.HttpError
-pub async fn DriveService::files_empty_trash(Self, drive_id? : String?, enforce_single_parent? : Bool?) -> @http.HttpResponse raise @http.HttpError
-pub async fn DriveService::files_export(Self, String, mime_type? : String?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::files_empty_trash(Self, drive_id? : String?, enforce_single_parent? : Bool?) -> Json raise @http.HttpError
+pub async fn DriveService::files_export(Self, String, mime_type? : String?) -> Json raise @http.HttpError
+pub async fn DriveService::files_generate_cse_token(Self, file_id? : String?, parent? : String?) -> GenerateCseTokenResponse raise @http.HttpError
 pub async fn DriveService::files_generate_ids(Self, count? : Int?, space? : String?, type_? : String?) -> GeneratedIds raise @http.HttpError
 pub async fn DriveService::files_get(Self, String, acknowledge_abuse? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> File raise @http.HttpError
 pub async fn DriveService::files_list(Self, corpora? : String?, corpus? : String?, drive_id? : String?, include_items_from_all_drives? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, include_team_drive_items? : Bool?, order_by? : String?, page_size? : Int?, page_token? : String?, q? : String?, spaces? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, team_drive_id? : String?) -> FileList raise @http.HttpError
 pub async fn DriveService::files_list_labels(Self, String, max_results? : Int?, page_token? : String?) -> LabelList raise @http.HttpError
-pub async fn DriveService::files_modify_labels(Self, String) -> ModifyLabelsResponse raise @http.HttpError
-pub async fn DriveService::files_update(Self, String, add_parents? : String?, enforce_single_parent? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, remove_parents? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
-pub async fn DriveService::files_watch(Self, String, acknowledge_abuse? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> Channel raise @http.HttpError
-pub fn DriveService::new(@core.GoogleClient) -> Self
+pub async fn DriveService::files_modify_labels(Self, String, ModifyLabelsRequest) -> ModifyLabelsResponse raise @http.HttpError
+pub async fn DriveService::files_update(Self, String, File, add_parents? : String?, enforce_single_parent? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, keep_revision_forever? : Bool?, ocr_language? : String?, remove_parents? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_content_as_indexable_text? : Bool?) -> File raise @http.HttpError
+pub async fn DriveService::files_watch(Self, String, Channel, acknowledge_abuse? : Bool?, include_labels? : String?, include_permissions_for_view? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?) -> Channel raise @http.HttpError
+pub fn DriveService::new(@core.GoogleClient, base_url? : String) -> Self
 pub async fn DriveService::operations_get(Self, String) -> Operation raise @http.HttpError
-pub async fn DriveService::permissions_create(Self, String, email_message? : String?, enforce_expansive_access? : Bool?, enforce_single_parent? : Bool?, move_to_new_owners_root? : Bool?, send_notification_email? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
-pub async fn DriveService::permissions_delete(Self, String, String, enforce_expansive_access? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::permissions_create(Self, String, Permission, email_message? : String?, enforce_expansive_access? : Bool?, enforce_single_parent? : Bool?, move_to_new_owners_root? : Bool?, send_notification_email? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
+pub async fn DriveService::permissions_delete(Self, String, String, enforce_expansive_access? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> Json raise @http.HttpError
 pub async fn DriveService::permissions_get(Self, String, String, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
 pub async fn DriveService::permissions_list(Self, String, include_permissions_for_view? : String?, page_size? : Int?, page_token? : String?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, use_domain_admin_access? : Bool?) -> PermissionList raise @http.HttpError
-pub async fn DriveService::permissions_update(Self, String, String, enforce_expansive_access? : Bool?, remove_expiration? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
-pub async fn DriveService::replies_create(Self, String, String) -> Reply raise @http.HttpError
-pub async fn DriveService::replies_delete(Self, String, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::permissions_update(Self, String, String, Permission, enforce_expansive_access? : Bool?, remove_expiration? : Bool?, supports_all_drives? : Bool?, supports_team_drives? : Bool?, transfer_ownership? : Bool?, use_domain_admin_access? : Bool?) -> Permission raise @http.HttpError
+pub async fn DriveService::replies_create(Self, String, String, Reply) -> Reply raise @http.HttpError
+pub async fn DriveService::replies_delete(Self, String, String, String) -> Json raise @http.HttpError
 pub async fn DriveService::replies_get(Self, String, String, String, include_deleted? : Bool?) -> Reply raise @http.HttpError
 pub async fn DriveService::replies_list(Self, String, String, include_deleted? : Bool?, page_size? : Int?, page_token? : String?) -> ReplyList raise @http.HttpError
-pub async fn DriveService::replies_update(Self, String, String, String) -> Reply raise @http.HttpError
-pub async fn DriveService::revisions_delete(Self, String, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::replies_update(Self, String, String, String, Reply) -> Reply raise @http.HttpError
+pub async fn DriveService::revisions_delete(Self, String, String) -> Json raise @http.HttpError
 pub async fn DriveService::revisions_get(Self, String, String, acknowledge_abuse? : Bool?) -> Revision raise @http.HttpError
 pub async fn DriveService::revisions_list(Self, String, page_size? : Int?, page_token? : String?) -> RevisionList raise @http.HttpError
-pub async fn DriveService::revisions_update(Self, String, String) -> Revision raise @http.HttpError
-pub async fn DriveService::teamdrives_create(Self, request_id? : String?) -> TeamDrive raise @http.HttpError
-pub async fn DriveService::teamdrives_delete(Self, String) -> @http.HttpResponse raise @http.HttpError
+pub async fn DriveService::revisions_update(Self, String, String, Revision) -> Revision raise @http.HttpError
+pub async fn DriveService::teamdrives_create(Self, TeamDrive, request_id? : String?) -> TeamDrive raise @http.HttpError
+pub async fn DriveService::teamdrives_delete(Self, String) -> Json raise @http.HttpError
 pub async fn DriveService::teamdrives_get(Self, String, use_domain_admin_access? : Bool?) -> TeamDrive raise @http.HttpError
 pub async fn DriveService::teamdrives_list(Self, page_size? : Int?, page_token? : String?, q? : String?, use_domain_admin_access? : Bool?) -> TeamDriveList raise @http.HttpError
-pub async fn DriveService::teamdrives_update(Self, String, use_domain_admin_access? : Bool?) -> TeamDrive raise @http.HttpError
+pub async fn DriveService::teamdrives_update(Self, String, TeamDrive, use_domain_admin_access? : Bool?) -> TeamDrive raise @http.HttpError
 
 pub(all) struct File {
-  version : String?
-  content_restrictions : Array[ContentRestriction]?
-  original_filename : String?
-  kind : String?
-  mime_type : String?
-  has_augmented_permissions : Bool?
-  web_view_link : String?
-  shared : Bool?
-  link_share_metadata : Json?
-  label_info : Json?
-  download_restrictions : DownloadRestrictionsMetadata?
-  drive_id : String?
-  viewers_can_copy_content : Bool?
-  thumbnail_link : String?
-  has_thumbnail : Bool?
-  owners : Array[User]?
-  permissions : Array[Permission]?
-  viewed_by_me : Bool?
-  head_revision_id : String?
-  quota_bytes_used : String?
-  spaces : Array[String]?
-  shared_with_me_time : String?
-  export_links : Json?
-  trashing_user : User?
-  resource_key : String?
-  created_time : String?
-  full_file_extension : String?
-  video_media_metadata : Json?
-  web_content_link : String?
-  md5_checksum : String?
-  inherited_permissions_disabled : Bool?
-  starred : Bool?
-  trashed_time : String?
-  modified_by_me_time : String?
-  team_drive_id : String?
-  icon_link : String?
-  file_extension : String?
   viewed_by_me_time : String?
+  content_restrictions : Array[ContentRestriction]?
+  has_augmented_permissions : Bool?
+  modified_by_me_time : String?
+  file_extension : String?
   trashed : Bool?
-  app_properties : Json?
-  shortcut_details : Json?
-  thumbnail_version : String?
-  permission_ids : Array[String]?
   explicitly_trashed : Bool?
-  properties : Json?
-  copy_requires_writer_permission : Bool?
+  shared_with_me_time : String?
+  app_properties : Json?
   sharing_user : User?
-  modified_time : String?
-  capabilities : Json?
-  sha1_checksum : String?
-  owned_by_me : Bool?
-  content_hints : Json?
-  folder_color_rgb : String?
-  sha256_checksum : String?
-  last_modifying_user : User?
-  size : String?
-  name : String?
-  id : String?
-  parents : Array[String]?
-  description : String?
-  modified_by_me : Bool?
-  image_media_metadata : Json?
   writers_can_share : Bool?
+  full_file_extension : String?
+  thumbnail_version : String?
+  mime_type : String?
+  inherited_permissions_disabled : Bool?
+  viewed_by_me : Bool?
+  team_drive_id : String?
+  client_encryption_details : ClientEncryptionDetails?
+  permissions : Array[Permission]?
+  sha1_checksum : String?
+  description : String?
+  icon_link : String?
+  copy_requires_writer_permission : Bool?
+  drive_id : String?
+  kind : String?
+  head_revision_id : String?
+  sha256_checksum : String?
+  viewers_can_copy_content : Bool?
+  capabilities : Json?
+  md5_checksum : String?
+  size : String?
+  content_hints : Json?
+  label_info : Json?
+  trashed_time : String?
+  video_media_metadata : Json?
+  folder_color_rgb : String?
+  starred : Bool?
+  properties : Json?
+  trashing_user : User?
+  parents : Array[String]?
+  version : String?
+  modified_time : String?
+  id : String?
+  thumbnail_link : String?
+  spaces : Array[String]?
   is_app_authorized : Bool?
-} derive(Eq, Show, @json.FromJson)
+  modified_by_me : Bool?
+  name : String?
+  link_share_metadata : Json?
+  owners : Array[User]?
+  resource_key : String?
+  shared : Bool?
+  image_media_metadata : Json?
+  created_time : String?
+  original_filename : String?
+  owned_by_me : Bool?
+  web_content_link : String?
+  has_thumbnail : Bool?
+  permission_ids : Array[String]?
+  download_restrictions : DownloadRestrictionsMetadata?
+  quota_bytes_used : String?
+  shortcut_details : Json?
+  last_modifying_user : User?
+  export_links : Json?
+  web_view_link : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct FileList {
   next_page_token : String?
   kind : String?
-  files : Array[File]?
   incomplete_search : Bool?
-} derive(Eq, Show, @json.FromJson)
+  files : Array[File]?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct GenerateCseTokenResponse {
+  current_kacls_name : String?
+  file_id : String?
+  current_kacls_id : String?
+  kind : String?
+  jwt : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GeneratedIds {
-  kind : String?
   ids : Array[String]?
   space : String?
-} derive(Eq, Show, @json.FromJson)
+  kind : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Label {
-  revision_id : String?
-  id : String?
   fields : Json?
+  id : String?
   kind : String?
-} derive(Eq, Show, @json.FromJson)
+  revision_id : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelField {
-  selection : Array[String]?
   text : Array[String]?
-  user : Array[User]?
+  integer : Array[String]?
+  selection : Array[String]?
   kind : String?
+  id : String?
   value_type : String?
   date_string : Array[String]?
-  id : String?
-  integer : Array[String]?
-} derive(Eq, Show, @json.FromJson)
+  user : Array[User]?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelFieldModification {
+  field_id : String?
+  set_integer_values : Array[String]?
   unset_values : Bool?
-  set_selection_values : Array[String]?
   kind : String?
   set_date_values : Array[String]?
-  set_integer_values : Array[String]?
-  set_user_values : Array[String]?
-  field_id : String?
   set_text_values : Array[String]?
-} derive(Eq, Show, @json.FromJson)
+  set_selection_values : Array[String]?
+  set_user_values : Array[String]?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelList {
   next_page_token : String?
   kind : String?
   labels : Array[Label]?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelModification {
   label_id : String?
+  kind : String?
   field_modifications : Array[LabelFieldModification]?
   remove_label : Bool?
-  kind : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListAccessProposalsResponse {
   next_page_token : String?
   access_proposals : Array[AccessProposal]?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ModifyLabelsRequest {
-  label_modifications : Array[LabelModification]?
   kind : String?
-} derive(Eq, Show, @json.FromJson)
+  label_modifications : Array[LabelModification]?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ModifyLabelsResponse {
-  modified_labels : Array[Label]?
   kind : String?
-} derive(Eq, Show, @json.FromJson)
+  modified_labels : Array[Label]?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Operation {
   response : Json?
-  done : Bool?
   name : String?
-  metadata : Json?
   error : Status?
-} derive(Eq, Show, @json.FromJson)
+  metadata : Json?
+  done : Bool?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Permission {
-  allow_file_discovery : Bool?
-  inherited_permissions_disabled : Bool?
-  permission_details : Array[Json]?
-  team_drive_permission_details : Array[Json]?
-  deleted : Bool?
-  pending_owner : Bool?
-  kind : String?
-  photo_link : String?
-  view : String?
-  id : String?
-  type_ : String?
-  domain : String?
-  email_address : String?
-  role : String?
-  display_name : String?
   expiration_time : String?
-} derive(Eq, Show, @json.FromJson)
+  domain : String?
+  display_name : String?
+  view : String?
+  inherited_permissions_disabled : Bool?
+  team_drive_permission_details : Array[Json]?
+  photo_link : String?
+  role : String?
+  type_ : String?
+  kind : String?
+  email_address : String?
+  id : String?
+  allow_file_discovery : Bool?
+  deleted : Bool?
+  permission_details : Array[Json]?
+  pending_owner : Bool?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct PermissionList {
   permissions : Array[Permission]?
   next_page_token : String?
   kind : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Reply {
-  modified_time : String?
-  id : String?
+  author : User?
+  created_time : String?
   action : String?
   assignee_email_address : String?
-  author : User?
   content : String?
-  created_time : String?
   deleted : Bool?
+  id : String?
+  modified_time : String?
   html_content : String?
   kind : String?
   mentioned_email_addresses : Array[String]?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ReplyList {
   kind : String?
   replies : Array[Reply]?
   next_page_token : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ResolveAccessProposalRequest {
-  action : String?
   role : Array[String]?
-  view : String?
+  action : String?
   send_notification : Bool?
-} derive(Eq, Show, @json.FromJson)
+  view : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ReviewerResponse {
+  reviewer : User?
   kind : String?
   response : String?
-  reviewer : User?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Revision {
-  published_link : String?
-  export_links : Json?
-  id : String?
-  mime_type : String?
-  size : String?
-  last_modifying_user : User?
-  keep_forever : Bool?
   kind : String?
-  publish_auto : Bool?
+  last_modifying_user : User?
   modified_time : String?
+  id : String?
+  export_links : Json?
+  published : Bool?
+  keep_forever : Bool?
+  published_link : String?
+  published_outside_domain : Bool?
+  publish_auto : Bool?
+  size : String?
+  mime_type : String?
   md5_checksum : String?
   original_filename : String?
-  published : Bool?
-  published_outside_domain : Bool?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RevisionList {
   revisions : Array[Revision]?
   next_page_token : String?
   kind : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StartPageToken {
   start_page_token : String?
   kind : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Status {
-  details : Array[Json]?
   code : Int?
   message : String?
-} derive(Eq, Show, @json.FromJson)
+  details : Array[Json]?
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TeamDrive {
-  name : String?
-  id : String?
   restrictions : Json?
-  theme_id : String?
-  background_image_link : String?
   color_rgb : String?
+  kind : String?
+  name : String?
+  background_image_link : String?
+  theme_id : String?
+  capabilities : Json?
   created_time : String?
+  id : String?
   org_unit_id : String?
   background_image_file : Json?
-  kind : String?
-  capabilities : Json?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TeamDriveList {
   next_page_token : String?
   kind : String?
   team_drives : Array[TeamDrive]?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct User {
-  permission_id : String?
   me : Bool?
   email_address : String?
+  permission_id : String?
+  photo_link : String?
   display_name : String?
   kind : String?
-  photo_link : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 // Type aliases
 

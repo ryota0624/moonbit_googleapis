@@ -36,7 +36,7 @@ pub struct CloudtraceService {
   base_url : String
   client : @core.GoogleClient
 }
-pub fn CloudtraceService::new(@core.GoogleClient) -> Self
+pub fn CloudtraceService::new(@core.GoogleClient, base_url? : String) -> Self
 pub async fn CloudtraceService::projects_traces_batch_write(Self, String, BatchWriteSpansRequest) -> Empty raise @http.HttpError
 pub async fn CloudtraceService::projects_traces_spans_create_span(Self, String, Span) -> Span raise @http.HttpError
 
@@ -44,9 +44,9 @@ pub(all) struct Empty {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Link {
-  trace_id : String?
   span_id : String?
   type_ : String?
+  trace_id : String?
   attributes : Attributes?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -56,10 +56,10 @@ pub(all) struct Links {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct MessageEvent {
+  compressed_size_bytes : String?
+  uncompressed_size_bytes : String?
   type_ : String?
   id : String?
-  uncompressed_size_bytes : String?
-  compressed_size_bytes : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Module {
@@ -68,28 +68,28 @@ pub(all) struct Module {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Span {
+  child_span_count : Int?
+  start_time : String?
+  stack_trace : StackTrace?
+  attributes : Attributes?
   name : String?
-  span_id : String?
+  same_process_as_parent_span : Bool?
   parent_span_id : String?
   display_name : TruncatableString?
-  start_time : String?
-  end_time : String?
-  attributes : Attributes?
-  stack_trace : StackTrace?
-  time_events : TimeEvents?
   links : Links?
-  status : Status?
-  same_process_as_parent_span : Bool?
-  child_span_count : Int?
+  span_id : String?
   span_kind : String?
+  status : Status?
+  time_events : TimeEvents?
+  end_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StackFrame {
-  function_name : TruncatableString?
-  original_function_name : TruncatableString?
-  file_name : TruncatableString?
-  line_number : String?
   column_number : String?
+  line_number : String?
+  function_name : TruncatableString?
+  file_name : TruncatableString?
+  original_function_name : TruncatableString?
   load_module : Module?
   source_version : TruncatableString?
 } derive(Eq, Show, ToJson, @json.FromJson)
@@ -100,13 +100,13 @@ pub(all) struct StackFrames {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StackTrace {
-  stack_frames : StackFrames?
   stack_trace_hash_id : String?
+  stack_frames : StackFrames?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Status {
-  code : Int?
   message : String?
+  code : Int?
   details : Array[Json]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 

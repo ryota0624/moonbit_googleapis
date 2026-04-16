@@ -9,11 +9,11 @@ pub struct StorageService {
 }
 
 ///|
-pub fn StorageService::new(client : @core.GoogleClient) -> StorageService {
-  StorageService::{
-    base_url: "https://storage.googleapis.com/storage/v1",
-    client,
-  }
+pub fn StorageService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://storage.googleapis.com/storage/v1",
+) -> StorageService {
+  StorageService::{ base_url, client }
 }
 
 ///| storage.anywhereCaches.disable
@@ -100,9 +100,9 @@ pub async fn StorageService::anywhere_caches_get(
 pub async fn StorageService::anywhere_caches_insert(
   self : StorageService,
   bucket : String,
+  request : AnywhereCache,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "anywhereCaches"
@@ -259,14 +259,14 @@ pub async fn StorageService::anywhere_caches_resume(
 ///| storage.anywhereCaches.update
 
 ///|
-/// Updates the config(ttl and admissionPolicy) of an Anywhere Cache instance.
+/// Updates the config of an Anywhere Cache instance.
 pub async fn StorageService::anywhere_caches_update(
   self : StorageService,
   bucket : String,
   anywhere_cache_id : String,
+  request : AnywhereCache,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -307,7 +307,7 @@ pub async fn StorageService::bucket_access_controls_delete(
   bucket : String,
   entity : String,
   user_project? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match user_project {
     Some(v) => qp.push(("userProject", url_encode(v)))
@@ -327,7 +327,12 @@ pub async fn StorageService::bucket_access_controls_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.bucketAccessControls.get
@@ -374,6 +379,7 @@ pub async fn StorageService::bucket_access_controls_get(
 pub async fn StorageService::bucket_access_controls_insert(
   self : StorageService,
   bucket : String,
+  request : BucketAccessControl,
   user_project? : String? = None,
 ) -> BucketAccessControl raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -382,8 +388,7 @@ pub async fn StorageService::bucket_access_controls_insert(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "acl"
@@ -456,6 +461,7 @@ pub async fn StorageService::bucket_access_controls_patch(
   self : StorageService,
   bucket : String,
   entity : String,
+  request : BucketAccessControl,
   user_project? : String? = None,
 ) -> BucketAccessControl raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -464,8 +470,7 @@ pub async fn StorageService::bucket_access_controls_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "acl" + "/" + entity
@@ -502,6 +507,7 @@ pub async fn StorageService::bucket_access_controls_update(
   self : StorageService,
   bucket : String,
   entity : String,
+  request : BucketAccessControl,
   user_project? : String? = None,
 ) -> BucketAccessControl raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -510,8 +516,7 @@ pub async fn StorageService::bucket_access_controls_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "acl" + "/" + entity
@@ -550,7 +555,7 @@ pub async fn StorageService::buckets_delete(
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
   user_project? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match if_metageneration_match {
     Some(v) => qp.push(("ifMetagenerationMatch", url_encode(v)))
@@ -578,7 +583,12 @@ pub async fn StorageService::buckets_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.buckets.get
@@ -725,6 +735,7 @@ pub async fn StorageService::buckets_get_storage_layout(
 /// Creates a new bucket.
 pub async fn StorageService::buckets_insert(
   self : StorageService,
+  request : Bucket,
   enable_object_retention? : Bool? = None,
   predefined_acl? : String? = None,
   predefined_default_object_acl? : String? = None,
@@ -759,8 +770,7 @@ pub async fn StorageService::buckets_insert(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b"
@@ -917,6 +927,7 @@ pub async fn StorageService::buckets_lock_retention_policy(
 pub async fn StorageService::buckets_patch(
   self : StorageService,
   bucket : String,
+  request : Bucket,
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
   predefined_acl? : String? = None,
@@ -950,8 +961,7 @@ pub async fn StorageService::buckets_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket
@@ -987,9 +997,9 @@ pub async fn StorageService::buckets_patch(
 pub async fn StorageService::buckets_relocate(
   self : StorageService,
   bucket : String,
+  request : RelocateBucketRequest,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "relocate"
@@ -1076,6 +1086,7 @@ pub async fn StorageService::buckets_restore(
 pub async fn StorageService::buckets_set_iam_policy(
   self : StorageService,
   bucket : String,
+  request : Policy,
   user_project? : String? = None,
 ) -> Policy raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1084,8 +1095,7 @@ pub async fn StorageService::buckets_set_iam_policy(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "iam"
@@ -1121,12 +1131,15 @@ pub async fn StorageService::buckets_set_iam_policy(
 pub async fn StorageService::buckets_test_iam_permissions(
   self : StorageService,
   bucket : String,
-  permissions? : String? = None,
+  permissions? : Array[String]? = None,
   user_project? : String? = None,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match permissions {
-    Some(v) => qp.push(("permissions", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("permissions", url_encode(v)))
+      }
     None => ()
   }
   match user_project {
@@ -1162,6 +1175,7 @@ pub async fn StorageService::buckets_test_iam_permissions(
 pub async fn StorageService::buckets_update(
   self : StorageService,
   bucket : String,
+  request : Bucket,
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
   predefined_acl? : String? = None,
@@ -1195,8 +1209,7 @@ pub async fn StorageService::buckets_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket
@@ -1231,9 +1244,9 @@ pub async fn StorageService::buckets_update(
 /// Stop watching resources through this channel
 pub async fn StorageService::channels_stop(
   self : StorageService,
-) -> @http.HttpResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  request : Channel,
+) -> Json raise @http.HttpError {
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "channels" + "/" + "stop"
@@ -1250,7 +1263,12 @@ pub async fn StorageService::channels_stop(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.defaultObjectAccessControls.delete
@@ -1262,7 +1280,7 @@ pub async fn StorageService::default_object_access_controls_delete(
   bucket : String,
   entity : String,
   user_project? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match user_project {
     Some(v) => qp.push(("userProject", url_encode(v)))
@@ -1282,7 +1300,12 @@ pub async fn StorageService::default_object_access_controls_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.defaultObjectAccessControls.get
@@ -1329,6 +1352,7 @@ pub async fn StorageService::default_object_access_controls_get(
 pub async fn StorageService::default_object_access_controls_insert(
   self : StorageService,
   bucket : String,
+  request : ObjectAccessControl,
   user_project? : String? = None,
 ) -> ObjectAccessControl raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1337,8 +1361,7 @@ pub async fn StorageService::default_object_access_controls_insert(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "defaultObjectAcl"
@@ -1421,6 +1444,7 @@ pub async fn StorageService::default_object_access_controls_patch(
   self : StorageService,
   bucket : String,
   entity : String,
+  request : ObjectAccessControl,
   user_project? : String? = None,
 ) -> ObjectAccessControl raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1429,8 +1453,7 @@ pub async fn StorageService::default_object_access_controls_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "defaultObjectAcl" + "/" + entity
@@ -1467,6 +1490,7 @@ pub async fn StorageService::default_object_access_controls_update(
   self : StorageService,
   bucket : String,
   entity : String,
+  request : ObjectAccessControl,
   user_project? : String? = None,
 ) -> ObjectAccessControl raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1475,8 +1499,7 @@ pub async fn StorageService::default_object_access_controls_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "defaultObjectAcl" + "/" + entity
@@ -1515,7 +1538,7 @@ pub async fn StorageService::folders_delete(
   folder : String,
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match if_metageneration_match {
     Some(v) => qp.push(("ifMetagenerationMatch", url_encode(v)))
@@ -1539,7 +1562,12 @@ pub async fn StorageService::folders_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.folders.deleteRecursive
@@ -1651,6 +1679,7 @@ pub async fn StorageService::folders_get(
 pub async fn StorageService::folders_insert(
   self : StorageService,
   bucket : String,
+  request : Folder,
   recursive? : Bool? = None,
 ) -> Folder raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1659,8 +1688,7 @@ pub async fn StorageService::folders_insert(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "folders"
@@ -1826,7 +1854,7 @@ pub async fn StorageService::managed_folders_delete(
   allow_non_empty? : Bool? = None,
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match allow_non_empty {
     Some(v) => qp.push(("allowNonEmpty", if v { "true" } else { "false" }))
@@ -1861,7 +1889,12 @@ pub async fn StorageService::managed_folders_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.managedFolders.get
@@ -1971,9 +2004,9 @@ pub async fn StorageService::managed_folders_get_iam_policy(
 pub async fn StorageService::managed_folders_insert(
   self : StorageService,
   bucket : String,
+  request : ManagedFolder,
 ) -> ManagedFolder raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "managedFolders"
@@ -2052,6 +2085,7 @@ pub async fn StorageService::managed_folders_set_iam_policy(
   self : StorageService,
   bucket : String,
   managed_folder : String,
+  request : Policy,
   user_project? : String? = None,
 ) -> Policy raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2060,8 +2094,7 @@ pub async fn StorageService::managed_folders_set_iam_policy(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2107,12 +2140,15 @@ pub async fn StorageService::managed_folders_test_iam_permissions(
   self : StorageService,
   bucket : String,
   managed_folder : String,
-  permissions? : String? = None,
+  permissions? : Array[String]? = None,
   user_project? : String? = None,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match permissions {
-    Some(v) => qp.push(("permissions", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("permissions", url_encode(v)))
+      }
     None => ()
   }
   match user_project {
@@ -2161,7 +2197,7 @@ pub async fn StorageService::notifications_delete(
   bucket : String,
   notification : String,
   user_project? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match user_project {
     Some(v) => qp.push(("userProject", url_encode(v)))
@@ -2188,7 +2224,12 @@ pub async fn StorageService::notifications_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.notifications.get
@@ -2242,6 +2283,7 @@ pub async fn StorageService::notifications_get(
 pub async fn StorageService::notifications_insert(
   self : StorageService,
   bucket : String,
+  request : Notification,
   user_project? : String? = None,
 ) -> Notification raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2250,8 +2292,7 @@ pub async fn StorageService::notifications_insert(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "notificationConfigs"
@@ -2327,7 +2368,7 @@ pub async fn StorageService::object_access_controls_delete(
   entity : String,
   generation? : String? = None,
   user_project? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match generation {
     Some(v) => qp.push(("generation", url_encode(v)))
@@ -2362,7 +2403,12 @@ pub async fn StorageService::object_access_controls_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.objectAccessControls.get
@@ -2427,6 +2473,7 @@ pub async fn StorageService::object_access_controls_insert(
   self : StorageService,
   bucket : String,
   object : String,
+  request : ObjectAccessControl,
   generation? : String? = None,
   user_project? : String? = None,
 ) -> ObjectAccessControl raise @http.HttpError {
@@ -2440,8 +2487,7 @@ pub async fn StorageService::object_access_controls_insert(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "o" + "/" + object + "/" + "acl"
@@ -2521,6 +2567,7 @@ pub async fn StorageService::object_access_controls_patch(
   bucket : String,
   object : String,
   entity : String,
+  request : ObjectAccessControl,
   generation? : String? = None,
   user_project? : String? = None,
 ) -> ObjectAccessControl raise @http.HttpError {
@@ -2534,8 +2581,7 @@ pub async fn StorageService::object_access_controls_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2584,6 +2630,7 @@ pub async fn StorageService::object_access_controls_update(
   bucket : String,
   object : String,
   entity : String,
+  request : ObjectAccessControl,
   generation? : String? = None,
   user_project? : String? = None,
 ) -> ObjectAccessControl raise @http.HttpError {
@@ -2597,8 +2644,7 @@ pub async fn StorageService::object_access_controls_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2645,9 +2691,9 @@ pub async fn StorageService::object_access_controls_update(
 pub async fn StorageService::objects_bulk_restore(
   self : StorageService,
   bucket : String,
+  request : BulkRestoreObjectsRequest,
 ) -> GoogleLongrunningOperation raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "o" + "/" + "bulkRestore"
@@ -2680,8 +2726,9 @@ pub async fn StorageService::objects_compose(
   self : StorageService,
   destination_bucket : String,
   destination_object : String,
+  request : ComposeRequest,
   destination_predefined_acl? : String? = None,
-  drop_context_groups? : String? = None,
+  drop_context_groups? : Array[String]? = None,
   if_generation_match? : String? = None,
   if_metageneration_match? : String? = None,
   kms_key_name? : String? = None,
@@ -2693,7 +2740,10 @@ pub async fn StorageService::objects_compose(
     None => ()
   }
   match drop_context_groups {
-    Some(v) => qp.push(("dropContextGroups", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("dropContextGroups", url_encode(v)))
+      }
     None => ()
   }
   match if_generation_match {
@@ -2713,8 +2763,7 @@ pub async fn StorageService::objects_compose(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2762,6 +2811,7 @@ pub async fn StorageService::objects_copy(
   source_object : String,
   destination_bucket : String,
   destination_object : String,
+  request : Object,
   destination_kms_key_name? : String? = None,
   destination_predefined_acl? : String? = None,
   if_generation_match? : String? = None,
@@ -2830,8 +2880,7 @@ pub async fn StorageService::objects_copy(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2891,7 +2940,7 @@ pub async fn StorageService::objects_delete(
   if_metageneration_match? : String? = None,
   if_metageneration_not_match? : String? = None,
   user_project? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match generation {
     Some(v) => qp.push(("generation", url_encode(v)))
@@ -2931,7 +2980,12 @@ pub async fn StorageService::objects_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.objects.get
@@ -3060,6 +3114,7 @@ pub async fn StorageService::objects_get_iam_policy(
 pub async fn StorageService::objects_insert(
   self : StorageService,
   bucket : String,
+  request : Object,
   content_encoding? : String? = None,
   if_generation_match? : String? = None,
   if_generation_not_match? : String? = None,
@@ -3113,8 +3168,7 @@ pub async fn StorageService::objects_insert(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "o"
@@ -3359,6 +3413,7 @@ pub async fn StorageService::objects_patch(
   self : StorageService,
   bucket : String,
   object : String,
+  request : Object,
   generation? : String? = None,
   if_generation_match? : String? = None,
   if_generation_not_match? : String? = None,
@@ -3408,8 +3463,7 @@ pub async fn StorageService::objects_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "o" + "/" + object
@@ -3543,9 +3597,10 @@ pub async fn StorageService::objects_rewrite(
   source_object : String,
   destination_bucket : String,
   destination_object : String,
+  request : Object,
   destination_kms_key_name? : String? = None,
   destination_predefined_acl? : String? = None,
-  drop_context_groups? : String? = None,
+  drop_context_groups? : Array[String]? = None,
   if_generation_match? : String? = None,
   if_generation_not_match? : String? = None,
   if_metageneration_match? : String? = None,
@@ -3570,7 +3625,10 @@ pub async fn StorageService::objects_rewrite(
     None => ()
   }
   match drop_context_groups {
-    Some(v) => qp.push(("dropContextGroups", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("dropContextGroups", url_encode(v)))
+      }
     None => ()
   }
   match if_generation_match {
@@ -3626,8 +3684,7 @@ pub async fn StorageService::objects_rewrite(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -3681,6 +3738,7 @@ pub async fn StorageService::objects_set_iam_policy(
   self : StorageService,
   bucket : String,
   object : String,
+  request : Policy,
   generation? : String? = None,
   user_project? : String? = None,
 ) -> Policy raise @http.HttpError {
@@ -3694,8 +3752,7 @@ pub async fn StorageService::objects_set_iam_policy(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "o" + "/" + object + "/" + "iam"
@@ -3733,7 +3790,7 @@ pub async fn StorageService::objects_test_iam_permissions(
   bucket : String,
   object : String,
   generation? : String? = None,
-  permissions? : String? = None,
+  permissions? : Array[String]? = None,
   user_project? : String? = None,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -3742,7 +3799,10 @@ pub async fn StorageService::objects_test_iam_permissions(
     None => ()
   }
   match permissions {
-    Some(v) => qp.push(("permissions", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("permissions", url_encode(v)))
+      }
     None => ()
   }
   match user_project {
@@ -3790,6 +3850,7 @@ pub async fn StorageService::objects_update(
   self : StorageService,
   bucket : String,
   object : String,
+  request : Object,
   generation? : String? = None,
   if_generation_match? : String? = None,
   if_generation_not_match? : String? = None,
@@ -3839,8 +3900,7 @@ pub async fn StorageService::objects_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "o" + "/" + object
@@ -3876,6 +3936,7 @@ pub async fn StorageService::objects_update(
 pub async fn StorageService::objects_watch_all(
   self : StorageService,
   bucket : String,
+  request : Channel,
   delimiter? : String? = None,
   end_offset? : String? = None,
   include_trailing_delimiter? : Bool? = None,
@@ -3930,8 +3991,7 @@ pub async fn StorageService::objects_watch_all(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "b" + "/" + bucket + "/" + "o" + "/" + "watch"
@@ -3968,9 +4028,9 @@ pub async fn StorageService::operations_advance_relocate_bucket(
   self : StorageService,
   bucket : String,
   operation_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  request : AdvanceRelocateBucketOperationRequest,
+) -> Json raise @http.HttpError {
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -3996,7 +4056,12 @@ pub async fn StorageService::operations_advance_relocate_bucket(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.buckets.operations.cancel
@@ -4007,7 +4072,7 @@ pub async fn StorageService::operations_cancel(
   self : StorageService,
   bucket : String,
   operation_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let meta : Map[String, Json] = Map::new()
   let body = Json::object(meta).stringify()
   let h : Map[String, String] = {}
@@ -4035,7 +4100,12 @@ pub async fn StorageService::operations_cancel(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.buckets.operations.get
@@ -4169,7 +4239,7 @@ pub async fn StorageService::projects_hmac_keys_delete(
   project_id : String,
   access_id : String,
   user_project? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match user_project {
     Some(v) => qp.push(("userProject", url_encode(v)))
@@ -4196,7 +4266,12 @@ pub async fn StorageService::projects_hmac_keys_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| storage.projects.hmacKeys.get
@@ -4307,6 +4382,7 @@ pub async fn StorageService::projects_hmac_keys_update(
   self : StorageService,
   project_id : String,
   access_id : String,
+  request : HmacKeyMetadata,
   user_project? : String? = None,
 ) -> HmacKeyMetadata raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -4315,8 +4391,7 @@ pub async fn StorageService::projects_hmac_keys_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +

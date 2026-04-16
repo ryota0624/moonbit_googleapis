@@ -18,47 +18,47 @@ pub(all) struct AppEngineHttpTarget {
   relative_uri : String?
   headers : Json?
   body : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AppEngineRouting {
   service : String?
   version : String?
   instance : String?
   host : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CancelOperationRequest {
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub struct CloudschedulerService {
   base_url : String
   client : @core.GoogleClient
 }
-pub fn CloudschedulerService::new(@core.GoogleClient) -> Self
+pub fn CloudschedulerService::new(@core.GoogleClient, base_url? : String) -> Self
 pub async fn CloudschedulerService::projects_locations_get(Self, String) -> Location raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_get_cmek_config(Self, String) -> CmekConfig raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_create(Self, String) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_create(Self, String, Job) -> Job raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_jobs_delete(Self, String) -> Empty raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_jobs_get(Self, String) -> Job raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_jobs_list(Self, String, page_size? : Int?, page_token? : String?) -> ListJobsResponse raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_patch(Self, String, update_mask? : String?) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_pause(Self, String) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_resume(Self, String) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_jobs_run(Self, String) -> Job raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_list(Self, String, extra_location_types? : String?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_operations_cancel(Self, String) -> Empty raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_patch(Self, String, Job, update_mask? : String?) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_pause(Self, String, PauseJobRequest) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_resume(Self, String, ResumeJobRequest) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_jobs_run(Self, String, RunJobRequest) -> Job raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_list(Self, String, extra_location_types? : Array[String]?, filter? : String?, page_size? : Int?, page_token? : String?) -> ListLocationsResponse raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_operations_cancel(Self, String, CancelOperationRequest) -> Empty raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_operations_delete(Self, String) -> Empty raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_operations_get(Self, String) -> Operation raise @http.HttpError
 pub async fn CloudschedulerService::projects_locations_operations_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?, return_partial_success? : Bool?) -> ListOperationsResponse raise @http.HttpError
-pub async fn CloudschedulerService::projects_locations_update_cmek_config(Self, String, update_mask? : String?) -> Operation raise @http.HttpError
+pub async fn CloudschedulerService::projects_locations_update_cmek_config(Self, String, CmekConfig, update_mask? : String?) -> Operation raise @http.HttpError
 
 pub(all) struct CmekConfig {
   name : String?
   kms_key_name : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Empty {
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct HttpTarget {
   uri : String?
@@ -67,7 +67,7 @@ pub(all) struct HttpTarget {
   body : String?
   oauth_token : OAuthToken?
   oidc_token : OidcToken?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Job {
   name : String?
@@ -85,23 +85,23 @@ pub(all) struct Job {
   retry_config : RetryConfig?
   attempt_deadline : String?
   satisfies_pzs : Bool?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListJobsResponse {
   jobs : Array[Job]?
   next_page_token : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListLocationsResponse {
   locations : Array[Location]?
   next_page_token : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListOperationsResponse {
   operations : Array[Operation]?
   next_page_token : String?
   unreachable_ : Array[String]?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Location {
   name : String?
@@ -109,17 +109,17 @@ pub(all) struct Location {
   display_name : String?
   labels : Json?
   metadata : Json?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct OAuthToken {
   service_account_email : String?
   scope : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct OidcToken {
   service_account_email : String?
   audience : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Operation {
   name : String?
@@ -127,7 +127,7 @@ pub(all) struct Operation {
   done : Bool?
   error : Status?
   response : Json?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct OperationMetadata {
   create_time : String?
@@ -137,10 +137,10 @@ pub(all) struct OperationMetadata {
   status_detail : String?
   cancel_requested : Bool?
   api_version : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct PauseJobRequest {
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct PubsubMessage {
   data : String?
@@ -148,16 +148,16 @@ pub(all) struct PubsubMessage {
   message_id : String?
   publish_time : String?
   ordering_key : String?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct PubsubTarget {
   topic_name : String?
   data : String?
   attributes : Json?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ResumeJobRequest {
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RetryConfig {
   retry_count : Int?
@@ -165,16 +165,16 @@ pub(all) struct RetryConfig {
   min_backoff_duration : String?
   max_backoff_duration : String?
   max_doublings : Int?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RunJobRequest {
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Status {
   code : Int?
   message : String?
   details : Array[Json]?
-} derive(Eq, Show, @json.FromJson)
+} derive(Eq, Show, ToJson, @json.FromJson)
 
 // Type aliases
 

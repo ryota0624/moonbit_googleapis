@@ -11,11 +11,9 @@ pub struct CloudschedulerService {
 ///|
 pub fn CloudschedulerService::new(
   client : @core.GoogleClient,
+  base_url? : String = "https://cloudscheduler.googleapis.com",
 ) -> CloudschedulerService {
-  CloudschedulerService::{
-    base_url: "https://cloudscheduler.googleapis.com",
-    client,
-  }
+  CloudschedulerService::{ base_url, client }
 }
 
 ///| cloudscheduler.projects.locations.get
@@ -75,14 +73,17 @@ pub async fn CloudschedulerService::projects_locations_get_cmek_config(
 pub async fn CloudschedulerService::projects_locations_list(
   self : CloudschedulerService,
   name : String,
-  extra_location_types? : String? = None,
+  extra_location_types? : Array[String]? = None,
   filter? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListLocationsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match extra_location_types {
-    Some(v) => qp.push(("extraLocationTypes", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("extraLocationTypes", url_encode(v)))
+      }
     None => ()
   }
   match filter {
@@ -126,6 +127,7 @@ pub async fn CloudschedulerService::projects_locations_list(
 pub async fn CloudschedulerService::projects_locations_update_cmek_config(
   self : CloudschedulerService,
   name : String,
+  request : CmekConfig,
   update_mask? : String? = None,
 ) -> Operation raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -134,8 +136,7 @@ pub async fn CloudschedulerService::projects_locations_update_cmek_config(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -171,9 +172,9 @@ pub async fn CloudschedulerService::projects_locations_update_cmek_config(
 pub async fn CloudschedulerService::projects_locations_jobs_create(
   self : CloudschedulerService,
   parent : String,
+  request : Job,
 ) -> Job raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "jobs"
@@ -296,6 +297,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_list(
 pub async fn CloudschedulerService::projects_locations_jobs_patch(
   self : CloudschedulerService,
   name : String,
+  request : Job,
   update_mask? : String? = None,
 ) -> Job raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -304,8 +306,7 @@ pub async fn CloudschedulerService::projects_locations_jobs_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -341,9 +342,9 @@ pub async fn CloudschedulerService::projects_locations_jobs_patch(
 pub async fn CloudschedulerService::projects_locations_jobs_pause(
   self : CloudschedulerService,
   name : String,
+  request : PauseJobRequest,
 ) -> Job raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":pause"
@@ -375,9 +376,9 @@ pub async fn CloudschedulerService::projects_locations_jobs_pause(
 pub async fn CloudschedulerService::projects_locations_jobs_resume(
   self : CloudschedulerService,
   name : String,
+  request : ResumeJobRequest,
 ) -> Job raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":resume"
@@ -409,9 +410,9 @@ pub async fn CloudschedulerService::projects_locations_jobs_resume(
 pub async fn CloudschedulerService::projects_locations_jobs_run(
   self : CloudschedulerService,
   name : String,
+  request : RunJobRequest,
 ) -> Job raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":run"
@@ -443,9 +444,9 @@ pub async fn CloudschedulerService::projects_locations_jobs_run(
 pub async fn CloudschedulerService::projects_locations_operations_cancel(
   self : CloudschedulerService,
   name : String,
+  request : CancelOperationRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":cancel"

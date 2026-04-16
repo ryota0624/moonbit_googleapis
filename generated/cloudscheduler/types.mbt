@@ -3,7 +3,12 @@
 pub(all) struct ListLocationsResponse {
   locations : Array[Location]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Location
@@ -13,7 +18,12 @@ pub(all) struct Location {
   display_name : String?
   labels : Json?
   metadata : Json?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListOperationsResponse
@@ -28,6 +38,7 @@ pub(all) struct ListOperationsResponse {
     rename_fields="camelCase",
     fields(unreachable_(rename="unreachable")),
   ),
+  ToJson(rename_fields="camelCase", fields(unreachable_(rename="unreachable"))),
 )
 
 ///|
@@ -38,7 +49,12 @@ pub(all) struct Operation {
   done : Bool?
   error : Status?
   response : Json?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Status
@@ -46,11 +62,21 @@ pub(all) struct Status {
   code : Int?
   message : String?
   details : Array[Json]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Empty
-pub(all) struct Empty {} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+pub(all) struct Empty {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema CancelOperationRequest
@@ -58,6 +84,7 @@ pub(all) struct CancelOperationRequest {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
@@ -65,7 +92,12 @@ pub(all) struct CancelOperationRequest {} derive (
 pub(all) struct ListJobsResponse {
   jobs : Array[Job]?
   next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema Job
@@ -85,7 +117,12 @@ pub(all) struct Job {
   retry_config : RetryConfig?
   attempt_deadline : String?
   satisfies_pzs : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema PubsubTarget
@@ -93,7 +130,12 @@ pub(all) struct PubsubTarget {
   topic_name : String?
   data : String?
   attributes : Json?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema AppEngineHttpTarget
@@ -103,7 +145,12 @@ pub(all) struct AppEngineHttpTarget {
   relative_uri : String?
   headers : Json?
   body : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema AppEngineRouting
@@ -112,7 +159,12 @@ pub(all) struct AppEngineRouting {
   version : String?
   instance : String?
   host : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema HttpTarget
@@ -123,21 +175,36 @@ pub(all) struct HttpTarget {
   body : String?
   oauth_token : OAuthToken?
   oidc_token : OidcToken?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema OAuthToken
 pub(all) struct OAuthToken {
   service_account_email : String?
   scope : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema OidcToken
 pub(all) struct OidcToken {
   service_account_email : String?
   audience : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema RetryConfig
@@ -147,7 +214,12 @@ pub(all) struct RetryConfig {
   min_backoff_duration : String?
   max_backoff_duration : String?
   max_doublings : Int?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema PauseJobRequest
@@ -155,6 +227,7 @@ pub(all) struct PauseJobRequest {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
@@ -163,6 +236,7 @@ pub(all) struct ResumeJobRequest {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
@@ -171,6 +245,7 @@ pub(all) struct RunJobRequest {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
@@ -178,7 +253,12 @@ pub(all) struct RunJobRequest {} derive (
 pub(all) struct CmekConfig {
   name : String?
   kms_key_name : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema PubsubMessage
@@ -188,7 +268,12 @@ pub(all) struct PubsubMessage {
   message_id : String?
   publish_time : String?
   ordering_key : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema OperationMetadata
@@ -200,4 +285,9 @@ pub(all) struct OperationMetadata {
   status_detail : String?
   cancel_requested : Bool?
   api_version : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)

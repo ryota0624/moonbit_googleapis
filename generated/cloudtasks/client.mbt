@@ -9,8 +9,11 @@ pub struct CloudtasksService {
 }
 
 ///|
-pub fn CloudtasksService::new(client : @core.GoogleClient) -> CloudtasksService {
-  CloudtasksService::{ base_url: "https://cloudtasks.googleapis.com", client }
+pub fn CloudtasksService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://cloudtasks.googleapis.com",
+) -> CloudtasksService {
+  CloudtasksService::{ base_url, client }
 }
 
 ///| cloudtasks.projects.locations.get
@@ -70,14 +73,17 @@ pub async fn CloudtasksService::projects_locations_get_cmek_config(
 pub async fn CloudtasksService::projects_locations_list(
   self : CloudtasksService,
   name : String,
-  extra_location_types? : String? = None,
+  extra_location_types? : Array[String]? = None,
   filter? : String? = None,
   page_size? : Int? = None,
   page_token? : String? = None,
 ) -> ListLocationsResponse raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match extra_location_types {
-    Some(v) => qp.push(("extraLocationTypes", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("extraLocationTypes", url_encode(v)))
+      }
     None => ()
   }
   match filter {
@@ -121,6 +127,7 @@ pub async fn CloudtasksService::projects_locations_list(
 pub async fn CloudtasksService::projects_locations_update_cmek_config(
   self : CloudtasksService,
   name : String,
+  request : CmekConfig,
   update_mask? : String? = None,
 ) -> CmekConfig raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -129,8 +136,7 @@ pub async fn CloudtasksService::projects_locations_update_cmek_config(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -166,9 +172,9 @@ pub async fn CloudtasksService::projects_locations_update_cmek_config(
 pub async fn CloudtasksService::projects_locations_queues_create(
   self : CloudtasksService,
   parent : String,
+  request : Queue,
 ) -> Queue raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "queues"
@@ -250,9 +256,9 @@ pub async fn CloudtasksService::projects_locations_queues_get(
 pub async fn CloudtasksService::projects_locations_queues_get_iam_policy(
   self : CloudtasksService,
   resource : String,
+  request : GetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":getIamPolicy"
@@ -330,6 +336,7 @@ pub async fn CloudtasksService::projects_locations_queues_list(
 pub async fn CloudtasksService::projects_locations_queues_patch(
   self : CloudtasksService,
   name : String,
+  request : Queue,
   update_mask? : String? = None,
 ) -> Queue raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -338,8 +345,7 @@ pub async fn CloudtasksService::projects_locations_queues_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name
@@ -375,9 +381,9 @@ pub async fn CloudtasksService::projects_locations_queues_patch(
 pub async fn CloudtasksService::projects_locations_queues_pause(
   self : CloudtasksService,
   name : String,
+  request : PauseQueueRequest,
 ) -> Queue raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":pause"
@@ -409,9 +415,9 @@ pub async fn CloudtasksService::projects_locations_queues_pause(
 pub async fn CloudtasksService::projects_locations_queues_purge(
   self : CloudtasksService,
   name : String,
+  request : PurgeQueueRequest,
 ) -> Queue raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":purge"
@@ -443,9 +449,9 @@ pub async fn CloudtasksService::projects_locations_queues_purge(
 pub async fn CloudtasksService::projects_locations_queues_resume(
   self : CloudtasksService,
   name : String,
+  request : ResumeQueueRequest,
 ) -> Queue raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":resume"
@@ -477,9 +483,9 @@ pub async fn CloudtasksService::projects_locations_queues_resume(
 pub async fn CloudtasksService::projects_locations_queues_set_iam_policy(
   self : CloudtasksService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":setIamPolicy"
@@ -511,9 +517,9 @@ pub async fn CloudtasksService::projects_locations_queues_set_iam_policy(
 pub async fn CloudtasksService::projects_locations_queues_test_iam_permissions(
   self : CloudtasksService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + resource + "/" + ":testIamPermissions"
@@ -546,9 +552,9 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_buffer(
   self : CloudtasksService,
   queue : String,
   task_id : String,
+  request : BufferTaskRequest,
 ) -> BufferTaskResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -589,9 +595,9 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_buffer(
 pub async fn CloudtasksService::projects_locations_queues_tasks_create(
   self : CloudtasksService,
   parent : String,
+  request : CreateTaskRequest,
 ) -> Task raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + parent + "/" + "tasks"
@@ -730,9 +736,9 @@ pub async fn CloudtasksService::projects_locations_queues_tasks_list(
 pub async fn CloudtasksService::projects_locations_queues_tasks_run(
   self : CloudtasksService,
   name : String,
+  request : RunTaskRequest,
 ) -> Task raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v2" + "/" + name + "/" + ":run"

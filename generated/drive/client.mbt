@@ -9,8 +9,11 @@ pub struct DriveService {
 }
 
 ///|
-pub fn DriveService::new(client : @core.GoogleClient) -> DriveService {
-  DriveService::{ base_url: "https://www.googleapis.com/drive/v3", client }
+pub fn DriveService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://www.googleapis.com/drive/v3",
+) -> DriveService {
+  DriveService::{ base_url, client }
 }
 
 ///| drive.about.get
@@ -119,9 +122,9 @@ pub async fn DriveService::accessproposals_resolve(
   self : DriveService,
   file_id : String,
   proposal_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  request : ResolveAccessProposalRequest,
+) -> Json raise @http.HttpError {
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -147,7 +150,12 @@ pub async fn DriveService::accessproposals_resolve(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.approvals.get
@@ -453,6 +461,7 @@ pub async fn DriveService::changes_list(
 /// Subscribes to changes for a user. For more information, see [Notifications for resource changes](https://developers.google.com/workspace/drive/api/guides/push).
 pub async fn DriveService::changes_watch(
   self : DriveService,
+  request : Channel,
   drive_id? : String? = None,
   include_corpus_removals? : Bool? = None,
   include_items_from_all_drives? : Bool? = None,
@@ -529,8 +538,7 @@ pub async fn DriveService::changes_watch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "changes" + "/" + "watch"
@@ -565,9 +573,9 @@ pub async fn DriveService::changes_watch(
 /// Stops watching resources through this channel. For more information, see [Notifications for resource changes](https://developers.google.com/workspace/drive/api/guides/push).
 pub async fn DriveService::channels_stop(
   self : DriveService,
-) -> @http.HttpResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  request : Channel,
+) -> Json raise @http.HttpError {
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "channels" + "/" + "stop"
@@ -584,7 +592,12 @@ pub async fn DriveService::channels_stop(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.comments.create
@@ -594,9 +607,9 @@ pub async fn DriveService::channels_stop(
 pub async fn DriveService::comments_create(
   self : DriveService,
   file_id : String,
+  request : Comment,
 ) -> Comment raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "comments"
@@ -629,7 +642,7 @@ pub async fn DriveService::comments_delete(
   self : DriveService,
   file_id : String,
   comment_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let path = "/" + "files" + "/" + file_id + "/" + "comments" + "/" + comment_id
   let url = self.base_url + path
   let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
@@ -639,7 +652,12 @@ pub async fn DriveService::comments_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.comments.get
@@ -738,9 +756,9 @@ pub async fn DriveService::comments_update(
   self : DriveService,
   file_id : String,
   comment_id : String,
+  request : Comment,
 ) -> Comment raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "comments" + "/" + comment_id
@@ -771,6 +789,7 @@ pub async fn DriveService::comments_update(
 /// Creates a shared drive. For more information, see [Manage shared drives](https://developers.google.com/workspace/drive/api/guides/manage-shareddrives).
 pub async fn DriveService::drives_create(
   self : DriveService,
+  request : Drive,
   request_id? : String? = None,
 ) -> Drive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -779,8 +798,7 @@ pub async fn DriveService::drives_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "drives"
@@ -818,7 +836,7 @@ pub async fn DriveService::drives_delete(
   drive_id : String,
   allow_item_deletion? : Bool? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match allow_item_deletion {
     Some(v) => qp.push(("allowItemDeletion", if v { "true" } else { "false" }))
@@ -843,7 +861,12 @@ pub async fn DriveService::drives_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.drives.get
@@ -1009,6 +1032,7 @@ pub async fn DriveService::drives_unhide(
 pub async fn DriveService::drives_update(
   self : DriveService,
   drive_id : String,
+  request : Drive,
   use_domain_admin_access? : Bool? = None,
 ) -> Drive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1018,8 +1042,7 @@ pub async fn DriveService::drives_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "drives" + "/" + drive_id
@@ -1055,6 +1078,7 @@ pub async fn DriveService::drives_update(
 pub async fn DriveService::files_copy(
   self : DriveService,
   file_id : String,
+  request : File,
   enforce_single_parent? : Bool? = None,
   ignore_default_visibility? : Bool? = None,
   include_labels? : String? = None,
@@ -1101,8 +1125,7 @@ pub async fn DriveService::files_copy(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "copy"
@@ -1137,6 +1160,7 @@ pub async fn DriveService::files_copy(
 ///  Creates a file. For more information, see [Create and manage files](https://developers.google.com/workspace/drive/api/guides/create-file). This method supports an */upload* URI and accepts uploaded media with the following characteristics: - *Maximum file size:* 5,120 GB - *Accepted Media MIME types:* `*/*` (Specify a valid MIME type, rather than the literal `*/*` value. The literal `*/*` is only used to indicate that any valid MIME type can be uploaded. For more information, see [Google Workspace and Google Drive supported MIME types](https://developers.google.com/workspace/drive/api/guides/mime-types).) For more information on uploading files, see [Upload file data](https://developers.google.com/workspace/drive/api/guides/manage-uploads). Apps creating shortcuts with the `create` method must specify the MIME type `application/vnd.google-apps.shortcut`. Apps should specify a file extension in the `name` property when inserting files with the API. For example, an operation to insert a JPEG file should specify something like `"name": "cat.jpg"` in the metadata. Subsequent `GET` requests include the read-only `fileExtension` property populated with the extension originally specified in the `name` property. When a Google Drive user requests to download a file, or when the file is downloaded through the sync client, Drive builds a full filename (with extension) based on the name. In cases where the extension is missing, Drive attempts to determine the extension based on the file's MIME type.
 pub async fn DriveService::files_create(
   self : DriveService,
+  request : File,
   enforce_single_parent? : Bool? = None,
   ignore_default_visibility? : Bool? = None,
   include_labels? : String? = None,
@@ -1189,8 +1213,7 @@ pub async fn DriveService::files_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "files"
@@ -1229,7 +1252,7 @@ pub async fn DriveService::files_delete(
   enforce_single_parent? : Bool? = None,
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match enforce_single_parent {
     Some(v) =>
@@ -1258,7 +1281,12 @@ pub async fn DriveService::files_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.download
@@ -1319,7 +1347,7 @@ pub async fn DriveService::files_empty_trash(
   self : DriveService,
   drive_id? : String? = None,
   enforce_single_parent? : Bool? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match drive_id {
     Some(v) => qp.push(("driveId", url_encode(v)))
@@ -1344,7 +1372,12 @@ pub async fn DriveService::files_empty_trash(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.export
@@ -1355,7 +1388,7 @@ pub async fn DriveService::files_export(
   self : DriveService,
   file_id : String,
   mime_type? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match mime_type {
     Some(v) => qp.push(("mimeType", url_encode(v)))
@@ -1375,7 +1408,52 @@ pub async fn DriveService::files_export(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+}
+
+///| drive.files.generateCseToken
+
+///|
+/// Generates a CSE token which can be used to create or update CSE files.
+pub async fn DriveService::files_generate_cse_token(
+  self : DriveService,
+  file_id? : String? = None,
+  parent? : String? = None,
+) -> GenerateCseTokenResponse raise @http.HttpError {
+  let qp : Array[(String, String)] = Array::new()
+  match file_id {
+    Some(v) => qp.push(("fileId", url_encode(v)))
+    None => ()
+  }
+  match parent {
+    Some(v) => qp.push(("parent", url_encode(v)))
+    None => ()
+  }
+  let qs = build_query_string(qp)
+  let path = "/" + "files" + "/" + "generateCseToken"
+  let url = if qs.is_empty() {
+    self.base_url + path
+  } else {
+    self.base_url + path + "?" + qs
+  }
+  let req = @http.HttpRequest::new(url, @http.HttpMethod::GET, {})
+  let resp = self.client.request(req) catch { e => raise e }
+  if resp.status_code >= 400 {
+    raise @http.HttpError::network_message(
+      "HTTP " + resp.status_code.to_string() + ": " + resp.body,
+    )
+  }
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.files.generateIds
@@ -1634,9 +1712,9 @@ pub async fn DriveService::files_list_labels(
 pub async fn DriveService::files_modify_labels(
   self : DriveService,
   file_id : String,
+  request : ModifyLabelsRequest,
 ) -> ModifyLabelsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "modifyLabels"
@@ -1668,6 +1746,7 @@ pub async fn DriveService::files_modify_labels(
 pub async fn DriveService::files_update(
   self : DriveService,
   file_id : String,
+  request : File,
   add_parents? : String? = None,
   enforce_single_parent? : Bool? = None,
   include_labels? : String? = None,
@@ -1724,8 +1803,7 @@ pub async fn DriveService::files_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id
@@ -1761,6 +1839,7 @@ pub async fn DriveService::files_update(
 pub async fn DriveService::files_watch(
   self : DriveService,
   file_id : String,
+  request : Channel,
   acknowledge_abuse? : Bool? = None,
   include_labels? : String? = None,
   include_permissions_for_view? : String? = None,
@@ -1789,8 +1868,7 @@ pub async fn DriveService::files_watch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "watch"
@@ -1851,6 +1929,7 @@ pub async fn DriveService::operations_get(
 pub async fn DriveService::permissions_create(
   self : DriveService,
   file_id : String,
+  request : Permission,
   email_message? : String? = None,
   enforce_expansive_access? : Bool? = None,
   enforce_single_parent? : Bool? = None,
@@ -1904,8 +1983,7 @@ pub async fn DriveService::permissions_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "files" + "/" + file_id + "/" + "permissions"
@@ -1946,7 +2024,7 @@ pub async fn DriveService::permissions_delete(
   supports_all_drives? : Bool? = None,
   supports_team_drives? : Bool? = None,
   use_domain_admin_access? : Bool? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match enforce_expansive_access {
     Some(v) =>
@@ -1987,7 +2065,12 @@ pub async fn DriveService::permissions_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.permissions.get
@@ -2115,6 +2198,7 @@ pub async fn DriveService::permissions_update(
   self : DriveService,
   file_id : String,
   permission_id : String,
+  request : Permission,
   enforce_expansive_access? : Bool? = None,
   remove_expiration? : Bool? = None,
   supports_all_drives? : Bool? = None,
@@ -2150,8 +2234,7 @@ pub async fn DriveService::permissions_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2195,9 +2278,9 @@ pub async fn DriveService::replies_create(
   self : DriveService,
   file_id : String,
   comment_id : String,
+  request : Reply,
 ) -> Reply raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2240,7 +2323,7 @@ pub async fn DriveService::replies_delete(
   file_id : String,
   comment_id : String,
   reply_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let path = "/" +
     "files" +
     "/" +
@@ -2261,7 +2344,12 @@ pub async fn DriveService::replies_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.replies.get
@@ -2378,9 +2466,9 @@ pub async fn DriveService::replies_update(
   file_id : String,
   comment_id : String,
   reply_id : String,
+  request : Reply,
 ) -> Reply raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2424,7 +2512,7 @@ pub async fn DriveService::revisions_delete(
   self : DriveService,
   file_id : String,
   revision_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let path = "/" +
     "files" +
     "/" +
@@ -2441,7 +2529,12 @@ pub async fn DriveService::revisions_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.revisions.get
@@ -2537,9 +2630,9 @@ pub async fn DriveService::revisions_update(
   self : DriveService,
   file_id : String,
   revision_id : String,
+  request : Revision,
 ) -> Revision raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2577,6 +2670,7 @@ pub async fn DriveService::revisions_update(
 /// Deprecated: Use `drives.create` instead.
 pub async fn DriveService::teamdrives_create(
   self : DriveService,
+  request : TeamDrive,
   request_id? : String? = None,
 ) -> TeamDrive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2585,8 +2679,7 @@ pub async fn DriveService::teamdrives_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "teamdrives"
@@ -2622,7 +2715,7 @@ pub async fn DriveService::teamdrives_create(
 pub async fn DriveService::teamdrives_delete(
   self : DriveService,
   team_drive_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let path = "/" + "teamdrives" + "/" + team_drive_id
   let url = self.base_url + path
   let req = @http.HttpRequest::new(url, @http.HttpMethod::DELETE, {})
@@ -2632,7 +2725,12 @@ pub async fn DriveService::teamdrives_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| drive.teamdrives.get
@@ -2730,6 +2828,7 @@ pub async fn DriveService::teamdrives_list(
 pub async fn DriveService::teamdrives_update(
   self : DriveService,
   team_drive_id : String,
+  request : TeamDrive,
   use_domain_admin_access? : Bool? = None,
 ) -> TeamDrive raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2739,8 +2838,7 @@ pub async fn DriveService::teamdrives_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "teamdrives" + "/" + team_drive_id

@@ -9,8 +9,11 @@ pub struct PubsubService {
 }
 
 ///|
-pub fn PubsubService::new(client : @core.GoogleClient) -> PubsubService {
-  PubsubService::{ base_url: "https://pubsub.googleapis.com", client }
+pub fn PubsubService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://pubsub.googleapis.com",
+) -> PubsubService {
+  PubsubService::{ base_url, client }
 }
 
 ///| pubsub.projects.schemas.commit
@@ -20,9 +23,9 @@ pub fn PubsubService::new(client : @core.GoogleClient) -> PubsubService {
 pub async fn PubsubService::projects_schemas_commit(
   self : PubsubService,
   name : String,
+  request : CommitSchemaRequest,
 ) -> Schema raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":commit"
@@ -54,6 +57,7 @@ pub async fn PubsubService::projects_schemas_commit(
 pub async fn PubsubService::projects_schemas_create(
   self : PubsubService,
   parent : String,
+  request : Schema,
   schema_id? : String? = None,
 ) -> Schema raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -62,8 +66,7 @@ pub async fn PubsubService::projects_schemas_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "schemas"
@@ -324,9 +327,9 @@ pub async fn PubsubService::projects_schemas_list_revisions(
 pub async fn PubsubService::projects_schemas_rollback(
   self : PubsubService,
   name : String,
+  request : RollbackSchemaRequest,
 ) -> Schema raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name + "/" + ":rollback"
@@ -358,9 +361,9 @@ pub async fn PubsubService::projects_schemas_rollback(
 pub async fn PubsubService::projects_schemas_set_iam_policy(
   self : PubsubService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":setIamPolicy"
@@ -392,9 +395,9 @@ pub async fn PubsubService::projects_schemas_set_iam_policy(
 pub async fn PubsubService::projects_schemas_test_iam_permissions(
   self : PubsubService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":testIamPermissions"
@@ -426,9 +429,9 @@ pub async fn PubsubService::projects_schemas_test_iam_permissions(
 pub async fn PubsubService::projects_schemas_validate(
   self : PubsubService,
   parent : String,
+  request : ValidateSchemaRequest,
 ) -> ValidateSchemaResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "schemas:validate"
@@ -460,9 +463,9 @@ pub async fn PubsubService::projects_schemas_validate(
 pub async fn PubsubService::projects_schemas_validate_message(
   self : PubsubService,
   parent : String,
+  request : ValidateMessageRequest,
 ) -> ValidateMessageResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + parent + "/" + "schemas:validateMessage"
@@ -494,9 +497,9 @@ pub async fn PubsubService::projects_schemas_validate_message(
 pub async fn PubsubService::projects_snapshots_create(
   self : PubsubService,
   name : String,
+  request : CreateSnapshotRequest,
 ) -> Snapshot raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -655,9 +658,9 @@ pub async fn PubsubService::projects_snapshots_list(
 pub async fn PubsubService::projects_snapshots_patch(
   self : PubsubService,
   name : String,
+  request : UpdateSnapshotRequest,
 ) -> Snapshot raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -689,9 +692,9 @@ pub async fn PubsubService::projects_snapshots_patch(
 pub async fn PubsubService::projects_snapshots_set_iam_policy(
   self : PubsubService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":setIamPolicy"
@@ -723,9 +726,9 @@ pub async fn PubsubService::projects_snapshots_set_iam_policy(
 pub async fn PubsubService::projects_snapshots_test_iam_permissions(
   self : PubsubService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":testIamPermissions"
@@ -757,9 +760,9 @@ pub async fn PubsubService::projects_snapshots_test_iam_permissions(
 pub async fn PubsubService::projects_subscriptions_acknowledge(
   self : PubsubService,
   subscription : String,
+  request : AcknowledgeRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":acknowledge"
@@ -791,9 +794,9 @@ pub async fn PubsubService::projects_subscriptions_acknowledge(
 pub async fn PubsubService::projects_subscriptions_create(
   self : PubsubService,
   name : String,
+  request : Subscription,
 ) -> Subscription raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -986,9 +989,9 @@ pub async fn PubsubService::projects_subscriptions_list(
 pub async fn PubsubService::projects_subscriptions_modify_ack_deadline(
   self : PubsubService,
   subscription : String,
+  request : ModifyAckDeadlineRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":modifyAckDeadline"
@@ -1020,9 +1023,9 @@ pub async fn PubsubService::projects_subscriptions_modify_ack_deadline(
 pub async fn PubsubService::projects_subscriptions_modify_push_config(
   self : PubsubService,
   subscription : String,
+  request : ModifyPushConfigRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":modifyPushConfig"
@@ -1054,9 +1057,9 @@ pub async fn PubsubService::projects_subscriptions_modify_push_config(
 pub async fn PubsubService::projects_subscriptions_patch(
   self : PubsubService,
   name : String,
+  request : UpdateSubscriptionRequest,
 ) -> Subscription raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -1088,9 +1091,9 @@ pub async fn PubsubService::projects_subscriptions_patch(
 pub async fn PubsubService::projects_subscriptions_pull(
   self : PubsubService,
   subscription : String,
+  request : PullRequest,
 ) -> PullResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":pull"
@@ -1122,9 +1125,9 @@ pub async fn PubsubService::projects_subscriptions_pull(
 pub async fn PubsubService::projects_subscriptions_seek(
   self : PubsubService,
   subscription : String,
+  request : SeekRequest,
 ) -> SeekResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + subscription + "/" + ":seek"
@@ -1156,9 +1159,9 @@ pub async fn PubsubService::projects_subscriptions_seek(
 pub async fn PubsubService::projects_subscriptions_set_iam_policy(
   self : PubsubService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":setIamPolicy"
@@ -1190,9 +1193,9 @@ pub async fn PubsubService::projects_subscriptions_set_iam_policy(
 pub async fn PubsubService::projects_subscriptions_test_iam_permissions(
   self : PubsubService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":testIamPermissions"
@@ -1224,9 +1227,9 @@ pub async fn PubsubService::projects_subscriptions_test_iam_permissions(
 pub async fn PubsubService::projects_topics_create(
   self : PubsubService,
   name : String,
+  request : Topic,
 ) -> Topic raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -1385,9 +1388,9 @@ pub async fn PubsubService::projects_topics_list(
 pub async fn PubsubService::projects_topics_patch(
   self : PubsubService,
   name : String,
+  request : UpdateTopicRequest,
 ) -> Topic raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + name
@@ -1419,9 +1422,9 @@ pub async fn PubsubService::projects_topics_patch(
 pub async fn PubsubService::projects_topics_publish(
   self : PubsubService,
   topic : String,
+  request : PublishRequest,
 ) -> PublishResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + topic + "/" + ":publish"
@@ -1453,9 +1456,9 @@ pub async fn PubsubService::projects_topics_publish(
 pub async fn PubsubService::projects_topics_set_iam_policy(
   self : PubsubService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":setIamPolicy"
@@ -1487,9 +1490,9 @@ pub async fn PubsubService::projects_topics_set_iam_policy(
 pub async fn PubsubService::projects_topics_test_iam_permissions(
   self : PubsubService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v1" + "/" + resource + "/" + ":testIamPermissions"

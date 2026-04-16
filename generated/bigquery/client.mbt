@@ -9,11 +9,11 @@ pub struct BigqueryService {
 }
 
 ///|
-pub fn BigqueryService::new(client : @core.GoogleClient) -> BigqueryService {
-  BigqueryService::{
-    base_url: "https://bigquery.googleapis.com/bigquery/v2",
-    client,
-  }
+pub fn BigqueryService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://bigquery.googleapis.com/bigquery/v2",
+) -> BigqueryService {
+  BigqueryService::{ base_url, client }
 }
 
 ///| bigquery.datasets.delete
@@ -25,7 +25,7 @@ pub async fn BigqueryService::datasets_delete(
   project_id : String,
   dataset_id : String,
   delete_contents? : Bool? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match delete_contents {
     Some(v) => qp.push(("deleteContents", if v { "true" } else { "false" }))
@@ -52,7 +52,12 @@ pub async fn BigqueryService::datasets_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| bigquery.datasets.get
@@ -111,6 +116,7 @@ pub async fn BigqueryService::datasets_get(
 pub async fn BigqueryService::datasets_insert(
   self : BigqueryService,
   project_id : String,
+  request : Dataset,
   access_policy_version? : Int? = None,
 ) -> Dataset raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -119,8 +125,7 @@ pub async fn BigqueryService::datasets_insert(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "projects" + "/" + project_id + "/" + "datasets"
@@ -208,6 +213,7 @@ pub async fn BigqueryService::datasets_patch(
   self : BigqueryService,
   project_id : String,
   dataset_id : String,
+  request : Dataset,
   access_policy_version? : Int? = None,
   update_mode? : String? = None,
 ) -> Dataset raise @http.HttpError {
@@ -221,8 +227,7 @@ pub async fn BigqueryService::datasets_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -266,9 +271,9 @@ pub async fn BigqueryService::datasets_undelete(
   self : BigqueryService,
   project_id : String,
   dataset_id : String,
+  request : UndeleteDatasetRequest,
 ) -> Dataset raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -310,6 +315,7 @@ pub async fn BigqueryService::datasets_update(
   self : BigqueryService,
   project_id : String,
   dataset_id : String,
+  request : Dataset,
   access_policy_version? : Int? = None,
   update_mode? : String? = None,
 ) -> Dataset raise @http.HttpError {
@@ -323,8 +329,7 @@ pub async fn BigqueryService::datasets_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -424,7 +429,7 @@ pub async fn BigqueryService::jobs_delete(
   project_id : String,
   job_id : String,
   location? : String? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match location {
     Some(v) => qp.push(("location", url_encode(v)))
@@ -453,7 +458,12 @@ pub async fn BigqueryService::jobs_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| bigquery.jobs.get
@@ -577,9 +587,9 @@ pub async fn BigqueryService::jobs_get_query_results(
 pub async fn BigqueryService::jobs_insert(
   self : BigqueryService,
   project_id : String,
+  request : Job,
 ) -> Job raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "projects" + "/" + project_id + "/" + "jobs"
@@ -618,7 +628,7 @@ pub async fn BigqueryService::jobs_list(
   page_token? : String? = None,
   parent_job_id? : String? = None,
   projection? : String? = None,
-  state_filter? : String? = None,
+  state_filter? : Array[String]? = None,
 ) -> JobList raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match all_users {
@@ -650,7 +660,10 @@ pub async fn BigqueryService::jobs_list(
     None => ()
   }
   match state_filter {
-    Some(v) => qp.push(("stateFilter", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("stateFilter", url_encode(v)))
+      }
     None => ()
   }
   let qs = build_query_string(qp)
@@ -682,9 +695,9 @@ pub async fn BigqueryService::jobs_list(
 pub async fn BigqueryService::jobs_query(
   self : BigqueryService,
   project_id : String,
+  request : QueryRequest,
 ) -> QueryResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "projects" + "/" + project_id + "/" + "queries"
@@ -718,7 +731,7 @@ pub async fn BigqueryService::models_delete(
   project_id : String,
   dataset_id : String,
   model_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let path = "/" +
     "projects" +
     "/" +
@@ -739,7 +752,12 @@ pub async fn BigqueryService::models_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| bigquery.models.get
@@ -840,9 +858,9 @@ pub async fn BigqueryService::models_patch(
   project_id : String,
   dataset_id : String,
   model_id : String,
+  request : Model,
 ) -> Model raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -952,7 +970,7 @@ pub async fn BigqueryService::routines_delete(
   project_id : String,
   dataset_id : String,
   routine_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let path = "/" +
     "projects" +
     "/" +
@@ -973,7 +991,12 @@ pub async fn BigqueryService::routines_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| bigquery.routines.get
@@ -1032,9 +1055,9 @@ pub async fn BigqueryService::routines_get(
 pub async fn BigqueryService::routines_get_iam_policy(
   self : BigqueryService,
   resource : String,
+  request : GetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + resource + "/" + ":getIamPolicy"
@@ -1067,9 +1090,9 @@ pub async fn BigqueryService::routines_insert(
   self : BigqueryService,
   project_id : String,
   dataset_id : String,
+  request : Routine,
 ) -> Routine raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -1171,9 +1194,9 @@ pub async fn BigqueryService::routines_list(
 pub async fn BigqueryService::routines_set_iam_policy(
   self : BigqueryService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + resource + "/" + ":setIamPolicy"
@@ -1205,9 +1228,9 @@ pub async fn BigqueryService::routines_set_iam_policy(
 pub async fn BigqueryService::routines_test_iam_permissions(
   self : BigqueryService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + resource + "/" + ":testIamPermissions"
@@ -1241,9 +1264,9 @@ pub async fn BigqueryService::routines_update(
   project_id : String,
   dataset_id : String,
   routine_id : String,
+  request : Routine,
 ) -> Routine raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -1288,9 +1311,9 @@ pub async fn BigqueryService::row_access_policies_batch_delete(
   project_id : String,
   dataset_id : String,
   table_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  request : BatchDeleteRowAccessPoliciesRequest,
+) -> Json raise @http.HttpError {
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -1320,7 +1343,12 @@ pub async fn BigqueryService::row_access_policies_batch_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| bigquery.rowAccessPolicies.delete
@@ -1334,7 +1362,7 @@ pub async fn BigqueryService::row_access_policies_delete(
   table_id : String,
   policy_id : String,
   force? : Bool? = None,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
   match force {
     Some(v) => qp.push(("force", if v { "true" } else { "false" }))
@@ -1369,7 +1397,12 @@ pub async fn BigqueryService::row_access_policies_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| bigquery.rowAccessPolicies.get
@@ -1422,9 +1455,9 @@ pub async fn BigqueryService::row_access_policies_get(
 pub async fn BigqueryService::row_access_policies_get_iam_policy(
   self : BigqueryService,
   resource : String,
+  request : GetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + resource + "/" + ":getIamPolicy"
@@ -1458,9 +1491,9 @@ pub async fn BigqueryService::row_access_policies_insert(
   project_id : String,
   dataset_id : String,
   table_id : String,
+  request : RowAccessPolicy,
 ) -> RowAccessPolicy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -1561,9 +1594,9 @@ pub async fn BigqueryService::row_access_policies_list(
 pub async fn BigqueryService::row_access_policies_test_iam_permissions(
   self : BigqueryService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + resource + "/" + ":testIamPermissions"
@@ -1598,9 +1631,9 @@ pub async fn BigqueryService::row_access_policies_update(
   dataset_id : String,
   table_id : String,
   policy_id : String,
+  request : RowAccessPolicy,
 ) -> RowAccessPolicy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -1649,9 +1682,9 @@ pub async fn BigqueryService::tabledata_insert_all(
   project_id : String,
   dataset_id : String,
   table_id : String,
+  request : TableDataInsertAllRequest,
 ) -> TableDataInsertAllResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -1777,7 +1810,7 @@ pub async fn BigqueryService::tables_delete(
   project_id : String,
   dataset_id : String,
   table_id : String,
-) -> @http.HttpResponse raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let path = "/" +
     "projects" +
     "/" +
@@ -1798,7 +1831,12 @@ pub async fn BigqueryService::tables_delete(
       "HTTP " + resp.status_code.to_string() + ": " + resp.body,
     )
   }
-  resp
+  let json = @json.parse(resp.body) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
+  @json.from_json(json) catch {
+    e => raise @http.HttpError::network_message(e.to_string())
+  }
 }
 
 ///| bigquery.tables.get
@@ -1862,9 +1900,9 @@ pub async fn BigqueryService::tables_get(
 pub async fn BigqueryService::tables_get_iam_policy(
   self : BigqueryService,
   resource : String,
+  request : GetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + resource + "/" + ":getIamPolicy"
@@ -1897,9 +1935,9 @@ pub async fn BigqueryService::tables_insert(
   self : BigqueryService,
   project_id : String,
   dataset_id : String,
+  request : Table,
 ) -> Table raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -1993,6 +2031,7 @@ pub async fn BigqueryService::tables_patch(
   project_id : String,
   dataset_id : String,
   table_id : String,
+  request : Table,
   autodetect_schema? : Bool? = None,
 ) -> Table raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2001,8 +2040,7 @@ pub async fn BigqueryService::tables_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +
@@ -2049,9 +2087,9 @@ pub async fn BigqueryService::tables_patch(
 pub async fn BigqueryService::tables_set_iam_policy(
   self : BigqueryService,
   resource : String,
+  request : SetIamPolicyRequest,
 ) -> Policy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + resource + "/" + ":setIamPolicy"
@@ -2083,9 +2121,9 @@ pub async fn BigqueryService::tables_set_iam_policy(
 pub async fn BigqueryService::tables_test_iam_permissions(
   self : BigqueryService,
   resource : String,
+  request : TestIamPermissionsRequest,
 ) -> TestIamPermissionsResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + resource + "/" + ":testIamPermissions"
@@ -2119,6 +2157,7 @@ pub async fn BigqueryService::tables_update(
   project_id : String,
   dataset_id : String,
   table_id : String,
+  request : Table,
   autodetect_schema? : Bool? = None,
 ) -> Table raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2127,8 +2166,7 @@ pub async fn BigqueryService::tables_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" +

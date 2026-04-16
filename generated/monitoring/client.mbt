@@ -9,8 +9,11 @@ pub struct MonitoringService {
 }
 
 ///|
-pub fn MonitoringService::new(client : @core.GoogleClient) -> MonitoringService {
-  MonitoringService::{ base_url: "https://monitoring.googleapis.com", client }
+pub fn MonitoringService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://monitoring.googleapis.com",
+) -> MonitoringService {
+  MonitoringService::{ base_url, client }
 }
 
 ///| monitoring.folders.timeSeries.list
@@ -22,7 +25,7 @@ pub async fn MonitoringService::folders_time_series_list(
   name : String,
   aggregation_alignment_period? : String? = None,
   aggregation_cross_series_reducer? : String? = None,
-  aggregation_group_by_fields? : String? = None,
+  aggregation_group_by_fields? : Array[String]? = None,
   aggregation_per_series_aligner? : String? = None,
   filter? : String? = None,
   interval_end_time? : String? = None,
@@ -32,7 +35,7 @@ pub async fn MonitoringService::folders_time_series_list(
   page_token? : String? = None,
   secondary_aggregation_alignment_period? : String? = None,
   secondary_aggregation_cross_series_reducer? : String? = None,
-  secondary_aggregation_group_by_fields? : String? = None,
+  secondary_aggregation_group_by_fields? : Array[String]? = None,
   secondary_aggregation_per_series_aligner? : String? = None,
   view? : String? = None,
 ) -> ListTimeSeriesResponse raise @http.HttpError {
@@ -46,7 +49,10 @@ pub async fn MonitoringService::folders_time_series_list(
     None => ()
   }
   match aggregation_group_by_fields {
-    Some(v) => qp.push(("aggregation.groupByFields", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("aggregation.groupByFields", url_encode(v)))
+      }
     None => ()
   }
   match aggregation_per_series_aligner {
@@ -87,7 +93,10 @@ pub async fn MonitoringService::folders_time_series_list(
     None => ()
   }
   match secondary_aggregation_group_by_fields {
-    Some(v) => qp.push(("secondaryAggregation.groupByFields", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("secondaryAggregation.groupByFields", url_encode(v)))
+      }
     None => ()
   }
   match secondary_aggregation_per_series_aligner {
@@ -129,7 +138,7 @@ pub async fn MonitoringService::organizations_time_series_list(
   name : String,
   aggregation_alignment_period? : String? = None,
   aggregation_cross_series_reducer? : String? = None,
-  aggregation_group_by_fields? : String? = None,
+  aggregation_group_by_fields? : Array[String]? = None,
   aggregation_per_series_aligner? : String? = None,
   filter? : String? = None,
   interval_end_time? : String? = None,
@@ -139,7 +148,7 @@ pub async fn MonitoringService::organizations_time_series_list(
   page_token? : String? = None,
   secondary_aggregation_alignment_period? : String? = None,
   secondary_aggregation_cross_series_reducer? : String? = None,
-  secondary_aggregation_group_by_fields? : String? = None,
+  secondary_aggregation_group_by_fields? : Array[String]? = None,
   secondary_aggregation_per_series_aligner? : String? = None,
   view? : String? = None,
 ) -> ListTimeSeriesResponse raise @http.HttpError {
@@ -153,7 +162,10 @@ pub async fn MonitoringService::organizations_time_series_list(
     None => ()
   }
   match aggregation_group_by_fields {
-    Some(v) => qp.push(("aggregation.groupByFields", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("aggregation.groupByFields", url_encode(v)))
+      }
     None => ()
   }
   match aggregation_per_series_aligner {
@@ -194,7 +206,10 @@ pub async fn MonitoringService::organizations_time_series_list(
     None => ()
   }
   match secondary_aggregation_group_by_fields {
-    Some(v) => qp.push(("secondaryAggregation.groupByFields", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("secondaryAggregation.groupByFields", url_encode(v)))
+      }
     None => ()
   }
   match secondary_aggregation_per_series_aligner {
@@ -234,9 +249,9 @@ pub async fn MonitoringService::organizations_time_series_list(
 pub async fn MonitoringService::projects_alert_policies_create(
   self : MonitoringService,
   name : String,
+  request : AlertPolicy,
 ) -> AlertPolicy raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "alertPolicies"
@@ -369,6 +384,7 @@ pub async fn MonitoringService::projects_alert_policies_list(
 pub async fn MonitoringService::projects_alert_policies_patch(
   self : MonitoringService,
   name : String,
+  request : AlertPolicy,
   update_mask? : String? = None,
 ) -> AlertPolicy raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -377,8 +393,7 @@ pub async fn MonitoringService::projects_alert_policies_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
@@ -490,9 +505,9 @@ pub async fn MonitoringService::projects_alerts_list(
 pub async fn MonitoringService::projects_collectd_time_series_create(
   self : MonitoringService,
   name : String,
+  request : CreateCollectdTimeSeriesRequest,
 ) -> CreateCollectdTimeSeriesResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "collectdTimeSeries"
@@ -524,6 +539,7 @@ pub async fn MonitoringService::projects_collectd_time_series_create(
 pub async fn MonitoringService::projects_groups_create(
   self : MonitoringService,
   name : String,
+  request : Group,
   validate_only? : Bool? = None,
 ) -> Group raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -532,8 +548,7 @@ pub async fn MonitoringService::projects_groups_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "groups"
@@ -686,6 +701,7 @@ pub async fn MonitoringService::projects_groups_list(
 pub async fn MonitoringService::projects_groups_update(
   self : MonitoringService,
   name : String,
+  request : Group,
   validate_only? : Bool? = None,
 ) -> Group raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -694,8 +710,7 @@ pub async fn MonitoringService::projects_groups_update(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
@@ -787,9 +802,9 @@ pub async fn MonitoringService::projects_groups_members_list(
 pub async fn MonitoringService::projects_metric_descriptors_create(
   self : MonitoringService,
   name : String,
+  request : MetricDescriptor,
 ) -> MetricDescriptor raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "metricDescriptors"
@@ -1059,9 +1074,9 @@ pub async fn MonitoringService::projects_notification_channel_descriptors_list(
 pub async fn MonitoringService::projects_notification_channels_create(
   self : MonitoringService,
   name : String,
+  request : NotificationChannel,
 ) -> NotificationChannel raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "notificationChannels"
@@ -1154,9 +1169,9 @@ pub async fn MonitoringService::projects_notification_channels_get(
 pub async fn MonitoringService::projects_notification_channels_get_verification_code(
   self : MonitoringService,
   name : String,
+  request : GetNotificationChannelVerificationCodeRequest,
 ) -> GetNotificationChannelVerificationCodeResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + ":getVerificationCode"
@@ -1239,6 +1254,7 @@ pub async fn MonitoringService::projects_notification_channels_list(
 pub async fn MonitoringService::projects_notification_channels_patch(
   self : MonitoringService,
   name : String,
+  request : NotificationChannel,
   update_mask? : String? = None,
 ) -> NotificationChannel raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1247,8 +1263,7 @@ pub async fn MonitoringService::projects_notification_channels_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
@@ -1284,9 +1299,9 @@ pub async fn MonitoringService::projects_notification_channels_patch(
 pub async fn MonitoringService::projects_notification_channels_send_verification_code(
   self : MonitoringService,
   name : String,
+  request : SendNotificationChannelVerificationCodeRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + ":sendVerificationCode"
@@ -1318,9 +1333,9 @@ pub async fn MonitoringService::projects_notification_channels_send_verification
 pub async fn MonitoringService::projects_notification_channels_verify(
   self : MonitoringService,
   name : String,
+  request : VerifyNotificationChannelRequest,
 ) -> NotificationChannel raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + ":verify"
@@ -1352,9 +1367,9 @@ pub async fn MonitoringService::projects_notification_channels_verify(
 pub async fn MonitoringService::projects_snoozes_create(
   self : MonitoringService,
   parent : String,
+  request : Snooze,
 ) -> Snooze raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + parent + "/" + "snoozes"
@@ -1457,6 +1472,7 @@ pub async fn MonitoringService::projects_snoozes_list(
 pub async fn MonitoringService::projects_snoozes_patch(
   self : MonitoringService,
   name : String,
+  request : Snooze,
   update_mask? : String? = None,
 ) -> Snooze raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1465,8 +1481,7 @@ pub async fn MonitoringService::projects_snoozes_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
@@ -1502,9 +1517,9 @@ pub async fn MonitoringService::projects_snoozes_patch(
 pub async fn MonitoringService::projects_time_series_create(
   self : MonitoringService,
   name : String,
+  request : CreateTimeSeriesRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "timeSeries"
@@ -1536,9 +1551,9 @@ pub async fn MonitoringService::projects_time_series_create(
 pub async fn MonitoringService::projects_time_series_create_service(
   self : MonitoringService,
   name : String,
+  request : CreateTimeSeriesRequest,
 ) -> Empty raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "timeSeries:createService"
@@ -1572,7 +1587,7 @@ pub async fn MonitoringService::projects_time_series_list(
   name : String,
   aggregation_alignment_period? : String? = None,
   aggregation_cross_series_reducer? : String? = None,
-  aggregation_group_by_fields? : String? = None,
+  aggregation_group_by_fields? : Array[String]? = None,
   aggregation_per_series_aligner? : String? = None,
   filter? : String? = None,
   interval_end_time? : String? = None,
@@ -1582,7 +1597,7 @@ pub async fn MonitoringService::projects_time_series_list(
   page_token? : String? = None,
   secondary_aggregation_alignment_period? : String? = None,
   secondary_aggregation_cross_series_reducer? : String? = None,
-  secondary_aggregation_group_by_fields? : String? = None,
+  secondary_aggregation_group_by_fields? : Array[String]? = None,
   secondary_aggregation_per_series_aligner? : String? = None,
   view? : String? = None,
 ) -> ListTimeSeriesResponse raise @http.HttpError {
@@ -1596,7 +1611,10 @@ pub async fn MonitoringService::projects_time_series_list(
     None => ()
   }
   match aggregation_group_by_fields {
-    Some(v) => qp.push(("aggregation.groupByFields", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("aggregation.groupByFields", url_encode(v)))
+      }
     None => ()
   }
   match aggregation_per_series_aligner {
@@ -1637,7 +1655,10 @@ pub async fn MonitoringService::projects_time_series_list(
     None => ()
   }
   match secondary_aggregation_group_by_fields {
-    Some(v) => qp.push(("secondaryAggregation.groupByFields", url_encode(v)))
+    Some(vs) =>
+      for v in vs {
+        qp.push(("secondaryAggregation.groupByFields", url_encode(v)))
+      }
     None => ()
   }
   match secondary_aggregation_per_series_aligner {
@@ -1677,9 +1698,9 @@ pub async fn MonitoringService::projects_time_series_list(
 pub async fn MonitoringService::projects_time_series_query(
   self : MonitoringService,
   name : String,
+  request : QueryTimeSeriesRequest,
 ) -> QueryTimeSeriesResponse raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name + "/" + "timeSeries:query"
@@ -1711,9 +1732,9 @@ pub async fn MonitoringService::projects_time_series_query(
 pub async fn MonitoringService::projects_uptime_check_configs_create(
   self : MonitoringService,
   parent : String,
+  request : UptimeCheckConfig,
 ) -> UptimeCheckConfig raise @http.HttpError {
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + parent + "/" + "uptimeCheckConfigs"
@@ -1841,6 +1862,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_list(
 pub async fn MonitoringService::projects_uptime_check_configs_patch(
   self : MonitoringService,
   name : String,
+  request : UptimeCheckConfig,
   update_mask? : String? = None,
 ) -> UptimeCheckConfig raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1849,8 +1871,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
@@ -1886,6 +1907,7 @@ pub async fn MonitoringService::projects_uptime_check_configs_patch(
 pub async fn MonitoringService::services_create(
   self : MonitoringService,
   parent : String,
+  request : Service,
   service_id? : String? = None,
 ) -> Service raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -1894,8 +1916,7 @@ pub async fn MonitoringService::services_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + parent + "/" + "services"
@@ -2027,6 +2048,7 @@ pub async fn MonitoringService::services_list(
 pub async fn MonitoringService::services_patch(
   self : MonitoringService,
   name : String,
+  request : Service,
   update_mask? : String? = None,
 ) -> Service raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2035,8 +2057,7 @@ pub async fn MonitoringService::services_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name
@@ -2072,6 +2093,7 @@ pub async fn MonitoringService::services_patch(
 pub async fn MonitoringService::services_service_level_objectives_create(
   self : MonitoringService,
   parent : String,
+  request : ServiceLevelObjective,
   service_level_objective_id? : String? = None,
 ) -> ServiceLevelObjective raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2080,8 +2102,7 @@ pub async fn MonitoringService::services_service_level_objectives_create(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + parent + "/" + "serviceLevelObjectives"
@@ -2229,6 +2250,7 @@ pub async fn MonitoringService::services_service_level_objectives_list(
 pub async fn MonitoringService::services_service_level_objectives_patch(
   self : MonitoringService,
   name : String,
+  request : ServiceLevelObjective,
   update_mask? : String? = None,
 ) -> ServiceLevelObjective raise @http.HttpError {
   let qp : Array[(String, String)] = Array::new()
@@ -2237,8 +2259,7 @@ pub async fn MonitoringService::services_service_level_objectives_patch(
     None => ()
   }
   let qs = build_query_string(qp)
-  let meta : Map[String, Json] = Map::new()
-  let body = Json::object(meta).stringify()
+  let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
   let path = "/" + "v3" + "/" + name

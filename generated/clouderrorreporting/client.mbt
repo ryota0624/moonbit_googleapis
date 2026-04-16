@@ -11,11 +11,9 @@ pub struct ClouderrorreportingService {
 ///|
 pub fn ClouderrorreportingService::new(
   client : @core.GoogleClient,
+  base_url? : String = "https://clouderrorreporting.googleapis.com",
 ) -> ClouderrorreportingService {
-  ClouderrorreportingService::{
-    base_url: "https://clouderrorreporting.googleapis.com",
-    client,
-  }
+  ClouderrorreportingService::{ base_url, client }
 }
 
 ///| clouderrorreporting.projects.deleteEvents

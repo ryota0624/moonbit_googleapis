@@ -1,145 +1,97 @@
 ///|
-/// Schema Label
-pub(all) struct Label {
-  revision_id : String?
-  id : String?
-  fields : Json?
+/// Schema LabelList
+pub(all) struct LabelList {
+  next_page_token : String?
   kind : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema DownloadRestriction
-pub(all) struct DownloadRestriction {
-  restricted_for_readers : Bool?
-  restricted_for_writers : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema ModifyLabelsResponse
-pub(all) struct ModifyLabelsResponse {
-  modified_labels : Array[Label]?
-  kind : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema LabelField
-pub(all) struct LabelField {
-  selection : Array[String]?
-  text : Array[String]?
-  user : Array[User]?
-  kind : String?
-  value_type : String?
-  date_string : Array[String]?
-  id : String?
-  integer : Array[String]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+  labels : Array[Label]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema LabelFieldModification
 pub(all) struct LabelFieldModification {
+  field_id : String?
+  set_integer_values : Array[String]?
   unset_values : Bool?
-  set_selection_values : Array[String]?
   kind : String?
   set_date_values : Array[String]?
-  set_integer_values : Array[String]?
-  set_user_values : Array[String]?
-  field_id : String?
   set_text_values : Array[String]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema FileList
-pub(all) struct FileList {
-  next_page_token : String?
-  kind : String?
-  files : Array[File]?
-  incomplete_search : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema AppList
-pub(all) struct AppList {
-  default_app_ids : Array[String]?
-  self_link : String?
-  kind : String?
-  items : Array[App]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema ModifyLabelsRequest
-pub(all) struct ModifyLabelsRequest {
-  label_modifications : Array[LabelModification]?
-  kind : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema Reply
-pub(all) struct Reply {
-  modified_time : String?
-  id : String?
-  action : String?
-  assignee_email_address : String?
-  author : User?
-  content : String?
-  created_time : String?
-  deleted : Bool?
-  html_content : String?
-  kind : String?
-  mentioned_email_addresses : Array[String]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema Channel
-pub(all) struct Channel {
-  payload : Bool?
-  token : String?
-  resource_id : String?
-  kind : String?
-  address : String?
-  id : String?
-  resource_uri : String?
-  expiration : String?
-  type_ : String?
-  params : Json?
+  set_selection_values : Array[String]?
+  set_user_values : Array[String]?
 } derive (
   Eq,
   Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
-/// Schema About
-pub(all) struct About {
-  max_upload_size : String?
-  drive_themes : Array[Json]?
-  team_drive_themes : Array[Json]?
-  can_create_team_drives : Bool?
-  import_formats : Json?
-  folder_color_palette : Array[String]?
-  export_formats : Json?
-  app_installed : Bool?
-  kind : String?
-  max_import_sizes : Json?
-  user : User?
-  storage_quota : Json?
-  can_create_drives : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+/// Schema ResolveAccessProposalRequest
+pub(all) struct ResolveAccessProposalRequest {
+  role : Array[String]?
+  action : String?
+  send_notification : Bool?
+  view : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema TeamDrive
 pub(all) struct TeamDrive {
-  name : String?
-  id : String?
   restrictions : Json?
-  theme_id : String?
-  background_image_link : String?
   color_rgb : String?
+  kind : String?
+  name : String?
+  background_image_link : String?
+  theme_id : String?
+  capabilities : Json?
   created_time : String?
+  id : String?
   org_unit_id : String?
   background_image_file : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema LabelModification
+pub(all) struct LabelModification {
+  label_id : String?
   kind : String?
-  capabilities : Json?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+  field_modifications : Array[LabelFieldModification]?
+  remove_label : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Operation
+pub(all) struct Operation {
+  response : Json?
+  name : String?
+  error : Status?
+  metadata : Json?
+  done : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema TeamDriveList
@@ -147,76 +99,214 @@ pub(all) struct TeamDriveList {
   next_page_token : String?
   kind : String?
   team_drives : Array[TeamDrive]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
-/// Schema AppIcons
-pub(all) struct AppIcons {
-  category : String?
-  size : Int?
-  icon_url : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema Drive
-pub(all) struct Drive {
-  background_image_link : String?
-  color_rgb : String?
-  created_time : String?
-  org_unit_id : String?
-  kind : String?
-  capabilities : Json?
-  background_image_file : Json?
-  name : String?
+/// Schema Channel
+pub(all) struct Channel {
+  expiration : String?
+  params : Json?
   id : String?
-  restrictions : Json?
-  hidden : Bool?
-  theme_id : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema Change
-pub(all) struct Change {
-  file : File?
-  time : String?
-  file_id : String?
+  resource_id : String?
+  resource_uri : String?
+  token : String?
+  address : String?
   type_ : String?
-  drive : Drive?
-  team_drive : TeamDrive?
-  removed : Bool?
-  team_drive_id : String?
-  drive_id : String?
-  change_type : String?
   kind : String?
+  payload : Bool?
 } derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
 )
 
 ///|
-/// Schema LabelList
-pub(all) struct LabelList {
-  next_page_token : String?
+/// Schema Permission
+pub(all) struct Permission {
+  expiration_time : String?
+  domain : String?
+  display_name : String?
+  view : String?
+  inherited_permissions_disabled : Bool?
+  team_drive_permission_details : Array[Json]?
+  photo_link : String?
+  role : String?
+  type_ : String?
   kind : String?
-  labels : Array[Label]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+  email_address : String?
+  id : String?
+  allow_file_discovery : Bool?
+  deleted : Bool?
+  permission_details : Array[Json]?
+  pending_owner : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
+)
 
 ///|
-/// Schema ResolveAccessProposalRequest
-pub(all) struct ResolveAccessProposalRequest {
-  action : String?
-  role : Array[String]?
-  view : String?
-  send_notification : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+/// Schema LabelField
+pub(all) struct LabelField {
+  text : Array[String]?
+  integer : Array[String]?
+  selection : Array[String]?
+  kind : String?
+  id : String?
+  value_type : String?
+  date_string : Array[String]?
+  user : Array[User]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ListAccessProposalsResponse
 pub(all) struct ListAccessProposalsResponse {
   next_page_token : String?
   access_proposals : Array[AccessProposal]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema FileList
+pub(all) struct FileList {
+  next_page_token : String?
+  kind : String?
+  incomplete_search : Bool?
+  files : Array[File]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AccessProposalRoleAndView
+pub(all) struct AccessProposalRoleAndView {
+  role : String?
+  view : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CommentList
+pub(all) struct CommentList {
+  kind : String?
+  next_page_token : String?
+  comments : Array[Comment]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema File
+pub(all) struct File {
+  viewed_by_me_time : String?
+  content_restrictions : Array[ContentRestriction]?
+  has_augmented_permissions : Bool?
+  modified_by_me_time : String?
+  file_extension : String?
+  trashed : Bool?
+  explicitly_trashed : Bool?
+  shared_with_me_time : String?
+  app_properties : Json?
+  sharing_user : User?
+  writers_can_share : Bool?
+  full_file_extension : String?
+  thumbnail_version : String?
+  mime_type : String?
+  inherited_permissions_disabled : Bool?
+  viewed_by_me : Bool?
+  team_drive_id : String?
+  client_encryption_details : ClientEncryptionDetails?
+  permissions : Array[Permission]?
+  sha1_checksum : String?
+  description : String?
+  icon_link : String?
+  copy_requires_writer_permission : Bool?
+  drive_id : String?
+  kind : String?
+  head_revision_id : String?
+  sha256_checksum : String?
+  viewers_can_copy_content : Bool?
+  capabilities : Json?
+  md5_checksum : String?
+  size : String?
+  content_hints : Json?
+  label_info : Json?
+  trashed_time : String?
+  video_media_metadata : Json?
+  folder_color_rgb : String?
+  starred : Bool?
+  properties : Json?
+  trashing_user : User?
+  parents : Array[String]?
+  version : String?
+  modified_time : String?
+  id : String?
+  thumbnail_link : String?
+  spaces : Array[String]?
+  is_app_authorized : Bool?
+  modified_by_me : Bool?
+  name : String?
+  link_share_metadata : Json?
+  owners : Array[User]?
+  resource_key : String?
+  shared : Bool?
+  image_media_metadata : Json?
+  created_time : String?
+  original_filename : String?
+  owned_by_me : Bool?
+  web_content_link : String?
+  has_thumbnail : Bool?
+  permission_ids : Array[String]?
+  download_restrictions : DownloadRestrictionsMetadata?
+  quota_bytes_used : String?
+  shortcut_details : Json?
+  last_modifying_user : User?
+  export_links : Json?
+  web_view_link : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ModifyLabelsRequest
+pub(all) struct ModifyLabelsRequest {
+  kind : String?
+  label_modifications : Array[LabelModification]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema PermissionList
@@ -224,179 +314,54 @@ pub(all) struct PermissionList {
   permissions : Array[Permission]?
   next_page_token : String?
   kind : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
-/// Schema RevisionList
-pub(all) struct RevisionList {
-  revisions : Array[Revision]?
-  next_page_token : String?
-  kind : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema DownloadRestrictionsMetadata
-pub(all) struct DownloadRestrictionsMetadata {
-  item_download_restriction : DownloadRestriction?
-  effective_download_restriction_with_context : DownloadRestriction?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema GeneratedIds
-pub(all) struct GeneratedIds {
-  kind : String?
-  ids : Array[String]?
-  space : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema LabelModification
-pub(all) struct LabelModification {
-  label_id : String?
-  field_modifications : Array[LabelFieldModification]?
-  remove_label : Bool?
-  kind : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema AccessProposalRoleAndView
-pub(all) struct AccessProposalRoleAndView {
-  role : String?
-  view : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema Revision
-pub(all) struct Revision {
-  published_link : String?
-  export_links : Json?
-  id : String?
-  mime_type : String?
-  size : String?
-  last_modifying_user : User?
-  keep_forever : Bool?
-  kind : String?
-  publish_auto : Bool?
-  modified_time : String?
-  md5_checksum : String?
-  original_filename : String?
-  published : Bool?
-  published_outside_domain : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema ApprovalList
-pub(all) struct ApprovalList {
-  kind : String?
-  items : Array[Approval]?
-  next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema ChangeList
-pub(all) struct ChangeList {
-  new_start_page_token : String?
-  changes : Array[Change]?
-  kind : String?
-  next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema Status
-pub(all) struct Status {
-  details : Array[Json]?
-  code : Int?
-  message : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema App
-pub(all) struct App {
-  secondary_mime_types : Array[String]?
-  authorized : Bool?
-  supports_multi_open : Bool?
-  supports_create : Bool?
-  short_description : String?
-  product_url : String?
-  id : String?
-  name : String?
-  long_description : String?
-  kind : String?
-  use_by_default : Bool?
-  product_id : String?
-  open_url_template : String?
-  create_url : String?
-  supports_import : Bool?
-  create_in_folder_template : String?
-  has_drive_wide_scope : Bool?
-  primary_mime_types : Array[String]?
-  secondary_file_extensions : Array[String]?
-  icons : Array[AppIcons]?
-  object_type : String?
-  primary_file_extensions : Array[String]?
-  installed : Bool?
-  supports_offline_create : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+/// Schema ClientEncryptionDetails
+pub(all) struct ClientEncryptionDetails {
+  encryption_state : String?
+  decryption_metadata : DecryptionMetadata?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema ReviewerResponse
 pub(all) struct ReviewerResponse {
+  reviewer : User?
   kind : String?
   response : String?
-  reviewer : User?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
-/// Schema Comment
-pub(all) struct Comment {
-  replies : Array[Reply]?
-  modified_time : String?
-  mentioned_email_addresses : Array[String]?
-  kind : String?
-  quoted_file_content : Json?
-  html_content : String?
-  deleted : Bool?
-  content : String?
-  author : User?
-  assignee_email_address : String?
-  id : String?
-  anchor : String?
-  created_time : String?
-  resolved : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema ReplyList
-pub(all) struct ReplyList {
-  kind : String?
-  replies : Array[Reply]?
-  next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema Approval
-pub(all) struct Approval {
-  status : String?
-  kind : String?
+/// Schema AccessProposal
+pub(all) struct AccessProposal {
+  roles_and_views : Array[AccessProposalRoleAndView]?
   create_time : String?
-  modify_time : String?
-  due_time : String?
-  target_file_id : String?
-  approval_id : String?
-  reviewer_responses : Array[ReviewerResponse]?
-  complete_time : String?
-  initiator : User?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema Operation
-pub(all) struct Operation {
-  response : Json?
-  done : Bool?
-  name : String?
-  metadata : Json?
-  error : Status?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+  recipient_email_address : String?
+  proposal_id : String?
+  requester_email_address : String?
+  request_message : String?
+  file_id : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema DriveList
@@ -404,147 +369,159 @@ pub(all) struct DriveList {
   next_page_token : String?
   kind : String?
   drives : Array[Drive]?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
-/// Schema Permission
-pub(all) struct Permission {
-  allow_file_discovery : Bool?
-  inherited_permissions_disabled : Bool?
-  permission_details : Array[Json]?
-  team_drive_permission_details : Array[Json]?
-  deleted : Bool?
-  pending_owner : Bool?
+/// Schema Status
+pub(all) struct Status {
+  code : Int?
+  message : String?
+  details : Array[Json]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema About
+pub(all) struct About {
+  user : User?
+  import_formats : Json?
   kind : String?
-  photo_link : String?
-  view : String?
+  folder_color_palette : Array[String]?
+  can_create_drives : Bool?
+  max_upload_size : String?
+  max_import_sizes : Json?
+  drive_themes : Array[Json]?
+  storage_quota : Json?
+  app_installed : Bool?
+  team_drive_themes : Array[Json]?
+  export_formats : Json?
+  can_create_team_drives : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Comment
+pub(all) struct Comment {
+  content : String?
+  created_time : String?
+  author : User?
+  quoted_file_content : Json?
+  resolved : Bool?
+  replies : Array[Reply]?
+  assignee_email_address : String?
+  mentioned_email_addresses : Array[String]?
+  kind : String?
+  html_content : String?
+  deleted : Bool?
+  modified_time : String?
   id : String?
+  anchor : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ApprovalList
+pub(all) struct ApprovalList {
+  kind : String?
+  next_page_token : String?
+  items : Array[Approval]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Revision
+pub(all) struct Revision {
+  kind : String?
+  last_modifying_user : User?
+  modified_time : String?
+  id : String?
+  export_links : Json?
+  published : Bool?
+  keep_forever : Bool?
+  published_link : String?
+  published_outside_domain : Bool?
+  publish_auto : Bool?
+  size : String?
+  mime_type : String?
+  md5_checksum : String?
+  original_filename : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Change
+pub(all) struct Change {
+  file : File?
+  removed : Bool?
+  file_id : String?
+  drive : Drive?
+  team_drive_id : String?
+  team_drive : TeamDrive?
+  change_type : String?
+  kind : String?
+  time : String?
   type_ : String?
-  domain : String?
-  email_address : String?
-  role : String?
-  display_name : String?
-  expiration_time : String?
+  drive_id : String?
 } derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
 )
 
 ///|
-/// Schema CommentList
-pub(all) struct CommentList {
+/// Schema Label
+pub(all) struct Label {
+  fields : Json?
+  id : String?
   kind : String?
-  comments : Array[Comment]?
-  next_page_token : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema AccessProposal
-pub(all) struct AccessProposal {
-  create_time : String?
-  file_id : String?
-  request_message : String?
-  proposal_id : String?
-  requester_email_address : String?
-  roles_and_views : Array[AccessProposalRoleAndView]?
-  recipient_email_address : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+  revision_id : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
 
 ///|
 /// Schema User
 pub(all) struct User {
-  permission_id : String?
   me : Bool?
   email_address : String?
+  permission_id : String?
+  photo_link : String?
   display_name : String?
   kind : String?
-  photo_link : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema File
-pub(all) struct File {
-  version : String?
-  content_restrictions : Array[ContentRestriction]?
-  original_filename : String?
-  kind : String?
-  mime_type : String?
-  has_augmented_permissions : Bool?
-  web_view_link : String?
-  shared : Bool?
-  link_share_metadata : Json?
-  label_info : Json?
-  download_restrictions : DownloadRestrictionsMetadata?
-  drive_id : String?
-  viewers_can_copy_content : Bool?
-  thumbnail_link : String?
-  has_thumbnail : Bool?
-  owners : Array[User]?
-  permissions : Array[Permission]?
-  viewed_by_me : Bool?
-  head_revision_id : String?
-  quota_bytes_used : String?
-  spaces : Array[String]?
-  shared_with_me_time : String?
-  export_links : Json?
-  trashing_user : User?
-  resource_key : String?
-  created_time : String?
-  full_file_extension : String?
-  video_media_metadata : Json?
-  web_content_link : String?
-  md5_checksum : String?
-  inherited_permissions_disabled : Bool?
-  starred : Bool?
-  trashed_time : String?
-  modified_by_me_time : String?
-  team_drive_id : String?
-  icon_link : String?
-  file_extension : String?
-  viewed_by_me_time : String?
-  trashed : Bool?
-  app_properties : Json?
-  shortcut_details : Json?
-  thumbnail_version : String?
-  permission_ids : Array[String]?
-  explicitly_trashed : Bool?
-  properties : Json?
-  copy_requires_writer_permission : Bool?
-  sharing_user : User?
-  modified_time : String?
-  capabilities : Json?
-  sha1_checksum : String?
-  owned_by_me : Bool?
-  content_hints : Json?
-  folder_color_rgb : String?
-  sha256_checksum : String?
-  last_modifying_user : User?
-  size : String?
-  name : String?
-  id : String?
-  parents : Array[String]?
-  description : String?
-  modified_by_me : Bool?
-  image_media_metadata : Json?
-  writers_can_share : Bool?
-  is_app_authorized : Bool?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
-
-///|
-/// Schema ContentRestriction
-pub(all) struct ContentRestriction {
-  type_ : String?
-  reason : String?
-  restricting_user : User?
-  restriction_time : String?
-  owner_restricted : Bool?
-  read_only : Bool?
-  system_restricted : Bool?
 } derive (
   Eq,
   Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
 )
 
 ///|
@@ -552,4 +529,271 @@ pub(all) struct ContentRestriction {
 pub(all) struct StartPageToken {
   start_page_token : String?
   kind : String?
-} derive(Eq, Show, FromJson(rename_fields="camelCase"))
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GeneratedIds
+pub(all) struct GeneratedIds {
+  ids : Array[String]?
+  space : String?
+  kind : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema App
+pub(all) struct App {
+  authorized : Bool?
+  use_by_default : Bool?
+  create_in_folder_template : String?
+  name : String?
+  kind : String?
+  open_url_template : String?
+  supports_offline_create : Bool?
+  supports_multi_open : Bool?
+  create_url : String?
+  id : String?
+  has_drive_wide_scope : Bool?
+  object_type : String?
+  secondary_file_extensions : Array[String]?
+  long_description : String?
+  installed : Bool?
+  short_description : String?
+  primary_mime_types : Array[String]?
+  product_id : String?
+  product_url : String?
+  primary_file_extensions : Array[String]?
+  icons : Array[AppIcons]?
+  supports_import : Bool?
+  supports_create : Bool?
+  secondary_mime_types : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Drive
+pub(all) struct Drive {
+  background_image_file : Json?
+  id : String?
+  org_unit_id : String?
+  hidden : Bool?
+  capabilities : Json?
+  created_time : String?
+  name : String?
+  kind : String?
+  background_image_link : String?
+  theme_id : String?
+  restrictions : Json?
+  color_rgb : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DownloadRestriction
+pub(all) struct DownloadRestriction {
+  restricted_for_readers : Bool?
+  restricted_for_writers : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GenerateCseTokenResponse
+pub(all) struct GenerateCseTokenResponse {
+  current_kacls_name : String?
+  file_id : String?
+  current_kacls_id : String?
+  kind : String?
+  jwt : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AppIcons
+pub(all) struct AppIcons {
+  size : Int?
+  category : String?
+  icon_url : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Reply
+pub(all) struct Reply {
+  author : User?
+  created_time : String?
+  action : String?
+  assignee_email_address : String?
+  content : String?
+  deleted : Bool?
+  id : String?
+  modified_time : String?
+  html_content : String?
+  kind : String?
+  mentioned_email_addresses : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ReplyList
+pub(all) struct ReplyList {
+  kind : String?
+  replies : Array[Reply]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AppList
+pub(all) struct AppList {
+  kind : String?
+  items : Array[App]?
+  default_app_ids : Array[String]?
+  self_link : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ContentRestriction
+pub(all) struct ContentRestriction {
+  read_only : Bool?
+  restricting_user : User?
+  restriction_time : String?
+  system_restricted : Bool?
+  reason : String?
+  type_ : String?
+  owner_restricted : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
+)
+
+///|
+/// Schema DecryptionMetadata
+pub(all) struct DecryptionMetadata {
+  kacls_name : String?
+  encryption_resource_key_hash : String?
+  kacls_id : String?
+  key_format : String?
+  jwt : String?
+  wrapped_key : String?
+  aes256_gcm_chunk_size : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Approval
+pub(all) struct Approval {
+  create_time : String?
+  due_time : String?
+  status : String?
+  target_file_id : String?
+  reviewer_responses : Array[ReviewerResponse]?
+  approval_id : String?
+  initiator : User?
+  complete_time : String?
+  kind : String?
+  modify_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DownloadRestrictionsMetadata
+pub(all) struct DownloadRestrictionsMetadata {
+  item_download_restriction : DownloadRestriction?
+  effective_download_restriction_with_context : DownloadRestriction?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema RevisionList
+pub(all) struct RevisionList {
+  revisions : Array[Revision]?
+  next_page_token : String?
+  kind : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ChangeList
+pub(all) struct ChangeList {
+  changes : Array[Change]?
+  new_start_page_token : String?
+  kind : String?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ModifyLabelsResponse
+pub(all) struct ModifyLabelsResponse {
+  kind : String?
+  modified_labels : Array[Label]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)

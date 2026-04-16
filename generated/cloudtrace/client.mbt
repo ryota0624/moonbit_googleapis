@@ -9,8 +9,11 @@ pub struct CloudtraceService {
 }
 
 ///|
-pub fn CloudtraceService::new(client : @core.GoogleClient) -> CloudtraceService {
-  CloudtraceService::{ base_url: "https://cloudtrace.googleapis.com", client }
+pub fn CloudtraceService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://cloudtrace.googleapis.com",
+) -> CloudtraceService {
+  CloudtraceService::{ base_url, client }
 }
 
 ///| cloudtrace.projects.traces.batchWrite

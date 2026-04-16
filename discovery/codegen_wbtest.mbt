@@ -213,9 +213,9 @@ test "generate_types and generate_client snapshot" {
       #|}
       #|
       #|///|
-      #|pub fn DriveService::new(client : @core.GoogleClient) -> DriveService {
+      #|pub fn DriveService::new(client : @core.GoogleClient, base_url~ : String = "https://www.googleapis.com") -> DriveService {
       #|  DriveService::{
-      #|    base_url: "https://www.googleapis.com",
+      #|    base_url,
       #|    client,
       #|  }
       #|}
@@ -383,6 +383,7 @@ test "generate_types and generate_client snapshot" {
       #|}
       #|
       #|
+
     ),
   )
 }

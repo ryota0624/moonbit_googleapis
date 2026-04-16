@@ -13,9 +13,9 @@ import {
 
 // Types and methods
 pub(all) struct AppHub {
-  application : AppHubApplication?
   service : AppHubService?
   workload : AppHubWorkload?
+  application : AppHubApplication?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AppHubApplication {
@@ -26,14 +26,14 @@ pub(all) struct AppHubApplication {
 
 pub(all) struct AppHubService {
   id : String?
-  environment_type : String?
   criticality_type : String?
+  environment_type : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AppHubWorkload {
-  id : String?
-  environment_type : String?
   criticality_type : String?
+  environment_type : String?
+  id : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BigQueryDataset {
@@ -46,22 +46,22 @@ pub(all) struct BigQueryOptions {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Binding {
-  role : String?
   members : Array[String]?
   condition : Expr?
+  role : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BucketMetadata {
-  start_time : String?
-  end_time : String?
-  state : String?
   create_bucket_request : CreateBucketRequest?
   update_bucket_request : UpdateBucketRequest?
+  state : String?
+  start_time : String?
+  end_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BucketOptions {
-  linear_buckets : Linear?
   exponential_buckets : Exponential?
+  linear_buckets : Linear?
   explicit_buckets : Explicit?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -69,28 +69,28 @@ pub(all) struct CancelOperationRequest {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CmekSettings {
-  name : String?
-  kms_key_name : String?
-  kms_key_version_name : String?
   service_account_id : String?
+  kms_key_name : String?
+  name : String?
+  kms_key_version_name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CopyLogEntriesMetadata {
-  start_time : String?
-  end_time : String?
-  state : String?
-  cancellation_requested : Bool?
-  request : CopyLogEntriesRequest?
   progress : Int?
   writer_identity : String?
+  request : CopyLogEntriesRequest?
+  end_time : String?
   source : String?
   destination : String?
   verb : String?
+  state : String?
+  cancellation_requested : Bool?
+  start_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CopyLogEntriesRequest {
-  name : String?
   filter : String?
+  name : String?
   destination : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -99,20 +99,20 @@ pub(all) struct CopyLogEntriesResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CreateBucketRequest {
-  parent : String?
   bucket_id : String?
   bucket : LogBucket?
+  parent : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CreateLinkRequest {
   parent : String?
-  link : Link?
   link_id : String?
+  link : Link?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DefaultSinkConfig {
-  filter : String?
   exclusions : Array[LogExclusion]?
+  filter : String?
   mode : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -134,32 +134,32 @@ pub(all) struct Exponential {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Expr {
-  expression : String?
   title : String?
-  description : String?
+  expression : String?
   location : String?
+  description : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct FieldSource {
   field : String?
-  alias_ref : String?
-  projected_field : ProjectedField?
   is_json : Bool?
+  projected_field : ProjectedField?
   column_type : String?
   parent_path : String?
+  alias_ref : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct FilterExpression {
   field_source : FieldSource?
-  literal_value : Json?
-  field_source_value : FieldSource?
   comparator : String?
   is_negation : Bool?
+  literal_value : Json?
+  field_source_value : FieldSource?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct FilterPredicate {
-  operator_type : String?
   leaf_predicate : FilterExpression?
+  operator_type : String?
   child_predicates : Array[FilterPredicate]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -177,21 +177,21 @@ pub(all) struct GetPolicyOptions {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct HttpRequest {
-  request_method : String?
-  request_url : String?
-  request_size : String?
-  status : Int?
-  response_size : String?
-  user_agent : String?
-  remote_ip : String?
   server_ip : String?
-  referer : String?
-  latency : String?
   cache_lookup : Bool?
+  request_size : String?
+  response_size : String?
+  referer : String?
+  user_agent : String?
+  request_url : String?
+  latency : String?
+  status : Int?
   cache_hit : Bool?
+  request_method : String?
   cache_validated_with_origin_server : Bool?
-  cache_fill_bytes : String?
+  remote_ip : String?
   protocol : String?
+  cache_fill_bytes : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct IndexConfig {
@@ -201,15 +201,15 @@ pub(all) struct IndexConfig {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LabelDescriptor {
-  key : String?
   value_type : String?
   description : String?
+  key : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Linear {
-  num_finite_buckets : Int?
   width : Double?
   offset : Double?
+  num_finite_buckets : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Link {
@@ -221,11 +221,11 @@ pub(all) struct Link {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LinkMetadata {
-  start_time : String?
   end_time : String?
   state : String?
-  create_link_request : CreateLinkRequest?
   delete_link_request : DeleteLinkRequest?
+  start_time : String?
+  create_link_request : CreateLinkRequest?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListBucketsResponse {
@@ -249,10 +249,10 @@ pub(all) struct ListLocationsResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListLogEntriesRequest {
-  project_ids : Array[String]?
-  resource_names : Array[String]?
   filter : String?
   order_by : String?
+  project_ids : Array[String]?
+  resource_names : Array[String]?
   page_size : Int?
   page_token : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
@@ -273,8 +273,8 @@ pub(all) struct ListLogScopesResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListLogsResponse {
-  log_names : Array[String]?
   next_page_token : String?
+  log_names : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListMonitoredResourceDescriptorsResponse {
@@ -283,26 +283,26 @@ pub(all) struct ListMonitoredResourceDescriptorsResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListOperationsResponse {
+  unreachable_ : Array[String]?
   operations : Array[Operation]?
   next_page_token : String?
-  unreachable_ : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListRecentQueriesResponse {
+  unreachable_ : Array[String]?
   recent_queries : Array[RecentQuery]?
   next_page_token : String?
-  unreachable_ : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListSavedQueriesResponse {
-  saved_queries : Array[SavedQuery]?
   next_page_token : String?
+  saved_queries : Array[SavedQuery]?
   unreachable_ : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListSinksResponse {
-  sinks : Array[LogSink]?
   next_page_token : String?
+  sinks : Array[LogSink]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListViewsResponse {
@@ -312,10 +312,10 @@ pub(all) struct ListViewsResponse {
 
 pub(all) struct Location {
   name : String?
-  location_id : String?
   display_name : String?
-  labels : Json?
   metadata : Json?
+  location_id : String?
+  labels : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LocationMetadata {
@@ -323,50 +323,50 @@ pub(all) struct LocationMetadata {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogBucket {
+  restricted_fields : Array[String]?
+  cmek_settings : CmekSettings?
+  retention_days : Int?
+  lifecycle_state : String?
+  locked : Bool?
+  update_time : String?
   name : String?
   description : String?
   create_time : String?
-  update_time : String?
-  retention_days : Int?
-  locked : Bool?
-  lifecycle_state : String?
   analytics_enabled : Bool?
-  restricted_fields : Array[String]?
   index_configs : Array[IndexConfig]?
-  cmek_settings : CmekSettings?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogEntry {
-  log_name : String?
+  apphub_destination : AppHub?
+  split : LogSplit?
   resource : MonitoredResource?
-  proto_payload : Json?
-  text_payload : String?
   json_payload : Json?
-  timestamp : String?
   receive_timestamp : String?
-  severity : String?
+  span_id : String?
+  apphub : AppHub?
   insert_id : String?
-  http_request : HttpRequest?
-  labels : Json?
   metadata : MonitoredResourceMetadata?
   operation : LogEntryOperation?
-  trace : String?
-  span_id : String?
+  apphub_source : AppHub?
+  error_groups : Array[LogErrorGroup]?
+  otel : Json?
+  text_payload : String?
+  severity : String?
   trace_sampled : Bool?
   source_location : LogEntrySourceLocation?
-  split : LogSplit?
-  error_groups : Array[LogErrorGroup]?
-  apphub : AppHub?
-  apphub_destination : AppHub?
-  apphub_source : AppHub?
-  otel : Json?
+  timestamp : String?
+  log_name : String?
+  proto_payload : Json?
+  labels : Json?
+  trace : String?
+  http_request : HttpRequest?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogEntryOperation {
-  id : String?
-  producer : String?
   first : Bool?
   last : Bool?
+  id : String?
+  producer : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogEntrySourceLocation {
@@ -380,81 +380,81 @@ pub(all) struct LogErrorGroup {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogExclusion {
+  filter : String?
+  create_time : String?
   name : String?
   description : String?
-  filter : String?
-  disabled : Bool?
-  create_time : String?
   update_time : String?
+  disabled : Bool?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogLine {
   time : String?
-  severity : String?
   log_message : String?
   source_location : SourceLocation?
+  severity : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogMetric {
+  bucket_name : String?
+  value_extractor : String?
+  metric_descriptor : MetricDescriptor?
+  bucket_options : BucketOptions?
+  label_extractors : Json?
   name : String?
-  resource_name : String?
   description : String?
   filter : String?
-  bucket_name : String?
-  disabled : Bool?
-  metric_descriptor : MetricDescriptor?
-  value_extractor : String?
-  label_extractors : Json?
-  bucket_options : BucketOptions?
   create_time : String?
-  update_time : String?
+  resource_name : String?
   version : String?
+  disabled : Bool?
+  update_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogScope {
-  name : String?
   resource_names : Array[String]?
-  description : String?
   create_time : String?
+  name : String?
+  description : String?
   update_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogSink {
-  name : String?
-  resource_name : String?
   destination : String?
-  filter : String?
-  description : String?
-  disabled : Bool?
-  exclusions : Array[LogExclusion]?
-  output_version_format : String?
   writer_identity : String?
+  resource_name : String?
+  filter : String?
+  create_time : String?
+  name : String?
+  description : String?
+  output_version_format : String?
+  disabled : Bool?
   include_children : Bool?
   intercept_children : Bool?
   bigquery_options : BigQueryOptions?
-  create_time : String?
+  exclusions : Array[LogExclusion]?
   update_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogSplit {
-  uid : String?
   index : Int?
+  uid : String?
   total_splits : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LogView {
+  create_time : String?
+  filter : String?
+  update_time : String?
   name : String?
   description : String?
-  create_time : String?
-  update_time : String?
-  filter : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LoggingQuery {
+  summary_field_end : Int?
   filter : String?
   summary_fields : Array[SummaryField]?
   summary_field_start : Int?
-  summary_field_end : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub struct LoggingService {
@@ -595,7 +595,7 @@ pub async fn LoggingService::locations_operations_list(Self, String, filter? : S
 pub async fn LoggingService::logs_delete(Self, String) -> Empty raise @http.HttpError
 pub async fn LoggingService::logs_list(Self, String, page_size? : Int?, page_token? : String?, resource_names? : Array[String]?) -> ListLogsResponse raise @http.HttpError
 pub async fn LoggingService::monitored_resource_descriptors_list(Self, page_size? : Int?, page_token? : String?) -> ListMonitoredResourceDescriptorsResponse raise @http.HttpError
-pub fn LoggingService::new(@core.GoogleClient) -> Self
+pub fn LoggingService::new(@core.GoogleClient, base_url? : String) -> Self
 pub async fn LoggingService::organizations_exclusions_create(Self, String, LogExclusion) -> LogExclusion raise @http.HttpError
 pub async fn LoggingService::organizations_exclusions_delete(Self, String) -> Empty raise @http.HttpError
 pub async fn LoggingService::organizations_exclusions_get(Self, String) -> LogExclusion raise @http.HttpError
@@ -719,22 +719,22 @@ pub async fn LoggingService::v2_update_settings(Self, String, Settings, update_m
 
 pub(all) struct MetricDescriptor {
   name : String?
-  type_ : String?
-  labels : Array[LabelDescriptor]?
-  metric_kind : String?
   value_type : String?
-  unit : String?
   description : String?
+  type_ : String?
   display_name : String?
-  metadata : MetricDescriptorMetadata?
   launch_stage : String?
+  metric_kind : String?
   monitored_resource_types : Array[String]?
+  unit : String?
+  metadata : MetricDescriptorMetadata?
+  labels : Array[LabelDescriptor]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct MetricDescriptorMetadata {
   launch_stage : String?
-  sample_period : String?
   ingest_delay : String?
+  sample_period : String?
   time_series_resource_hierarchy_level : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -744,9 +744,9 @@ pub(all) struct MonitoredResource {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct MonitoredResourceDescriptor {
-  name : String?
   type_ : String?
   display_name : String?
+  name : String?
   description : String?
   labels : Array[LabelDescriptor]?
   launch_stage : String?
@@ -758,96 +758,96 @@ pub(all) struct MonitoredResourceMetadata {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Operation {
-  name : String?
-  metadata : Json?
-  done : Bool?
-  error : Status?
   response : Json?
+  name : String?
+  done : Bool?
+  metadata : Json?
+  error : Status?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct OpsAnalyticsQuery {
-  sql_query_text : String?
   query_builder : QueryBuilderConfig?
+  sql_query_text : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Policy {
+  etag : String?
   version : Int?
   bindings : Array[Binding]?
-  etag : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ProjectedField {
-  field : String?
   operation : String?
-  sql_aggregation_function : FunctionApplication?
-  alias_ : String?
   cast : String?
-  regex_extraction : String?
   truncation_granularity : String?
+  alias_ : String?
+  regex_extraction : String?
+  sql_aggregation_function : FunctionApplication?
+  field : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct QueryBuilderConfig {
-  resource_names : Array[String]?
-  filter : FilterPredicate?
-  field_sources : Array[FieldSource]?
-  limit : String?
-  order_bys : Array[SortOrderParameter]?
   search_term : String?
+  filter : FilterPredicate?
+  order_bys : Array[SortOrderParameter]?
+  resource_names : Array[String]?
+  limit : String?
+  field_sources : Array[FieldSource]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RecentQuery {
-  name : String?
   logging_query : LoggingQuery?
-  ops_analytics_query : OpsAnalyticsQuery?
+  name : String?
   last_run_time : String?
+  ops_analytics_query : OpsAnalyticsQuery?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RequestLog {
-  app_id : String?
-  module_id : String?
   version_id : String?
   request_id : String?
-  ip : String?
-  start_time : String?
-  end_time : String?
-  latency : String?
-  mega_cycles : String?
-  method_ : String?
+  app_id : String?
   resource : String?
-  http_version : String?
-  status : Int?
-  response_size : String?
-  referrer : String?
-  user_agent : String?
-  nickname : String?
-  url_map_entry : String?
-  host : String?
-  cost : Double?
-  task_queue_name : String?
-  task_name : String?
-  was_loading_request : Bool?
-  pending_time : String?
   instance_index : Int?
-  finished : Bool?
-  first : Bool?
-  instance_id : String?
-  line : Array[LogLine]?
-  app_engine_release : String?
-  trace_id : String?
   span_id : String?
+  app_engine_release : String?
+  was_loading_request : Bool?
+  host : String?
+  end_time : String?
+  line : Array[LogLine]?
+  nickname : String?
+  response_size : String?
+  instance_id : String?
+  first : Bool?
+  task_name : String?
+  finished : Bool?
+  task_queue_name : String?
+  cost : Double?
+  referrer : String?
+  status : Int?
+  trace_id : String?
+  start_time : String?
+  http_version : String?
+  method_ : String?
+  url_map_entry : String?
+  pending_time : String?
   trace_sampled : Bool?
   source_reference : Array[SourceReference]?
+  user_agent : String?
+  module_id : String?
+  latency : String?
+  ip : String?
+  mega_cycles : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct SavedQuery {
-  name : String?
-  display_name : String?
-  description : String?
-  logging_query : LoggingQuery?
   ops_analytics_query : OpsAnalyticsQuery?
-  create_time : String?
-  update_time : String?
   visibility : String?
+  logging_query : LoggingQuery?
+  create_time : String?
+  name : String?
+  description : String?
+  display_name : String?
+  update_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct SetIamPolicyRequest {
@@ -856,13 +856,13 @@ pub(all) struct SetIamPolicyRequest {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Settings {
+  storage_location : String?
   name : String?
   kms_key_name : String?
-  kms_service_account_id : String?
-  storage_location : String?
   disable_default_sink : Bool?
-  default_sink_config : DefaultSinkConfig?
   logging_service_account_id : String?
+  kms_service_account_id : String?
+  default_sink_config : DefaultSinkConfig?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct SortOrderParameter {
@@ -871,9 +871,9 @@ pub(all) struct SortOrderParameter {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct SourceLocation {
+  function_name : String?
   file : String?
   line : String?
-  function_name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct SourceReference {
@@ -892,14 +892,14 @@ pub(all) struct SummaryField {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct SuppressionInfo {
-  reason : String?
   suppressed_count : Int?
+  reason : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TailLogEntriesRequest {
+  buffer_window : String?
   resource_names : Array[String]?
   filter : String?
-  buffer_window : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TailLogEntriesResponse {
@@ -920,16 +920,16 @@ pub(all) struct UndeleteBucketRequest {
 
 pub(all) struct UpdateBucketRequest {
   name : String?
-  bucket : LogBucket?
   update_mask : String?
+  bucket : LogBucket?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct WriteLogEntriesRequest {
-  log_name : String?
   resource : MonitoredResource?
-  labels : Json?
   entries : Array[LogEntry]?
   partial_success : Bool?
+  log_name : String?
+  labels : Json?
   dry_run : Bool?
 } derive(Eq, Show, ToJson, @json.FromJson)
 

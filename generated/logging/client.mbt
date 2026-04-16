@@ -9,8 +9,11 @@ pub struct LoggingService {
 }
 
 ///|
-pub fn LoggingService::new(client : @core.GoogleClient) -> LoggingService {
-  LoggingService::{ base_url: "https://logging.googleapis.com", client }
+pub fn LoggingService::new(
+  client : @core.GoogleClient,
+  base_url? : String = "https://logging.googleapis.com",
+) -> LoggingService {
+  LoggingService::{ base_url, client }
 }
 
 ///| logging.billingAccounts.getCmekSettings
