@@ -1,4 +1,18 @@
 ///|
+test "camel_prefix_match: proto name longer than discovery name" {
+  let streamings : Map[String, Bool] = {
+    "BatchGetDocuments": true,
+    "RunQuery": true,
+    "Listen": true,
+  }
+  assert_true(camel_prefix_match("BatchGet", streamings))
+  assert_true(camel_prefix_match("RunQuery", streamings))
+  assert_true(camel_prefix_match("Listen", streamings))
+  assert_true(!camel_prefix_match("List", streamings))
+  assert_true(!camel_prefix_match("BatchWrite", streamings))
+}
+
+///|
 async test "generate_helpers matches generated/drive/helpers.mbt" {
   let expected = @fs.read_file("generated/drive/helpers.mbt").text()
   assert_eq(generate_helpers(), expected)

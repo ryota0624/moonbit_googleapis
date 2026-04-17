@@ -781,7 +781,7 @@ pub async fn FirestoreService::projects_databases_documents_batch_get(
   self : FirestoreService,
   database : String,
   request : BatchGetDocumentsRequest,
-) -> BatchGetDocumentsResponse raise @http.HttpError {
+) -> Array[BatchGetDocumentsResponse] raise @http.HttpError {
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")

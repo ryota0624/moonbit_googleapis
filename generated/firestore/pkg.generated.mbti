@@ -14,9 +14,9 @@ import {
 // Types and methods
 pub(all) struct Aggregation {
   alias_ : String?
-  count : Count?
-  avg : Avg?
   sum : Sum?
+  avg : Avg?
+  count : Count?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AggregationResult {
@@ -32,28 +32,28 @@ pub(all) struct Avg {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BatchGetDocumentsRequest {
-  documents : Array[String]?
-  mask : DocumentMask?
   transaction : String?
-  read_time : String?
+  mask : DocumentMask?
+  documents : Array[String]?
   new_transaction : TransactionOptions?
+  read_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BatchGetDocumentsResponse {
-  found : Document?
   missing : String?
-  transaction : String?
   read_time : String?
+  found : Document?
+  transaction : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BatchWriteRequest {
-  labels : Json?
   writes : Array[Write]?
+  labels : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BatchWriteResponse {
-  status : Array[Status]?
   write_results : Array[WriteResult]?
+  status : Array[Status]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BeginTransactionRequest {
@@ -85,13 +85,13 @@ pub(all) struct CommitRequest {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CommitResponse {
-  commit_time : String?
   write_results : Array[WriteResult]?
+  commit_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct CompositeFilter {
-  filters : Array[Filter]?
   op : String?
+  filters : Array[Filter]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Count {
@@ -99,26 +99,26 @@ pub(all) struct Count {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Cursor {
-  before : Bool?
   values : Array[Value]?
+  before : Bool?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Document {
   fields : Json?
+  name : String?
   create_time : String?
   update_time : String?
-  name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DocumentChange {
-  removed_target_ids : Array[Int]?
   target_ids : Array[Int]?
+  removed_target_ids : Array[Int]?
   document : Document?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DocumentDelete {
-  document : String?
   read_time : String?
+  document : String?
   removed_target_ids : Array[Int]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -127,14 +127,14 @@ pub(all) struct DocumentMask {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DocumentRemove {
-  removed_target_ids : Array[Int]?
-  document : String?
   read_time : String?
+  document : String?
+  removed_target_ids : Array[Int]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DocumentTransform {
-  field_transforms : Array[FieldTransform]?
   document : String?
+  field_transforms : Array[FieldTransform]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DocumentsTarget {
@@ -147,28 +147,28 @@ pub(all) struct Empty {
 pub(all) struct ExecutePipelineRequest {
   structured_pipeline : StructuredPipeline?
   transaction : String?
-  new_transaction : TransactionOptions?
   read_time : String?
+  new_transaction : TransactionOptions?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ExecutePipelineResponse {
   results : Array[Document]?
-  explain_stats : ExplainStats?
-  transaction : String?
   execution_time : String?
+  transaction : String?
+  explain_stats : ExplainStats?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ExecutionStats {
-  debug_stats : Json?
+  read_operations : String?
   results_returned : String?
   execution_duration : String?
-  read_operations : String?
+  debug_stats : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ExistenceFilter {
-  unchanged_names : BloomFilter?
-  target_id : Int?
   count : Int?
+  target_id : Int?
+  unchanged_names : BloomFilter?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ExplainMetrics {
@@ -195,13 +195,13 @@ pub(all) struct FieldReference {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct FieldTransform {
-  append_missing_elements : ArrayValue?
-  remove_all_from_array : ArrayValue?
   field_path : String?
-  maximum : Value?
-  set_to_server_value : String?
-  increment : Value?
   minimum : Value?
+  set_to_server_value : String?
+  remove_all_from_array : ArrayValue?
+  increment : Value?
+  maximum : Value?
+  append_missing_elements : ArrayValue?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Filter {
@@ -211,12 +211,12 @@ pub(all) struct Filter {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct FindNearest {
+  distance_measure : String?
+  distance_result_field : String?
   distance_threshold : Double?
+  query_vector : Value?
   vector_field : FieldReference?
   limit : Int?
-  distance_result_field : String?
-  query_vector : Value?
-  distance_measure : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub struct FirestoreService {
@@ -240,7 +240,7 @@ pub async fn FirestoreService::projects_databases_collection_groups_indexes_get(
 pub async fn FirestoreService::projects_databases_collection_groups_indexes_list(Self, String, filter? : String?, page_size? : Int?, page_token? : String?) -> GoogleFirestoreAdminV1ListIndexesResponse raise @http.HttpError
 pub async fn FirestoreService::projects_databases_create(Self, String, GoogleFirestoreAdminV1Database, database_id? : String?) -> GoogleLongrunningOperation raise @http.HttpError
 pub async fn FirestoreService::projects_databases_delete(Self, String, etag? : String?) -> GoogleLongrunningOperation raise @http.HttpError
-pub async fn FirestoreService::projects_databases_documents_batch_get(Self, String, BatchGetDocumentsRequest) -> BatchGetDocumentsResponse raise @http.HttpError
+pub async fn FirestoreService::projects_databases_documents_batch_get(Self, String, BatchGetDocumentsRequest) -> Array[BatchGetDocumentsResponse] raise @http.HttpError
 pub async fn FirestoreService::projects_databases_documents_batch_write(Self, String, BatchWriteRequest) -> BatchWriteResponse raise @http.HttpError
 pub async fn FirestoreService::projects_databases_documents_begin_transaction(Self, String, BeginTransactionRequest) -> BeginTransactionResponse raise @http.HttpError
 pub async fn FirestoreService::projects_databases_documents_commit(Self, String, CommitRequest) -> CommitResponse raise @http.HttpError
@@ -288,22 +288,22 @@ pub(all) struct Function {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1Backup {
-  snapshot_time : String?
-  database : String?
-  stats : GoogleFirestoreAdminV1Stats?
-  name : String?
-  database_uid : String?
   expire_time : String?
+  stats : GoogleFirestoreAdminV1Stats?
+  database_uid : String?
   state : String?
+  name : String?
+  database : String?
+  snapshot_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1BackupSchedule {
-  name : String?
   retention : String?
-  update_time : String?
   daily_recurrence : GoogleFirestoreAdminV1DailyRecurrence?
-  weekly_recurrence : GoogleFirestoreAdminV1WeeklyRecurrence?
   create_time : String?
+  update_time : String?
+  name : String?
+  weekly_recurrence : GoogleFirestoreAdminV1WeeklyRecurrence?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1BackupSource {
@@ -311,14 +311,14 @@ pub(all) struct GoogleFirestoreAdminV1BackupSource {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1BulkDeleteDocumentsMetadata {
-  collection_ids : Array[String]?
-  start_time : String?
-  end_time : String?
-  progress_documents : GoogleFirestoreAdminV1Progress?
   operation_state : String?
+  progress_documents : GoogleFirestoreAdminV1Progress?
+  collection_ids : Array[String]?
+  progress_bytes : GoogleFirestoreAdminV1Progress?
   namespace_ids : Array[String]?
   snapshot_time : String?
-  progress_bytes : GoogleFirestoreAdminV1Progress?
+  start_time : String?
+  end_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1BulkDeleteDocumentsRequest {
@@ -327,12 +327,12 @@ pub(all) struct GoogleFirestoreAdminV1BulkDeleteDocumentsRequest {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1CloneDatabaseMetadata {
-  pitr_snapshot : GoogleFirestoreAdminV1PitrSnapshot?
+  progress_percentage : GoogleFirestoreAdminV1Progress?
   operation_state : String?
+  database : String?
   start_time : String?
   end_time : String?
-  progress_percentage : GoogleFirestoreAdminV1Progress?
-  database : String?
+  pitr_snapshot : GoogleFirestoreAdminV1PitrSnapshot?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1CloneDatabaseRequest {
@@ -358,30 +358,30 @@ pub(all) struct GoogleFirestoreAdminV1DailyRecurrence {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1Database {
-  database_edition : String?
-  app_engine_integration_mode : String?
-  etag : String?
-  uid : String?
-  location_id : String?
-  source_info : GoogleFirestoreAdminV1SourceInfo?
-  previous_id : String?
-  tags : Json?
-  free_tier : Bool?
   delete_protection_state : String?
-  type_ : String?
-  earliest_version_time : String?
-  point_in_time_recovery_enablement : String?
-  mongodb_compatible_data_access_mode : String?
-  firestore_data_access_mode : String?
-  update_time : String?
-  delete_time : String?
+  free_tier : Bool?
   cmek_config : GoogleFirestoreAdminV1CmekConfig?
   realtime_updates_mode : String?
-  name : String?
-  concurrency_mode : String?
+  point_in_time_recovery_enablement : String?
+  etag : String?
   create_time : String?
-  version_retention_period : String?
+  update_time : String?
+  location_id : String?
+  delete_time : String?
   key_prefix : String?
+  database_edition : String?
+  tags : Json?
+  name : String?
+  version_retention_period : String?
+  app_engine_integration_mode : String?
+  previous_id : String?
+  uid : String?
+  earliest_version_time : String?
+  mongodb_compatible_data_access_mode : String?
+  source_info : GoogleFirestoreAdminV1SourceInfo?
+  concurrency_mode : String?
+  firestore_data_access_mode : String?
+  type_ : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1DeleteDatabaseMetadata {
@@ -395,27 +395,27 @@ pub(all) struct GoogleFirestoreAdminV1EnableUserCredsRequest {
 
 pub(all) struct GoogleFirestoreAdminV1EncryptionConfig {
   use_source_encryption : GoogleFirestoreAdminV1SourceEncryptionOptions?
-  google_default_encryption : GoogleFirestoreAdminV1GoogleDefaultEncryptionOptions?
   customer_managed_encryption : GoogleFirestoreAdminV1CustomerManagedEncryptionOptions?
+  google_default_encryption : GoogleFirestoreAdminV1GoogleDefaultEncryptionOptions?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ExportDocumentsMetadata {
-  collection_ids : Array[String]?
-  end_time : String?
-  output_uri_prefix : String?
-  operation_state : String?
   progress_bytes : GoogleFirestoreAdminV1Progress?
-  start_time : String?
-  progress_documents : GoogleFirestoreAdminV1Progress?
+  output_uri_prefix : String?
   namespace_ids : Array[String]?
+  start_time : String?
+  operation_state : String?
   snapshot_time : String?
+  end_time : String?
+  progress_documents : GoogleFirestoreAdminV1Progress?
+  collection_ids : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ExportDocumentsRequest {
-  namespace_ids : Array[String]?
-  snapshot_time : String?
   collection_ids : Array[String]?
+  snapshot_time : String?
   output_uri_prefix : String?
+  namespace_ids : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ExportDocumentsResponse {
@@ -423,20 +423,20 @@ pub(all) struct GoogleFirestoreAdminV1ExportDocumentsResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1Field {
-  name : String?
   index_config : GoogleFirestoreAdminV1IndexConfig?
   ttl_config : GoogleFirestoreAdminV1TtlConfig?
+  name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1FieldOperationMetadata {
-  progress_bytes : GoogleFirestoreAdminV1Progress?
-  progress_documents : GoogleFirestoreAdminV1Progress?
-  end_time : String?
   index_config_deltas : Array[GoogleFirestoreAdminV1IndexConfigDelta]?
-  start_time : String?
   state : String?
-  field : String?
   ttl_config_delta : GoogleFirestoreAdminV1TtlConfigDelta?
+  progress_documents : GoogleFirestoreAdminV1Progress?
+  progress_bytes : GoogleFirestoreAdminV1Progress?
+  field : String?
+  start_time : String?
+  end_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1FlatIndex {
@@ -446,40 +446,40 @@ pub(all) struct GoogleFirestoreAdminV1GoogleDefaultEncryptionOptions {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ImportDocumentsMetadata {
-  progress_documents : GoogleFirestoreAdminV1Progress?
-  input_uri_prefix : String?
-  operation_state : String?
-  namespace_ids : Array[String]?
   progress_bytes : GoogleFirestoreAdminV1Progress?
-  collection_ids : Array[String]?
+  namespace_ids : Array[String]?
+  input_uri_prefix : String?
   start_time : String?
   end_time : String?
+  operation_state : String?
+  progress_documents : GoogleFirestoreAdminV1Progress?
+  collection_ids : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ImportDocumentsRequest {
-  collection_ids : Array[String]?
-  input_uri_prefix : String?
   namespace_ids : Array[String]?
+  input_uri_prefix : String?
+  collection_ids : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1Index {
+  multikey : Bool?
+  api_scope : String?
+  query_scope : String?
+  name : String?
+  search_index_options : GoogleFirestoreAdminV1SearchIndexOptions?
+  state : String?
   density : String?
   shard_count : Int?
-  api_scope : String?
-  fields : Array[GoogleFirestoreAdminV1IndexField]?
-  state : String?
-  name : String?
   unique : Bool?
-  search_index_options : GoogleFirestoreAdminV1SearchIndexOptions?
-  query_scope : String?
-  multikey : Bool?
+  fields : Array[GoogleFirestoreAdminV1IndexField]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1IndexConfig {
-  reverting : Bool?
+  uses_ancestor_config : Bool?
   ancestor_field : String?
   indexes : Array[GoogleFirestoreAdminV1Index]?
-  uses_ancestor_config : Bool?
+  reverting : Bool?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1IndexConfigDelta {
@@ -488,19 +488,19 @@ pub(all) struct GoogleFirestoreAdminV1IndexConfigDelta {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1IndexField {
-  array_config : String?
-  vector_config : GoogleFirestoreAdminV1VectorConfig?
   order : String?
+  vector_config : GoogleFirestoreAdminV1VectorConfig?
   search_config : GoogleFirestoreAdminV1SearchConfig?
   field_path : String?
+  array_config : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1IndexOperationMetadata {
-  index : String?
-  start_time : String?
-  state : String?
-  end_time : String?
   progress_documents : GoogleFirestoreAdminV1Progress?
+  state : String?
+  start_time : String?
+  end_time : String?
+  index : String?
   progress_bytes : GoogleFirestoreAdminV1Progress?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -509,8 +509,8 @@ pub(all) struct GoogleFirestoreAdminV1ListBackupSchedulesResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ListBackupsResponse {
-  unreachable_ : Array[String]?
   backups : Array[GoogleFirestoreAdminV1Backup]?
+  unreachable_ : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ListDatabasesResponse {
@@ -519,13 +519,13 @@ pub(all) struct GoogleFirestoreAdminV1ListDatabasesResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ListFieldsResponse {
-  fields : Array[GoogleFirestoreAdminV1Field]?
   next_page_token : String?
+  fields : Array[GoogleFirestoreAdminV1Field]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ListIndexesResponse {
-  next_page_token : String?
   indexes : Array[GoogleFirestoreAdminV1Index]?
+  next_page_token : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1ListUserCredsResponse {
@@ -555,23 +555,23 @@ pub(all) struct GoogleFirestoreAdminV1ResourceIdentity {
 
 pub(all) struct GoogleFirestoreAdminV1RestoreDatabaseMetadata {
   operation_state : String?
-  database : String?
-  end_time : String?
-  backup : String?
   progress_percentage : GoogleFirestoreAdminV1Progress?
+  backup : String?
   start_time : String?
+  end_time : String?
+  database : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1RestoreDatabaseRequest {
+  encryption_config : GoogleFirestoreAdminV1EncryptionConfig?
   database_id : String?
   backup : String?
-  encryption_config : GoogleFirestoreAdminV1EncryptionConfig?
   tags : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1SearchConfig {
-  geo_spec : GoogleFirestoreAdminV1SearchGeoSpec?
   text_spec : GoogleFirestoreAdminV1SearchTextSpec?
+  geo_spec : GoogleFirestoreAdminV1SearchGeoSpec?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1SearchGeoSpec {
@@ -579,13 +579,13 @@ pub(all) struct GoogleFirestoreAdminV1SearchGeoSpec {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1SearchIndexOptions {
-  text_language : String?
   text_language_override_field_path : String?
+  text_language : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1SearchTextIndexSpec {
-  index_type : String?
   match_type : String?
+  index_type : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1SearchTextSpec {
@@ -596,13 +596,13 @@ pub(all) struct GoogleFirestoreAdminV1SourceEncryptionOptions {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1SourceInfo {
-  backup : GoogleFirestoreAdminV1BackupSource?
   operation : String?
+  backup : GoogleFirestoreAdminV1BackupSource?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1Stats {
-  index_count : String?
   size_bytes : String?
+  index_count : String?
   document_count : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -620,17 +620,17 @@ pub(all) struct GoogleFirestoreAdminV1UpdateDatabaseMetadata {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1UserCreds {
-  create_time : String?
-  resource_identity : GoogleFirestoreAdminV1ResourceIdentity?
   name : String?
+  secure_password : String?
+  resource_identity : GoogleFirestoreAdminV1ResourceIdentity?
+  create_time : String?
   update_time : String?
   state : String?
-  secure_password : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1VectorConfig {
-  dimension : Int?
   flat : GoogleFirestoreAdminV1FlatIndex?
+  dimension : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleFirestoreAdminV1WeeklyRecurrence {
@@ -647,22 +647,22 @@ pub(all) struct GoogleLongrunningListOperationsResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GoogleLongrunningOperation {
-  done : Bool?
-  error : Status?
-  response : Json?
   name : String?
+  error : Status?
+  done : Bool?
   metadata : Json?
+  response : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct LatLng {
-  latitude : Double?
   longitude : Double?
+  latitude : Double?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListCollectionIdsRequest {
+  page_token : String?
   page_size : Int?
   read_time : String?
-  page_token : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListCollectionIdsResponse {
@@ -671,33 +671,33 @@ pub(all) struct ListCollectionIdsResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListDocumentsResponse {
-  next_page_token : String?
   documents : Array[Document]?
+  next_page_token : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListLocationsResponse {
-  locations : Array[Location]?
   next_page_token : String?
+  locations : Array[Location]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListenRequest {
-  add_target : Target?
   remove_target : Int?
   labels : Json?
+  add_target : Target?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListenResponse {
-  document_change : DocumentChange?
-  document_delete : DocumentDelete?
-  document_remove : DocumentRemove?
-  target_change : TargetChange?
   filter : ExistenceFilter?
+  document_remove : DocumentRemove?
+  document_change : DocumentChange?
+  target_change : TargetChange?
+  document_delete : DocumentDelete?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Location {
+  labels : Json?
   metadata : Json?
   name : String?
-  labels : Json?
   location_id : String?
   display_name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
@@ -707,16 +707,16 @@ pub(all) struct MapValue {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Order {
-  field : FieldReference?
   direction : String?
+  field : FieldReference?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct PartitionQueryRequest {
-  partition_count : String?
-  read_time : String?
-  page_size : Int?
-  structured_query : StructuredQuery?
   page_token : String?
+  structured_query : StructuredQuery?
+  partition_count : String?
+  page_size : Int?
+  read_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct PartitionQueryResponse {
@@ -760,34 +760,34 @@ pub(all) struct RollbackRequest {
 
 pub(all) struct RunAggregationQueryRequest {
   read_time : String?
-  new_transaction : TransactionOptions?
-  structured_aggregation_query : StructuredAggregationQuery?
-  transaction : String?
   explain_options : ExplainOptions?
+  transaction : String?
+  structured_aggregation_query : StructuredAggregationQuery?
+  new_transaction : TransactionOptions?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RunAggregationQueryResponse {
-  read_time : String?
   result : AggregationResult?
-  explain_metrics : ExplainMetrics?
   transaction : String?
+  read_time : String?
+  explain_metrics : ExplainMetrics?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RunQueryRequest {
-  transaction : String?
-  explain_options : ExplainOptions?
   structured_query : StructuredQuery?
   new_transaction : TransactionOptions?
+  transaction : String?
+  explain_options : ExplainOptions?
   read_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct RunQueryResponse {
+  document : Document?
+  transaction : String?
   skipped_results : Int?
   explain_metrics : ExplainMetrics?
-  transaction : String?
-  document : Document?
-  read_time : String?
   done : Bool?
+  read_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Stage {
@@ -797,9 +797,9 @@ pub(all) struct Stage {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Status {
-  details : Array[Json]?
   code : Int?
   message : String?
+  details : Array[Json]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StructuredAggregationQuery {
@@ -808,20 +808,20 @@ pub(all) struct StructuredAggregationQuery {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StructuredPipeline {
-  options : Json?
   pipeline : Pipeline?
+  options : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StructuredQuery {
-  start_at : Cursor?
-  where_ : Filter?
+  from : Array[CollectionSelector]?
+  find_nearest : FindNearest?
   order_by : Array[Order]?
+  offset : Int?
   end_at : Cursor?
   select : Projection?
-  offset : Int?
-  from : Array[CollectionSelector]?
+  where_ : Filter?
   limit : Int?
-  find_nearest : FindNearest?
+  start_at : Cursor?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Sum {
@@ -829,20 +829,20 @@ pub(all) struct Sum {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Target {
-  target_id : Int?
-  once : Bool?
-  documents : DocumentsTarget?
   expected_count : Int?
-  resume_token : String?
   query : QueryTarget?
+  documents : DocumentsTarget?
+  resume_token : String?
+  once : Bool?
   read_time : String?
+  target_id : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TargetChange {
-  target_change_type : String?
-  target_ids : Array[Int]?
-  cause : Status?
   resume_token : String?
+  target_change_type : String?
+  cause : Status?
+  target_ids : Array[Int]?
   read_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -857,29 +857,29 @@ pub(all) struct UnaryFilter {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Value {
+  map_value : MapValue?
   pipeline_value : Pipeline?
-  variable_reference_value : String?
+  timestamp_value : String?
   string_value : String?
+  reference_value : String?
+  null_value : String?
+  geo_point_value : LatLng?
   double_value : Double?
   array_value : ArrayValue?
-  null_value : String?
-  bytes_value : String?
-  integer_value : String?
-  reference_value : String?
-  boolean_value : Bool?
-  function_value : Function?
-  geo_point_value : LatLng?
-  timestamp_value : String?
-  map_value : MapValue?
   field_reference_value : String?
+  variable_reference_value : String?
+  function_value : Function?
+  bytes_value : String?
+  boolean_value : Bool?
+  integer_value : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Write {
-  update : Document?
-  delete : String?
-  update_mask : DocumentMask?
-  update_transforms : Array[FieldTransform]?
   transform : DocumentTransform?
+  update_mask : DocumentMask?
+  delete : String?
+  update : Document?
+  update_transforms : Array[FieldTransform]?
   current_document : Precondition?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -891,15 +891,15 @@ pub(all) struct WriteRequest {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct WriteResponse {
-  stream_id : String?
   write_results : Array[WriteResult]?
-  commit_time : String?
   stream_token : String?
+  stream_id : String?
+  commit_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct WriteResult {
-  update_time : String?
   transform_results : Array[Value]?
+  update_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 // Type aliases

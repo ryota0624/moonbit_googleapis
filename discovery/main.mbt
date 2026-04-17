@@ -69,11 +69,37 @@ fn streaming_name_set(names : Array[String]) -> Map[String, Bool] {
 }
 
 ///|
+fn camel_prefix_match(
+  rpc_name : String,
+  streamings : Map[String, Bool],
+) -> Bool {
+  let mut found = false
+  streamings.each((k, _) => {
+    if !found && k.has_prefix(rpc_name) {
+      let suffix_len = k.length() - rpc_name.length()
+      if suffix_len == 0 {
+        found = true
+      } else {
+        let code = k[rpc_name.length()].to_int()
+        if code >= 65 && code <= 90 {
+          found = true
+        }
+      }
+    }
+  })
+  found
+}
+
+///|
 fn annotate_method_streaming(
   rest_m : RestMethod,
   streamings : Map[String, Bool],
 ) -> RestMethod {
   let rpc_name = capitalize_first(last_dot_segment(rest_m.id))
+  let is_streaming = match streamings.get(rpc_name) {
+    Some(v) => v
+    None => camel_prefix_match(rpc_name, streamings)
+  }
   RestMethod::{
     id: rest_m.id,
     path: rest_m.path,
@@ -82,7 +108,7 @@ fn annotate_method_streaming(
     parameters: rest_m.parameters,
     request: rest_m.request,
     response: rest_m.response,
-    server_streaming: Some(streamings.get(rpc_name).unwrap_or(false)),
+    server_streaming: Some(is_streaming),
   }
 }
 
