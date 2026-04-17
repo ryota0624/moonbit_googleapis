@@ -1,7 +1,7 @@
 ///|
 fn usage_and_exit() -> Unit {
   println(
-    "usage: moon run discovery -- <proto_package> [--image <path>] [--output <dir>]",
+    "usage: moon run codegen -- <proto_package> [--image <path>] [--output <dir>]",
   )
   println("  proto_package: e.g. google.firestore.v1")
   println(

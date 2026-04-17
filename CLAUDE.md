@@ -153,14 +153,14 @@ Git Commit前の作業完了後は、**完了ドキュメント**を作成して
 
 ## 生成コードの修正方針
 
-`generated/` 配下のファイルはコードジェネレーター (`discovery/`) からの出力であり、**直接修正してはいけない**。これらのファイルは `moon run discovery/` によって再生成されるため、手動編集は次回の再生成で失われる。
+`generated/` 配下のファイルはコードジェネレーター (`codegen/`) からの出力であり、**直接修正してはいけない**。これらのファイルは `moon run codegen/` によって再生成されるため、手動編集は次回の再生成で失われる。
 
 生成コードにバグや改善点を見つけた場合:
 
-1. `discovery/codegen.mbt` など、コードジェネレーター側を修正する
+1. `codegen/codegen.mbt` など、コードジェネレーター側を修正する
 2. 対象パッケージを再生成して変更を反映する
    ```bash
-   moon run discovery/ --target native -- <proto_package> \
+   moon run codegen/ --target native -- <proto_package> \
      --image /tmp/<api>-image.json --output generated/<api>
    moon fmt generated/<api>
    ```
@@ -173,13 +173,13 @@ Git Commit前の作業完了後は、**完了ドキュメント**を作成して
 cd googleapis
 buf build . --path google/firestore/v1 --output json -o /tmp/firestore-image.json
 cd ..
-moon run discovery/ --target native -- google.firestore.v1 \
+moon run codegen/ --target native -- google.firestore.v1 \
   --image /tmp/firestore-image.json --output generated/firestore
 ```
 
 全 API の一括再生成はサイズの大きな `googleapis-image.json` を扱うが、
 バイナリを含む descriptor のため現時点ではパッケージ単位で個別に image を
-作り直すのが安全（`.github/workflows/generate-local.yml` 参照）。
+作り直すのが安全（`.github/workflows/generate.yml` 参照）。
 
 # MoonBit Project Agents.md Guide
 

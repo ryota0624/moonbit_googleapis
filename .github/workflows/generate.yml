@@ -14,8 +14,14 @@ jobs:
       # proto_path is the subtree under googleapis/ that buf builds into a
       # per-package JSON image. Keeping images per-package avoids the
       # non-UTF8 bytes issue present in the combined googleapis-image.json.
+      #
+      # NOTE: `generated/storage` is intentionally NOT in this list. Neither
+      # google/storage/v1 nor google/storage/v2 protos carry google.api.http
+      # annotations, so the protobuf-only codegen cannot produce a REST
+      # client from them. `generated/storage` is currently a legacy artifact
+      # from the Discovery-JSON pipeline and is maintained manually until
+      # migrated.
       APIS: >-
-        storage:google.storage.v1:google/storage/v1
         firestore:google.firestore.v1:google/firestore/v1
         pubsub:google.pubsub.v1:google/pubsub/v1
         cloudtasks:google.cloud.tasks.v2:google/cloud/tasks/v2
@@ -47,7 +53,7 @@ jobs:
 
             (cd googleapis && buf build . --path "$proto_path" --output json -o "$image_path")
 
-            moon run discovery/ --target native -- \
+            moon run codegen/ --target native -- \
               "$proto_pkg" \
               --image "$image_path" \
               --output "generated/${api}"

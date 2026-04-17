@@ -95,11 +95,11 @@ Generate typed MoonBit clients from the [googleapis](https://github.com/googleap
 cd googleapis && buf build . --exclude-path preview --output json -o /tmp/googleapis-image.json
 
 # Generate a client for a specific API
-moon run discovery --target native -- google.firestore.v1 --output generated/firestore
-moon run discovery --target native -- google.pubsub.v1 --output generated/pubsub
+moon run codegen --target native -- google.firestore.v1 --output generated/firestore
+moon run codegen --target native -- google.pubsub.v1 --output generated/pubsub
 
 # Regenerate all bundled clients
-./scripts/generate_all.sh
+# (mirrors the logic in .github/workflows/generate.yml)
 ```
 
 **CLI options:**
@@ -139,7 +139,7 @@ The generator produces three files per service:
 |---------|-------------|
 | `http/` | `HttpClient` trait, `HttpRequest` / `HttpResponse` types, default implementation |
 | `core/` | `GoogleClient`, auth headers, error parsing, pagination |
-| `discovery/` | Protobuf-based MoonBit code generator CLI |
+| `codegen/` | Protobuf-based MoonBit code generator CLI |
 | `generated/` | Generated service clients (one sub-package per API) |
 | `sample/` | Usage examples (Storage, Firestore) |
 
