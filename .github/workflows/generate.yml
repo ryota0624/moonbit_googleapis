@@ -2,28 +2,29 @@ name: Generate API clients
 
 on:
   workflow_dispatch:
-
-env:
-  APIS: >-
-    drive:v3
-    storage:v1
-    firestore:v1
-    pubsub:v1
-    cloudtasks:v2
-    cloudscheduler:v1
-    logging:v2
-    cloudtrace:v2
-    clouderrorreporting:v1beta1
-    monitoring:v3
-    bigquery:v2
+  push:
+    branches:
+      - _actrun_generate
 
 jobs:
   generate:
     runs-on: self-hosted
     env:
-      STREAMING_APIS: >-
-        firestore:google.firestore.v1
-        pubsub:google.pubsub.v1
+      # Entries are "<output_dir>:<proto_package>:<proto_path>".
+      # proto_path is the subtree under googleapis/ that buf builds into a
+      # per-package JSON image. Keeping images per-package avoids the
+      # non-UTF8 bytes issue present in the combined googleapis-image.json.
+      APIS: >-
+        storage:google.storage.v1:google/storage/v1
+        firestore:google.firestore.v1:google/firestore/v1
+        pubsub:google.pubsub.v1:google/pubsub/v1
+        cloudtasks:google.cloud.tasks.v2:google/cloud/tasks/v2
+        cloudscheduler:google.cloud.scheduler.v1:google/cloud/scheduler/v1
+        logging:google.logging.v2:google/logging/v2
+        cloudtrace:google.devtools.cloudtrace.v2:google/devtools/cloudtrace/v2
+        clouderrorreporting:google.devtools.clouderrorreporting.v1beta1:google/devtools/clouderrorreporting/v1beta1
+        monitoring:google.monitoring.v3:google/monitoring/v3
+        bigquery:google.cloud.bigquery.storage.v1:google/cloud/bigquery/storage/v1
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,31 +33,24 @@ jobs:
       - name: Install buf CLI
         uses: bufbuild/buf-setup-action@v1
 
-      - name: Build proto image
-        run: |
-          cd googleapis
-          buf build . --exclude-path preview --output json -o /tmp/googleapis-image.json
-
       - name: Generate all API clients
         run: |
+          set -euo pipefail
           for entry in $APIS; do
             api="${entry%%:*}"
-            version="${entry##*:}"
-            echo "=== Generating $api ($version) ==="
-            curl -sS -o "/tmp/${api}.json" "https://www.googleapis.com/discovery/v1/apis/${api}/${version}/rest"
+            rest="${entry#*:}"
+            proto_pkg="${rest%%:*}"
+            proto_path="${rest#*:}"
 
-            STREAMING_FLAG=""
-            for sentry in $STREAMING_APIS; do
-              sapi="${sentry%%:*}"
-              sproto="${sentry##*:}"
-              if [ "$api" = "$sapi" ]; then
-                ./scripts/extract_streaming.sh "$sproto" "/tmp/${api}_streaming.json"
-                STREAMING_FLAG="--server-streaming /tmp/${api}_streaming.json"
-                break
-              fi
-            done
+            echo "=== Generating $api ($proto_pkg from $proto_path) ==="
+            image_path="/tmp/${api}-image.json"
 
-            moon run discovery/ --target native -- "/tmp/${api}.json" --output "generated/${api}" $STREAMING_FLAG
+            (cd googleapis && buf build . --path "$proto_path" --output json -o "$image_path")
+
+            moon run discovery/ --target native -- \
+              "$proto_pkg" \
+              --image "$image_path" \
+              --output "generated/${api}"
             moon fmt "generated/${api}"
           done
 
@@ -64,7 +58,7 @@ jobs:
         run: moon info
 
       - name: Check compilation
-        run: moon check
+        run: moon check --target native
 
       - name: Run tests
         run: moon test
