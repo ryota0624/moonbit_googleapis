@@ -20,7 +20,7 @@ Works on both **native** and **js** targets via HTTP/1.1.
 ```json
 {
   "deps": {
-    "ryota0624/googleapis": "0.2.3"
+    "ryota0624/googleapis": "0.3.0"
   }
 }
 ```
