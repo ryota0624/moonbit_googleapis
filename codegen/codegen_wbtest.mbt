@@ -139,9 +139,18 @@ test "write_rest_method uses Array return for server streaming" {
       #|  let json = @json.parse(resp.body) catch {
       #|    e => raise @http.HttpError::network_message(e.to_string())
       #|  }
-      #|  @json.from_json(json) catch {
-      #|    e => raise @http.HttpError::network_message(e.to_string())
+      #|  let arr = match json {
+      #|    Array(xs) => xs
+      #|    _ => raise @http.HttpError::network_message("expected JSON array for server-streaming response")
       #|  }
+      #|  let items : Array[RunQueryResponse] = Array::new()
+      #|  for el in arr {
+      #|    let item : RunQueryResponse = @json.from_json(el) catch {
+      #|      e => raise @http.HttpError::network_message(e.to_string())
+      #|    }
+      #|    items.push(item)
+      #|  }
+      #|  items
       #|}
       #|
       #|

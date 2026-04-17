@@ -10,18 +10,11 @@ jobs:
   generate:
     runs-on: self-hosted
     env:
-      # Entries are "<output_dir>:<proto_package>:<proto_path>".
+      # Proto-based APIs. Entries are "<output_dir>:<proto_package>:<proto_path>".
       # proto_path is the subtree under googleapis/ that buf builds into a
       # per-package JSON image. Keeping images per-package avoids the
       # non-UTF8 bytes issue present in the combined googleapis-image.json.
-      #
-      # NOTE: `generated/storage` is intentionally NOT in this list. Neither
-      # google/storage/v1 nor google/storage/v2 protos carry google.api.http
-      # annotations, so the protobuf-only codegen cannot produce a REST
-      # client from them. `generated/storage` is currently a legacy artifact
-      # from the Discovery-JSON pipeline and is maintained manually until
-      # migrated.
-      APIS: >-
+      PROTO_APIS: >-
         firestore:google.firestore.v1:google/firestore/v1
         pubsub:google.pubsub.v1:google/pubsub/v1
         cloudtasks:google.cloud.tasks.v2:google/cloud/tasks/v2
@@ -31,6 +24,11 @@ jobs:
         clouderrorreporting:google.devtools.clouderrorreporting.v1beta1:google/devtools/clouderrorreporting/v1beta1
         monitoring:google.monitoring.v3:google/monitoring/v3
         bigquery:google.cloud.bigquery.storage.v1:google/cloud/bigquery/storage/v1
+      # Discovery-based APIs. Entries are "<output_dir>:<discovery_url>".
+      # Used for APIs whose google.api.http annotations are missing from
+      # the proto definitions (e.g. Cloud Storage).
+      DISCOVERY_APIS: >-
+        storage:https://www.googleapis.com/discovery/v1/apis/storage/v1/rest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,10 +37,10 @@ jobs:
       - name: Install buf CLI
         uses: bufbuild/buf-setup-action@v1
 
-      - name: Generate all API clients
+      - name: Generate proto-based API clients
         run: |
           set -euo pipefail
-          for entry in $APIS; do
+          for entry in $PROTO_APIS; do
             api="${entry%%:*}"
             rest="${entry#*:}"
             proto_pkg="${rest%%:*}"
@@ -56,6 +54,24 @@ jobs:
             moon run codegen/ --target native -- \
               "$proto_pkg" \
               --image "$image_path" \
+              --output "generated/${api}"
+            moon fmt "generated/${api}"
+          done
+
+      - name: Generate Discovery-based API clients
+        run: |
+          set -euo pipefail
+          for entry in $DISCOVERY_APIS; do
+            api="${entry%%:*}"
+            url="${entry#*:}"
+
+            echo "=== Generating $api from Discovery: $url ==="
+            doc_path="/tmp/${api}-discovery.json"
+
+            curl -sSL -o "$doc_path" "$url"
+
+            moon run codegen/ --target native -- \
+              --image "$doc_path" \
               --output "generated/${api}"
             moon fmt "generated/${api}"
           done

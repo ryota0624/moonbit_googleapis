@@ -1,11 +1,16 @@
 ///|
 fn usage_and_exit() -> Unit {
   println(
-    "usage: moon run codegen -- <proto_package> [--image <path>] [--output <dir>]",
+    "usage: moon run codegen -- [<proto_package>] [--image <path>] [--output <dir>]",
   )
-  println("  proto_package: e.g. google.firestore.v1")
   println(
-    "  --image: path to buf Image JSON (default: /tmp/googleapis-image.json)",
+    "  proto_package: required when --image points to a buf proto image (e.g. google.firestore.v1).",
+  )
+  println(
+    "                 Omit when --image is a Google Discovery document (kind=discovery#restDescription).",
+  )
+  println(
+    "  --image: path to input JSON (buf Image or Discovery document). Default: /tmp/googleapis-image.json",
   )
   println("  --output: output directory")
   @sys.exit(1)
@@ -13,7 +18,7 @@ fn usage_and_exit() -> Unit {
 }
 
 ///|
-fn parse_args(args : Array[String]) -> (String, String, String?) {
+fn parse_args(args : Array[String]) -> (String?, String, String?) {
   let mut image_path = "/tmp/googleapis-image.json"
   let mut out_dir : String? = None
   let positionals : Array[String] = Array::new()
@@ -36,10 +41,8 @@ fn parse_args(args : Array[String]) -> (String, String, String?) {
       i = i + 1
     }
   }
-  if positionals.is_empty() {
-    usage_and_exit()
-  }
-  (positionals[0], image_path, out_dir)
+  let pkg = if positionals.is_empty() { None } else { Some(positionals[0]) }
+  (pkg, image_path, out_dir)
 }
 
 ///|
@@ -61,18 +64,49 @@ async fn main {
   }
   let (package_name, image_path, output_dir) = parse_args(args)
   let json_str = read_text_or_exit(image_path)
-  let image = parse_proto_image(json_str) catch {
+  let format = detect_input_format(json_str) catch {
     e => {
-      println("Failed to parse proto image: " + e.to_string())
+      println("Failed to detect input format: " + e.to_string())
       @sys.exit(1)
       panic()
     }
   }
-  let desc = proto_package_to_rest_description(image, package_name) catch {
-    e => {
-      println("Failed to convert proto to RestDescription: " + e.to_string())
-      @sys.exit(1)
-      panic()
+  let desc = match format {
+    InputFormat::Discovery =>
+      parse_discovery_rest_description(json_str) catch {
+        e => {
+          println("Failed to parse Discovery document: " + e.to_string())
+          @sys.exit(1)
+          panic()
+        }
+      }
+    InputFormat::Proto => {
+      let pkg = match package_name {
+        Some(p) => p
+        None => {
+          println(
+            "proto_package argument is required when --image is a buf proto image.",
+          )
+          usage_and_exit()
+          panic()
+        }
+      }
+      let image = parse_proto_image(json_str) catch {
+        e => {
+          println("Failed to parse proto image: " + e.to_string())
+          @sys.exit(1)
+          panic()
+        }
+      }
+      proto_package_to_rest_description(image, pkg) catch {
+        e => {
+          println(
+            "Failed to convert proto to RestDescription: " + e.to_string(),
+          )
+          @sys.exit(1)
+          panic()
+        }
+      }
     }
   }
   match output_dir {
