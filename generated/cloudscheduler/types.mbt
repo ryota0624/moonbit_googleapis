@@ -1,8 +1,12 @@
 ///|
-/// Schema ListLocationsResponse
-pub(all) struct ListLocationsResponse {
-  locations : Array[Location]?
-  next_page_token : String?
+/// Schema HttpTarget
+pub(all) struct HttpTarget {
+  uri : String?
+  http_method : String?
+  headers : Array[HeadersEntry]?
+  body : String?
+  oauth_token : OAuthToken?
+  oidc_token : OidcToken?
 } derive (
   Eq,
   Show,
@@ -11,125 +15,10 @@ pub(all) struct ListLocationsResponse {
 )
 
 ///|
-/// Schema Location
-pub(all) struct Location {
-  name : String?
-  location_id : String?
-  display_name : String?
-  labels : Json?
-  metadata : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListOperationsResponse
-pub(all) struct ListOperationsResponse {
-  operations : Array[Operation]?
-  next_page_token : String?
-  unreachable_ : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(
-    rename_fields="camelCase",
-    fields(unreachable_(rename="unreachable")),
-  ),
-  ToJson(rename_fields="camelCase", fields(unreachable_(rename="unreachable"))),
-)
-
-///|
-/// Schema Operation
-pub(all) struct Operation {
-  name : String?
-  metadata : Json?
-  done : Bool?
-  error : Status?
-  response : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Status
-pub(all) struct Status {
-  code : Int?
-  message : String?
-  details : Array[Json]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Empty
-pub(all) struct Empty {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CancelOperationRequest
-pub(all) struct CancelOperationRequest {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListJobsResponse
-pub(all) struct ListJobsResponse {
-  jobs : Array[Job]?
-  next_page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Job
-pub(all) struct Job {
-  name : String?
-  description : String?
-  pubsub_target : PubsubTarget?
-  app_engine_http_target : AppEngineHttpTarget?
-  http_target : HttpTarget?
-  schedule : String?
-  time_zone : String?
-  user_update_time : String?
-  state : String?
-  status : Status?
-  schedule_time : String?
-  last_attempt_time : String?
-  retry_config : RetryConfig?
-  attempt_deadline : String?
-  satisfies_pzs : Bool?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema PubsubTarget
-pub(all) struct PubsubTarget {
-  topic_name : String?
-  data : String?
-  attributes : Json?
+/// Schema HeadersEntry
+pub(all) struct HeadersEntry {
+  key : String?
+  value : String?
 } derive (
   Eq,
   Show,
@@ -143,8 +32,33 @@ pub(all) struct AppEngineHttpTarget {
   http_method : String?
   app_engine_routing : AppEngineRouting?
   relative_uri : String?
-  headers : Json?
+  headers : Array[HeadersEntry]?
   body : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema PubsubTarget
+pub(all) struct PubsubTarget {
+  topic_name : String?
+  data : String?
+  attributes : Array[AttributesEntry]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AttributesEntry
+pub(all) struct AttributesEntry {
+  key : String?
+  value : String?
 } derive (
   Eq,
   Show,
@@ -159,22 +73,6 @@ pub(all) struct AppEngineRouting {
   version : String?
   instance : String?
   host : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema HttpTarget
-pub(all) struct HttpTarget {
-  uri : String?
-  http_method : String?
-  headers : Json?
-  body : String?
-  oauth_token : OAuthToken?
-  oidc_token : OidcToken?
 } derive (
   Eq,
   Show,
@@ -207,6 +105,30 @@ pub(all) struct OidcToken {
 )
 
 ///|
+/// Schema Job
+pub(all) struct Job {
+  name : String?
+  description : String?
+  pubsub_target : PubsubTarget?
+  app_engine_http_target : AppEngineHttpTarget?
+  http_target : HttpTarget?
+  schedule : String?
+  time_zone : String?
+  user_update_time : String?
+  state : String?
+  status : Json?
+  schedule_time : String?
+  last_attempt_time : String?
+  retry_config : RetryConfig?
+  attempt_deadline : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema RetryConfig
 pub(all) struct RetryConfig {
   retry_count : Int?
@@ -222,8 +144,81 @@ pub(all) struct RetryConfig {
 )
 
 ///|
+/// Schema ListJobsRequest
+pub(all) struct ListJobsRequest {
+  parent : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListJobsResponse
+pub(all) struct ListJobsResponse {
+  jobs : Array[Job]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetJobRequest
+pub(all) struct GetJobRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateJobRequest
+pub(all) struct CreateJobRequest {
+  parent : String?
+  job : Job?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema UpdateJobRequest
+pub(all) struct UpdateJobRequest {
+  job : Job?
+  update_mask : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteJobRequest
+pub(all) struct DeleteJobRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema PauseJobRequest
-pub(all) struct PauseJobRequest {} derive (
+pub(all) struct PauseJobRequest {
+  name : String?
+} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -232,7 +227,9 @@ pub(all) struct PauseJobRequest {} derive (
 
 ///|
 /// Schema ResumeJobRequest
-pub(all) struct ResumeJobRequest {} derive (
+pub(all) struct ResumeJobRequest {
+  name : String?
+} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -241,50 +238,8 @@ pub(all) struct ResumeJobRequest {} derive (
 
 ///|
 /// Schema RunJobRequest
-pub(all) struct RunJobRequest {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CmekConfig
-pub(all) struct CmekConfig {
+pub(all) struct RunJobRequest {
   name : String?
-  kms_key_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema PubsubMessage
-pub(all) struct PubsubMessage {
-  data : String?
-  attributes : Json?
-  message_id : String?
-  publish_time : String?
-  ordering_key : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema OperationMetadata
-pub(all) struct OperationMetadata {
-  create_time : String?
-  end_time : String?
-  target : String?
-  verb : String?
-  status_detail : String?
-  cancel_requested : Bool?
-  api_version : String?
 } derive (
   Eq,
   Show,

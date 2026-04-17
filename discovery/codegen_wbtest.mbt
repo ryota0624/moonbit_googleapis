@@ -1,20 +1,14 @@
 ///|
-test "camel_prefix_match: proto name longer than discovery name" {
-  let streamings : Map[String, Bool] = {
-    "BatchGetDocuments": true,
-    "RunQuery": true,
-    "Listen": true,
+fn parse_rest_description_for_test(json : String) -> RestDescription {
+  let root = @json.parse(json) catch { _ => panic() }
+  @json.from_json(root) catch {
+    _ => panic()
   }
-  assert_true(camel_prefix_match("BatchGet", streamings))
-  assert_true(camel_prefix_match("RunQuery", streamings))
-  assert_true(camel_prefix_match("Listen", streamings))
-  assert_true(!camel_prefix_match("List", streamings))
-  assert_true(!camel_prefix_match("BatchWrite", streamings))
 }
 
 ///|
-async test "generate_helpers matches generated/drive/helpers.mbt" {
-  let expected = @fs.read_file("generated/drive/helpers.mbt").text()
+async test "generate_helpers matches generated/firestore/helpers.mbt" {
+  let expected = @fs.read_file("generated/firestore/helpers.mbt").text()
   assert_eq(generate_helpers(), expected)
 }
 
@@ -57,6 +51,45 @@ test "capitalize_first" {
   assert_eq(capitalize_first("drive"), "Drive")
   assert_eq(capitalize_first(""), "")
   assert_eq(capitalize_first("a"), "A")
+}
+
+///|
+test "normalize_proto_url: strips =pattern from path params" {
+  assert_eq(
+    normalize_proto_url("/v1/{name=projects/*/databases/*/documents/*/**}"),
+    "/v1/{name}",
+  )
+  assert_eq(
+    normalize_proto_url(
+      "/v1/{database=projects/*/databases/*}/documents:batchGet",
+    ),
+    "/v1/{database}/documents:batchGet",
+  )
+  assert_eq(normalize_proto_url("/v1/{name}"), "/v1/{name}")
+}
+
+///|
+test "parse_package_name_version" {
+  assert_eq(
+    parse_package_name_version("google.firestore.v1"),
+    ("firestore", "v1"),
+  )
+  assert_eq(
+    parse_package_name_version("google.cloud.bigquery.storage.v1"),
+    ("bigquery_storage", "v1"),
+  )
+  assert_eq(
+    parse_package_name_version("google.devtools.clouderrorreporting.v1beta1"),
+    ("clouderrorreporting", "v1beta1"),
+  )
+  assert_eq(parse_package_name_version("google.pubsub.v1"), ("pubsub", "v1"))
+}
+
+///|
+test "short_type_name" {
+  assert_eq(short_type_name(".google.firestore.v1.Document"), "Document")
+  assert_eq(short_type_name(".google.protobuf.Empty"), "Empty")
+  assert_eq(short_type_name("Document"), "Document")
 }
 
 ///|
@@ -197,7 +230,7 @@ test "generate_types and generate_client snapshot" {
     #|    }
     #|  }
     #|}
-  let d = parse_discovery(json)
+  let d = parse_rest_description_for_test(json)
   let out = generate_types(d) + "\n---\n" + generate_client(d)
   inspect(
     out,

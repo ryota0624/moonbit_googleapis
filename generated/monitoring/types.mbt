@@ -1,47 +1,11 @@
 ///|
-/// Schema MeshIstio
-pub(all) struct MeshIstio {
-  mesh_uid : String?
-  service_namespace : String?
-  service_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ServiceLevelIndicator
-pub(all) struct ServiceLevelIndicator {
-  basic_sli : BasicSli?
-  request_based : RequestBasedSli?
-  windows_based : WindowsBasedSli?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CreateCollectdTimeSeriesRequest
-pub(all) struct CreateCollectdTimeSeriesRequest {
-  resource : MonitoredResource?
-  collectd_version : String?
-  collectd_payloads : Array[CollectdPayload]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListServiceLevelObjectivesResponse
-pub(all) struct ListServiceLevelObjectivesResponse {
-  service_level_objectives : Array[ServiceLevelObjective]?
-  next_page_token : String?
+/// Schema TypedValue
+pub(all) struct TypedValue {
+  bool_value : Bool?
+  int64_value : String?
+  double_value : Double?
+  string_value : String?
+  distribution_value : Json?
 } derive (
   Eq,
   Show,
@@ -62,11 +26,12 @@ pub(all) struct TimeInterval {
 )
 
 ///|
-/// Schema ListNotificationChannelsResponse
-pub(all) struct ListNotificationChannelsResponse {
-  next_page_token : String?
-  total_size : Int?
-  notification_channels : Array[NotificationChannel]?
+/// Schema Aggregation
+pub(all) struct Aggregation {
+  alignment_period : String?
+  per_series_aligner : String?
+  cross_series_reducer : String?
+  group_by_fields : Array[String]?
 } derive (
   Eq,
   Show,
@@ -75,270 +40,10 @@ pub(all) struct ListNotificationChannelsResponse {
 )
 
 ///|
-/// Schema CollectdValueError
-pub(all) struct CollectdValueError {
-  index : Int?
-  error : Status?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema SendNotificationChannelVerificationCodeRequest
-pub(all) struct SendNotificationChannelVerificationCodeRequest {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema AvailabilityCriteria
-pub(all) struct AvailabilityCriteria {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema RequestBasedSli
-pub(all) struct RequestBasedSli {
-  good_total_ratio : TimeSeriesRatio?
-  distribution_cut : DistributionCut?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CollectdPayloadError
-pub(all) struct CollectdPayloadError {
-  error : Status?
-  value_errors : Array[CollectdValueError]?
-  index : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GoogleMonitoringV3Range
-pub(all) struct GoogleMonitoringV3Range {
-  min : Double?
-  max : Double?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Group
-pub(all) struct Group {
-  is_cluster : Bool?
-  display_name : String?
-  filter : String?
-  name : String?
-  parent_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BooleanTest
-pub(all) struct BooleanTest {
-  column : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema SpanContext
-pub(all) struct SpanContext {
-  span_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema QueryTimeSeriesRequest
-pub(all) struct QueryTimeSeriesRequest {
-  page_size : Int?
-  query : String?
-  page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema MonitoredResource
-pub(all) struct MonitoredResource {
-  labels : Json?
-  type_ : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema VerifyNotificationChannelRequest
-pub(all) struct VerifyNotificationChannelRequest {
-  code : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema IstioCanonicalService
-pub(all) struct IstioCanonicalService {
-  canonical_service_namespace : String?
-  mesh_uid : String?
-  canonical_service : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListAlertsResponse
-pub(all) struct ListAlertsResponse {
-  alerts : Array[Alert]?
-  next_page_token : String?
-  total_size : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Range
-pub(all) struct Range {
-  min : Double?
-  max : Double?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema NotificationChannelDescriptor
-pub(all) struct NotificationChannelDescriptor {
-  supported_tiers : Array[String]?
-  type_ : String?
-  display_name : String?
-  labels : Array[LabelDescriptor]?
-  launch_stage : String?
-  name : String?
-  description : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema TimeSeriesDescriptor
-pub(all) struct TimeSeriesDescriptor {
-  point_descriptors : Array[ValueDescriptor]?
-  label_descriptors : Array[LabelDescriptor]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ForecastOptions
-pub(all) struct ForecastOptions {
-  forecast_horizon : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Error
-pub(all) struct Error_ {
-  status : Status?
-  point_count : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Telemetry
-pub(all) struct Telemetry {
-  resource_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListTimeSeriesResponse
-pub(all) struct ListTimeSeriesResponse {
-  unit : String?
-  unreachable_ : Array[String]?
-  time_series : Array[TimeSeries]?
-  next_page_token : String?
-  execution_errors : Array[Status]?
-} derive (
-  Eq,
-  Show,
-  FromJson(
-    rename_fields="camelCase",
-    fields(unreachable_(rename="unreachable")),
-  ),
-  ToJson(rename_fields="camelCase", fields(unreachable_(rename="unreachable"))),
-)
-
-///|
-/// Schema CollectdValue
-pub(all) struct CollectdValue {
-  data_source_name : String?
-  value : TypedValue?
-  data_source_type : String?
+/// Schema MutationRecord
+pub(all) struct MutationRecord {
+  mutate_time : String?
+  mutated_by : String?
 } derive (
   Eq,
   Show,
@@ -349,528 +54,19 @@ pub(all) struct CollectdValue {
 ///|
 /// Schema AlertPolicy
 pub(all) struct AlertPolicy {
-  validity : Status?
-  enabled : Bool?
+  name : String?
+  display_name : String?
   documentation : Documentation?
-  name : String?
-  user_labels : Json?
-  combiner : String?
-  mutation_record : MutationRecord?
-  creation_record : MutationRecord?
-  display_name : String?
+  user_labels : Array[UserLabelsEntry]?
   conditions : Array[Condition]?
-  severity : String?
+  combiner : String?
+  enabled : Bool?
+  validity : Json?
   notification_channels : Array[String]?
+  creation_record : MutationRecord?
+  mutation_record : MutationRecord?
   alert_strategy : AlertStrategy?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ValueDescriptor
-pub(all) struct ValueDescriptor {
-  key : String?
-  value_type : String?
-  unit : String?
-  metric_kind : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BasicService
-pub(all) struct BasicService {
-  service_type : String?
-  service_labels : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Linear
-pub(all) struct Linear {
-  num_finite_buckets : Int?
-  width : Double?
-  offset : Double?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ClusterIstio
-pub(all) struct ClusterIstio {
-  location : String?
-  cluster_name : String?
-  service_namespace : String?
-  service_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Point
-pub(all) struct Point {
-  interval : TimeInterval?
-  value : TypedValue?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema LabelDescriptor
-pub(all) struct LabelDescriptor {
-  value_type : String?
-  key : String?
-  description : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ContentMatcher
-pub(all) struct ContentMatcher {
-  matcher : String?
-  json_path_matcher : JsonPathMatcher?
-  content : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ServiceAgentAuthentication
-pub(all) struct ServiceAgentAuthentication {
-  type_ : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema ListGroupsResponse
-pub(all) struct ListGroupsResponse {
-  group : Array[Group]?
-  next_page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListMonitoredResourceDescriptorsResponse
-pub(all) struct ListMonitoredResourceDescriptorsResponse {
-  next_page_token : String?
-  resource_descriptors : Array[MonitoredResourceDescriptor]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Empty
-pub(all) struct Empty {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema MonitoredResourceDescriptor
-pub(all) struct MonitoredResourceDescriptor {
-  labels : Array[LabelDescriptor]?
-  launch_stage : String?
-  type_ : String?
-  display_name : String?
-  name : String?
-  description : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema AppEngine
-pub(all) struct AppEngine {
-  module_id : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CollectdPayload
-pub(all) struct CollectdPayload {
-  start_time : String?
-  plugin_instance : String?
-  metadata : Json?
-  end_time : String?
-  values : Array[CollectdValue]?
-  plugin : String?
-  type_ : String?
-  type_instance : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema LabelValue
-pub(all) struct LabelValue {
-  bool_value : Bool?
-  string_value : String?
-  int64_value : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema UptimeCheckConfig
-pub(all) struct UptimeCheckConfig {
-  content_matchers : Array[ContentMatcher]?
-  disabled : Bool?
-  timeout : String?
-  log_check_failures : Bool?
-  http_check : HttpCheck?
-  display_name : String?
-  tcp_check : TcpCheck?
-  internal_checkers : Array[InternalChecker]?
-  checker_type : String?
-  synthetic_monitor : SyntheticMonitorTarget?
-  is_internal : Bool?
-  resource_group : ResourceGroup?
-  user_labels : Json?
-  monitored_resource : MonitoredResource?
-  name : String?
-  selected_regions : Array[String]?
-  period : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TimeSeriesData
-pub(all) struct TimeSeriesData {
-  point_data : Array[PointData]?
-  label_values : Array[LabelValue]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema WindowsBasedSli
-pub(all) struct WindowsBasedSli {
-  good_bad_metric_filter : String?
-  metric_mean_in_range : MetricRange?
-  window_period : String?
-  good_total_ratio_threshold : PerformanceThreshold?
-  metric_sum_in_range : MetricRange?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListServicesResponse
-pub(all) struct ListServicesResponse {
-  services : Array[Service]?
-  next_page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Exemplar
-pub(all) struct Exemplar {
-  timestamp : String?
-  value : Double?
-  attachments : Array[Json]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListUptimeCheckIpsResponse
-pub(all) struct ListUptimeCheckIpsResponse {
-  next_page_token : String?
-  uptime_check_ips : Array[UptimeCheckIp]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema PerformanceThreshold
-pub(all) struct PerformanceThreshold {
-  threshold : Double?
-  performance : RequestBasedSli?
-  basic_sli_performance : BasicSli?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BasicSli
-pub(all) struct BasicSli {
-  method_ : Array[String]?
-  location : Array[String]?
-  latency : LatencyCriteria?
-  availability : AvailabilityCriteria?
-  version : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(method_(rename="method"))),
-  ToJson(rename_fields="camelCase", fields(method_(rename="method"))),
-)
-
-///|
-/// Schema Custom
-pub(all) struct Custom {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema OperationMetadata
-pub(all) struct OperationMetadata {
-  update_time : String?
-  create_time : String?
-  state : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CloudFunctionV2Target
-pub(all) struct CloudFunctionV2Target {
-  name : String?
-  cloud_run_revision : MonitoredResource?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Distribution
-pub(all) struct Distribution {
-  range : Range?
-  bucket_options : BucketOptions?
-  count : String?
-  sum_of_squared_deviation : Double?
-  bucket_counts : Array[String]?
-  exemplars : Array[Exemplar]?
-  mean : Double?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema NotificationChannelStrategy
-pub(all) struct NotificationChannelStrategy {
-  notification_channel_names : Array[String]?
-  renotify_interval : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema LatencyCriteria
-pub(all) struct LatencyCriteria {
-  threshold : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Trigger
-pub(all) struct Trigger {
-  count : Int?
-  percent : Double?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Daily
-pub(all) struct Daily {
-  execution_time : TimeOfDay?
-  periodicity : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema UptimeCheckIp
-pub(all) struct UptimeCheckIp {
-  location : String?
-  ip_address : String?
-  region : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema MetricThreshold
-pub(all) struct MetricThreshold {
-  threshold_value : Double?
-  denominator_filter : String?
-  comparison : String?
-  duration : String?
-  aggregations : Array[Aggregation]?
-  denominator_aggregations : Array[Aggregation]?
-  evaluation_missing_data : String?
-  trigger : Trigger?
-  filter : String?
-  forecast_options : ForecastOptions?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema MonitoringQueryLanguageCondition
-pub(all) struct MonitoringQueryLanguageCondition {
-  duration : String?
-  trigger : Trigger?
-  query : String?
-  evaluation_missing_data : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BucketOptions
-pub(all) struct BucketOptions {
-  explicit_buckets : Explicit?
-  linear_buckets : Linear?
-  exponential_buckets : Exponential?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema PolicySnapshot
-pub(all) struct PolicySnapshot {
-  display_name : String?
-  user_labels : Json?
   severity : String?
-  name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GetNotificationChannelVerificationCodeResponse
-pub(all) struct GetNotificationChannelVerificationCodeResponse {
-  code : String?
-  expire_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListUptimeCheckConfigsResponse
-pub(all) struct ListUptimeCheckConfigsResponse {
-  next_page_token : String?
-  total_size : Int?
-  uptime_check_configs : Array[UptimeCheckConfig]?
 } derive (
   Eq,
   Show,
@@ -893,10 +89,10 @@ pub(all) struct Documentation {
 )
 
 ///|
-/// Schema CreateCollectdTimeSeriesResponse
-pub(all) struct CreateCollectdTimeSeriesResponse {
-  summary : CreateTimeSeriesSummary?
-  payload_errors : Array[CollectdPayloadError]?
+/// Schema Link
+pub(all) struct Link {
+  display_name : String?
+  url : String?
 } derive (
   Eq,
   Show,
@@ -905,30 +101,16 @@ pub(all) struct CreateCollectdTimeSeriesResponse {
 )
 
 ///|
-/// Schema Metric
-pub(all) struct Metric {
-  labels : Json?
-  type_ : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema Field
-pub(all) struct Field {
-  number : Int?
-  packed : Bool?
-  type_url : String?
-  oneof_index : Int?
-  options : Array[Option]?
-  default_value : String?
-  json_name : String?
+/// Schema Condition
+pub(all) struct Condition {
   name : String?
-  cardinality : String?
-  kind : String?
+  display_name : String?
+  condition_threshold : MetricThreshold?
+  condition_absent : MetricAbsence?
+  condition_matched_log : LogMatch?
+  condition_monitoring_query_language : MonitoringQueryLanguageCondition?
+  condition_prometheus_query_language : PrometheusQueryLanguageCondition?
+  condition_sql : SqlCondition?
 } derive (
   Eq,
   Show,
@@ -937,10 +119,10 @@ pub(all) struct Field {
 )
 
 ///|
-/// Schema DistributionCut
-pub(all) struct DistributionCut {
-  distribution_filter : String?
-  range : GoogleMonitoringV3Range?
+/// Schema Trigger
+pub(all) struct Trigger {
+  count : Int?
+  percent : Double?
 } derive (
   Eq,
   Show,
@@ -949,9 +131,271 @@ pub(all) struct DistributionCut {
 )
 
 ///|
-/// Schema PingConfig
-pub(all) struct PingConfig {
-  pings_count : Int?
+/// Schema MetricThreshold
+pub(all) struct MetricThreshold {
+  filter : String?
+  aggregations : Array[Aggregation]?
+  denominator_filter : String?
+  denominator_aggregations : Array[Aggregation]?
+  forecast_options : ForecastOptions?
+  comparison : String?
+  threshold_value : Double?
+  duration : String?
+  trigger : Trigger?
+  evaluation_missing_data : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ForecastOptions
+pub(all) struct ForecastOptions {
+  forecast_horizon : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema MetricAbsence
+pub(all) struct MetricAbsence {
+  filter : String?
+  aggregations : Array[Aggregation]?
+  duration : String?
+  trigger : Trigger?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema LogMatch
+pub(all) struct LogMatch {
+  filter : String?
+  label_extractors : Array[LabelExtractorsEntry]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema LabelExtractorsEntry
+pub(all) struct LabelExtractorsEntry {
+  key : String?
+  value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema MonitoringQueryLanguageCondition
+pub(all) struct MonitoringQueryLanguageCondition {
+  query : String?
+  duration : String?
+  trigger : Trigger?
+  evaluation_missing_data : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema PrometheusQueryLanguageCondition
+pub(all) struct PrometheusQueryLanguageCondition {
+  query : String?
+  duration : String?
+  evaluation_interval : String?
+  labels : Array[LabelsEntry]?
+  rule_group : String?
+  alert_rule : String?
+  disable_metric_validation : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema LabelsEntry
+pub(all) struct LabelsEntry {
+  key : String?
+  value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema SqlCondition
+pub(all) struct SqlCondition {
+  query : String?
+  minutes : Minutes?
+  hourly : Hourly?
+  daily : Daily?
+  row_count_test : RowCountTest?
+  boolean_test : BooleanTest?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Minutes
+pub(all) struct Minutes {
+  periodicity : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Hourly
+pub(all) struct Hourly {
+  periodicity : Int?
+  minute_offset : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Daily
+pub(all) struct Daily {
+  periodicity : Int?
+  execution_time : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema RowCountTest
+pub(all) struct RowCountTest {
+  comparison : String?
+  threshold : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BooleanTest
+pub(all) struct BooleanTest {
+  column : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AlertStrategy
+pub(all) struct AlertStrategy {
+  notification_rate_limit : NotificationRateLimit?
+  notification_prompts : Array[String]?
+  auto_close : String?
+  notification_channel_strategy : Array[NotificationChannelStrategy]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema NotificationRateLimit
+pub(all) struct NotificationRateLimit {
+  period : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema NotificationChannelStrategy
+pub(all) struct NotificationChannelStrategy {
+  notification_channel_names : Array[String]?
+  renotify_interval : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema UserLabelsEntry
+pub(all) struct UserLabelsEntry {
+  key : String?
+  value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateAlertPolicyRequest
+pub(all) struct CreateAlertPolicyRequest {
+  name : String?
+  alert_policy : AlertPolicy?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetAlertPolicyRequest
+pub(all) struct GetAlertPolicyRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListAlertPoliciesRequest
+pub(all) struct ListAlertPoliciesRequest {
+  name : String?
+  filter : String?
+  order_by : String?
+  page_size : Int?
+  page_token : String?
 } derive (
   Eq,
   Show,
@@ -973,12 +417,806 @@ pub(all) struct ListAlertPoliciesResponse {
 )
 
 ///|
+/// Schema UpdateAlertPolicyRequest
+pub(all) struct UpdateAlertPolicyRequest {
+  update_mask : String?
+  alert_policy : AlertPolicy?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteAlertPolicyRequest
+pub(all) struct DeleteAlertPolicyRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DroppedLabels
+pub(all) struct DroppedLabels {
+  label : Array[LabelEntry]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema LabelEntry
+pub(all) struct LabelEntry {
+  key : String?
+  value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Group
+pub(all) struct Group {
+  name : String?
+  display_name : String?
+  parent_name : String?
+  filter : String?
+  is_cluster : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListGroupsRequest
+pub(all) struct ListGroupsRequest {
+  name : String?
+  children_of_group : String?
+  ancestors_of_group : String?
+  descendants_of_group : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListGroupsResponse
+pub(all) struct ListGroupsResponse {
+  group : Array[Group]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetGroupRequest
+pub(all) struct GetGroupRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateGroupRequest
+pub(all) struct CreateGroupRequest {
+  name : String?
+  group : Group?
+  validate_only : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema UpdateGroupRequest
+pub(all) struct UpdateGroupRequest {
+  group : Group?
+  validate_only : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteGroupRequest
+pub(all) struct DeleteGroupRequest {
+  name : String?
+  recursive : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListGroupMembersRequest
+pub(all) struct ListGroupMembersRequest {
+  name : String?
+  page_size : Int?
+  page_token : String?
+  filter : String?
+  interval : TimeInterval?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListGroupMembersResponse
+pub(all) struct ListGroupMembersResponse {
+  members : Array[Json]?
+  next_page_token : String?
+  total_size : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Point
+pub(all) struct Point {
+  interval : TimeInterval?
+  value : TypedValue?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TimeSeries
+pub(all) struct TimeSeries {
+  metric : Json?
+  resource : Json?
+  metadata : Json?
+  metric_kind : String?
+  value_type : String?
+  points : Array[Point]?
+  unit : String?
+  description : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TimeSeriesDescriptor
+pub(all) struct TimeSeriesDescriptor {
+  label_descriptors : Array[Json]?
+  point_descriptors : Array[ValueDescriptor]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ValueDescriptor
+pub(all) struct ValueDescriptor {
+  key : String?
+  value_type : String?
+  metric_kind : String?
+  unit : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TimeSeriesData
+pub(all) struct TimeSeriesData {
+  label_values : Array[LabelValue]?
+  point_data : Array[PointData]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema PointData
+pub(all) struct PointData {
+  values : Array[TypedValue]?
+  time_interval : TimeInterval?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema LabelValue
+pub(all) struct LabelValue {
+  bool_value : Bool?
+  int64_value : String?
+  string_value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema QueryError
+pub(all) struct QueryError {
+  locator : TextLocator?
+  message : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TextLocator
+pub(all) struct TextLocator {
+  source : String?
+  start_position : Position?
+  end_position : Position?
+  nested_locator : TextLocator?
+  nesting_reason : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Position
+pub(all) struct Position {
+  line : Int?
+  column : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListMonitoredResourceDescriptorsRequest
+pub(all) struct ListMonitoredResourceDescriptorsRequest {
+  name : String?
+  filter : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListMonitoredResourceDescriptorsResponse
+pub(all) struct ListMonitoredResourceDescriptorsResponse {
+  resource_descriptors : Array[Json]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetMonitoredResourceDescriptorRequest
+pub(all) struct GetMonitoredResourceDescriptorRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListMetricDescriptorsRequest
+pub(all) struct ListMetricDescriptorsRequest {
+  name : String?
+  filter : String?
+  page_size : Int?
+  page_token : String?
+  active_only : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListMetricDescriptorsResponse
+pub(all) struct ListMetricDescriptorsResponse {
+  metric_descriptors : Array[Json]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetMetricDescriptorRequest
+pub(all) struct GetMetricDescriptorRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateMetricDescriptorRequest
+pub(all) struct CreateMetricDescriptorRequest {
+  name : String?
+  metric_descriptor : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteMetricDescriptorRequest
+pub(all) struct DeleteMetricDescriptorRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListTimeSeriesRequest
+pub(all) struct ListTimeSeriesRequest {
+  name : String?
+  filter : String?
+  interval : TimeInterval?
+  aggregation : Aggregation?
+  secondary_aggregation : Aggregation?
+  order_by : String?
+  view : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListTimeSeriesResponse
+pub(all) struct ListTimeSeriesResponse {
+  time_series : Array[TimeSeries]?
+  next_page_token : String?
+  execution_errors : Array[Json]?
+  unit : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateTimeSeriesRequest
+pub(all) struct CreateTimeSeriesRequest {
+  name : String?
+  time_series : Array[TimeSeries]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateTimeSeriesError
+pub(all) struct CreateTimeSeriesError {
+  time_series : TimeSeries?
+  status : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateTimeSeriesSummary
+pub(all) struct CreateTimeSeriesSummary {
+  total_point_count : Int?
+  success_point_count : Int?
+  errors : Array[Error_]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Error
+pub(all) struct Error_ {
+  status : Json?
+  point_count : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema QueryTimeSeriesRequest
+pub(all) struct QueryTimeSeriesRequest {
+  name : String?
+  query : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema QueryTimeSeriesResponse
 pub(all) struct QueryTimeSeriesResponse {
   time_series_descriptor : TimeSeriesDescriptor?
   time_series_data : Array[TimeSeriesData]?
-  partial_errors : Array[Status]?
   next_page_token : String?
+  partial_errors : Array[Json]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema QueryErrorList
+pub(all) struct QueryErrorList {
+  errors : Array[QueryError]?
+  error_summary : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema NotificationChannelDescriptor
+pub(all) struct NotificationChannelDescriptor {
+  name : String?
+  type_ : String?
+  display_name : String?
+  description : String?
+  labels : Array[Json]?
+  supported_tiers : Array[String]?
+  launch_stage : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
+)
+
+///|
+/// Schema NotificationChannel
+pub(all) struct NotificationChannel {
+  type_ : String?
+  name : String?
+  display_name : String?
+  description : String?
+  labels : Array[LabelsEntry]?
+  user_labels : Array[UserLabelsEntry]?
+  verification_status : String?
+  enabled : Bool?
+  creation_record : MutationRecord?
+  mutation_records : Array[MutationRecord]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
+)
+
+///|
+/// Schema ListNotificationChannelDescriptorsRequest
+pub(all) struct ListNotificationChannelDescriptorsRequest {
+  name : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListNotificationChannelDescriptorsResponse
+pub(all) struct ListNotificationChannelDescriptorsResponse {
+  channel_descriptors : Array[NotificationChannelDescriptor]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetNotificationChannelDescriptorRequest
+pub(all) struct GetNotificationChannelDescriptorRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateNotificationChannelRequest
+pub(all) struct CreateNotificationChannelRequest {
+  name : String?
+  notification_channel : NotificationChannel?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListNotificationChannelsRequest
+pub(all) struct ListNotificationChannelsRequest {
+  name : String?
+  filter : String?
+  order_by : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListNotificationChannelsResponse
+pub(all) struct ListNotificationChannelsResponse {
+  notification_channels : Array[NotificationChannel]?
+  next_page_token : String?
+  total_size : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetNotificationChannelRequest
+pub(all) struct GetNotificationChannelRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema UpdateNotificationChannelRequest
+pub(all) struct UpdateNotificationChannelRequest {
+  update_mask : String?
+  notification_channel : NotificationChannel?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteNotificationChannelRequest
+pub(all) struct DeleteNotificationChannelRequest {
+  name : String?
+  force : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema SendNotificationChannelVerificationCodeRequest
+pub(all) struct SendNotificationChannelVerificationCodeRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetNotificationChannelVerificationCodeRequest
+pub(all) struct GetNotificationChannelVerificationCodeRequest {
+  name : String?
+  expire_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetNotificationChannelVerificationCodeResponse
+pub(all) struct GetNotificationChannelVerificationCodeResponse {
+  code : String?
+  expire_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema VerifyNotificationChannelRequest
+pub(all) struct VerifyNotificationChannelRequest {
+  name : String?
+  code : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Service
+pub(all) struct Service {
+  name : String?
+  display_name : String?
+  custom : Custom?
+  app_engine : AppEngine?
+  cloud_endpoints : CloudEndpoints?
+  cluster_istio : ClusterIstio?
+  mesh_istio : MeshIstio?
+  istio_canonical_service : IstioCanonicalService?
+  cloud_run : CloudRun?
+  gke_namespace : GkeNamespace?
+  gke_workload : GkeWorkload?
+  gke_service : GkeService?
+  basic_service : BasicService?
+  telemetry : Telemetry?
+  user_labels : Array[UserLabelsEntry]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Custom
+pub(all) struct Custom {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AppEngine
+pub(all) struct AppEngine {
+  module_id : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CloudEndpoints
+pub(all) struct CloudEndpoints {
+  service : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ClusterIstio
+pub(all) struct ClusterIstio {
+  location : String?
+  cluster_name : String?
+  service_namespace : String?
+  service_name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema MeshIstio
+pub(all) struct MeshIstio {
+  mesh_uid : String?
+  service_namespace : String?
+  service_name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema IstioCanonicalService
+pub(all) struct IstioCanonicalService {
+  mesh_uid : String?
+  canonical_service_namespace : String?
+  canonical_service : String?
 } derive (
   Eq,
   Show,
@@ -991,6 +1229,20 @@ pub(all) struct QueryTimeSeriesResponse {
 pub(all) struct CloudRun {
   service_name : String?
   location : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GkeNamespace
+pub(all) struct GkeNamespace {
+  project_id : String?
+  location : String?
+  cluster_name : String?
+  namespace_name : String?
 } derive (
   Eq,
   Show,
@@ -1015,47 +1267,13 @@ pub(all) struct GkeWorkload {
 )
 
 ///|
-/// Schema Hourly
-pub(all) struct Hourly {
-  periodicity : Int?
-  minute_offset : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Criteria
-pub(all) struct Criteria {
-  policies : Array[String]?
-  filter : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Minutes
-pub(all) struct Minutes {
-  periodicity : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GkeNamespace
-pub(all) struct GkeNamespace {
+/// Schema GkeService
+pub(all) struct GkeService {
   project_id : String?
   location : String?
   cluster_name : String?
   namespace_name : String?
+  service_name : String?
 } derive (
   Eq,
   Show,
@@ -1064,15 +1282,10 @@ pub(all) struct GkeNamespace {
 )
 
 ///|
-/// Schema PrometheusQueryLanguageCondition
-pub(all) struct PrometheusQueryLanguageCondition {
-  duration : String?
-  rule_group : String?
-  alert_rule : String?
-  disable_metric_validation : Bool?
-  evaluation_interval : String?
-  labels : Json?
-  query : String?
+/// Schema BasicService
+pub(all) struct BasicService {
+  service_type : String?
+  service_labels : Array[ServiceLabelsEntry]?
 } derive (
   Eq,
   Show,
@@ -1081,10 +1294,10 @@ pub(all) struct PrometheusQueryLanguageCondition {
 )
 
 ///|
-/// Schema ResourceGroup
-pub(all) struct ResourceGroup {
-  group_id : String?
-  resource_type : String?
+/// Schema ServiceLabelsEntry
+pub(all) struct ServiceLabelsEntry {
+  key : String?
+  value : String?
 } derive (
   Eq,
   Show,
@@ -1093,13 +1306,9 @@ pub(all) struct ResourceGroup {
 )
 
 ///|
-/// Schema TypedValue
-pub(all) struct TypedValue {
-  bool_value : Bool?
-  string_value : String?
-  int64_value : String?
-  double_value : Double?
-  distribution_value : Distribution?
+/// Schema Telemetry
+pub(all) struct Telemetry {
+  resource_name : String?
 } derive (
   Eq,
   Show,
@@ -1108,153 +1317,15 @@ pub(all) struct TypedValue {
 )
 
 ///|
-/// Schema Link
-pub(all) struct Link {
-  url : String?
-  display_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema SourceContext
-pub(all) struct SourceContext {
-  file_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListGroupMembersResponse
-pub(all) struct ListGroupMembersResponse {
-  members : Array[MonitoredResource]?
-  next_page_token : String?
-  total_size : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TimeSeries
-pub(all) struct TimeSeries {
-  resource : MonitoredResource?
-  metadata : MonitoredResourceMetadata?
-  points : Array[Point]?
-  description : String?
-  metric : Metric?
-  metric_kind : String?
-  value_type : String?
-  unit : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema NotificationRateLimit
-pub(all) struct NotificationRateLimit {
-  period : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CreateTimeSeriesRequest
-pub(all) struct CreateTimeSeriesRequest {
-  time_series : Array[TimeSeries]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema SqlCondition
-pub(all) struct SqlCondition {
-  row_count_test : RowCountTest?
-  hourly : Hourly?
-  daily : Daily?
-  boolean_test : BooleanTest?
-  query : String?
-  minutes : Minutes?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListSnoozesResponse
-pub(all) struct ListSnoozesResponse {
-  snoozes : Array[Snooze]?
-  next_page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Option
-pub(all) struct Option {
+/// Schema ServiceLevelObjective
+pub(all) struct ServiceLevelObjective {
   name : String?
-  value : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BasicAuthentication
-pub(all) struct BasicAuthentication {
-  password : String?
-  username : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema GetNotificationChannelVerificationCodeRequest
-pub(all) struct GetNotificationChannelVerificationCodeRequest {
-  expire_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema InternalChecker
-pub(all) struct InternalChecker {
-  name : String?
-  state : String?
-  network : String?
-  gcp_zone : String?
   display_name : String?
-  peer_project_id : String?
+  service_level_indicator : ServiceLevelIndicator?
+  goal : Double?
+  rolling_period : String?
+  calendar_period : String?
+  user_labels : Array[UserLabelsEntry]?
 } derive (
   Eq,
   Show,
@@ -1263,22 +1334,11 @@ pub(all) struct InternalChecker {
 )
 
 ///|
-/// Schema HttpCheck
-pub(all) struct HttpCheck {
-  auth_info : BasicAuthentication?
-  ping_config : PingConfig?
-  body : String?
-  service_agent_authentication : ServiceAgentAuthentication?
-  request_method : String?
-  use_ssl : Bool?
-  validate_ssl : Bool?
-  mask_headers : Bool?
-  custom_content_type : String?
-  port : Int?
-  content_type : String?
-  accepted_response_status_codes : Array[ResponseStatusCode]?
-  headers : Json?
-  path : String?
+/// Schema ServiceLevelIndicator
+pub(all) struct ServiceLevelIndicator {
+  basic_sli : BasicSli?
+  request_based : RequestBasedSli?
+  windows_based : WindowsBasedSli?
 } derive (
   Eq,
   Show,
@@ -1287,10 +1347,23 @@ pub(all) struct HttpCheck {
 )
 
 ///|
-/// Schema CloudEndpoints
-pub(all) struct CloudEndpoints {
-  service : String?
+/// Schema BasicSli
+pub(all) struct BasicSli {
+  method_ : Array[String]?
+  location : Array[String]?
+  version : Array[String]?
+  availability : AvailabilityCriteria?
+  latency : LatencyCriteria?
 } derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(method_(rename="method"))),
+  ToJson(rename_fields="camelCase", fields(method_(rename="method"))),
+)
+
+///|
+/// Schema AvailabilityCriteria
+pub(all) struct AvailabilityCriteria {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -1298,104 +1371,8 @@ pub(all) struct CloudEndpoints {
 )
 
 ///|
-/// Schema ResponseStatusCode
-pub(all) struct ResponseStatusCode {
-  status_value : Int?
-  status_class : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Aggregation
-pub(all) struct Aggregation {
-  per_series_aligner : String?
-  alignment_period : String?
-  cross_series_reducer : String?
-  group_by_fields : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TcpCheck
-pub(all) struct TcpCheck {
-  ping_config : PingConfig?
-  port : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListMetricDescriptorsResponse
-pub(all) struct ListMetricDescriptorsResponse {
-  next_page_token : String?
-  metric_descriptors : Array[MetricDescriptor]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ListNotificationChannelDescriptorsResponse
-pub(all) struct ListNotificationChannelDescriptorsResponse {
-  channel_descriptors : Array[NotificationChannelDescriptor]?
-  next_page_token : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Status
-pub(all) struct Status {
-  code : Int?
-  message : String?
-  details : Array[Json]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema NotificationChannel
-pub(all) struct NotificationChannel {
-  name : String?
-  mutation_records : Array[MutationRecord]?
-  type_ : String?
-  display_name : String?
-  labels : Json?
-  creation_record : MutationRecord?
-  verification_status : String?
-  enabled : Bool?
-  description : String?
-  user_labels : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema RowCountTest
-pub(all) struct RowCountTest {
-  comparison : String?
+/// Schema LatencyCriteria
+pub(all) struct LatencyCriteria {
   threshold : String?
 } derive (
   Eq,
@@ -1405,11 +1382,10 @@ pub(all) struct RowCountTest {
 )
 
 ///|
-/// Schema Exponential
-pub(all) struct Exponential {
-  num_finite_buckets : Int?
-  growth_factor : Double?
-  scale : Double?
+/// Schema Range
+pub(all) struct Range {
+  min : Double?
+  max : Double?
 } derive (
   Eq,
   Show,
@@ -1418,12 +1394,10 @@ pub(all) struct Exponential {
 )
 
 ///|
-/// Schema TimeOfDay
-pub(all) struct TimeOfDay {
-  hours : Int?
-  minutes : Int?
-  seconds : Int?
-  nanos : Int?
+/// Schema RequestBasedSli
+pub(all) struct RequestBasedSli {
+  good_total_ratio : TimeSeriesRatio?
+  distribution_cut : DistributionCut?
 } derive (
   Eq,
   Show,
@@ -1445,12 +1419,212 @@ pub(all) struct TimeSeriesRatio {
 )
 
 ///|
+/// Schema DistributionCut
+pub(all) struct DistributionCut {
+  distribution_filter : String?
+  range : Range?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema WindowsBasedSli
+pub(all) struct WindowsBasedSli {
+  good_bad_metric_filter : String?
+  good_total_ratio_threshold : PerformanceThreshold?
+  metric_mean_in_range : MetricRange?
+  metric_sum_in_range : MetricRange?
+  window_period : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema PerformanceThreshold
+pub(all) struct PerformanceThreshold {
+  performance : RequestBasedSli?
+  basic_sli_performance : BasicSli?
+  threshold : Double?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema MetricRange
+pub(all) struct MetricRange {
+  time_series : String?
+  range : Range?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateServiceRequest
+pub(all) struct CreateServiceRequest {
+  parent : String?
+  service_id : String?
+  service : Service?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetServiceRequest
+pub(all) struct GetServiceRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListServicesRequest
+pub(all) struct ListServicesRequest {
+  parent : String?
+  filter : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListServicesResponse
+pub(all) struct ListServicesResponse {
+  services : Array[Service]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema UpdateServiceRequest
+pub(all) struct UpdateServiceRequest {
+  service : Service?
+  update_mask : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteServiceRequest
+pub(all) struct DeleteServiceRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateServiceLevelObjectiveRequest
+pub(all) struct CreateServiceLevelObjectiveRequest {
+  parent : String?
+  service_level_objective_id : String?
+  service_level_objective : ServiceLevelObjective?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetServiceLevelObjectiveRequest
+pub(all) struct GetServiceLevelObjectiveRequest {
+  name : String?
+  view : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListServiceLevelObjectivesRequest
+pub(all) struct ListServiceLevelObjectivesRequest {
+  parent : String?
+  filter : String?
+  page_size : Int?
+  page_token : String?
+  view : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListServiceLevelObjectivesResponse
+pub(all) struct ListServiceLevelObjectivesResponse {
+  service_level_objectives : Array[ServiceLevelObjective]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema UpdateServiceLevelObjectiveRequest
+pub(all) struct UpdateServiceLevelObjectiveRequest {
+  service_level_objective : ServiceLevelObjective?
+  update_mask : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteServiceLevelObjectiveRequest
+pub(all) struct DeleteServiceLevelObjectiveRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema Snooze
 pub(all) struct Snooze {
+  name : String?
   criteria : Criteria?
   interval : TimeInterval?
   display_name : String?
-  name : String?
 } derive (
   Eq,
   Show,
@@ -1459,45 +1633,10 @@ pub(all) struct Snooze {
 )
 
 ///|
-/// Schema MetricDescriptor
-pub(all) struct MetricDescriptor {
-  launch_stage : String?
-  unit : String?
-  description : String?
-  labels : Array[LabelDescriptor]?
-  metric_kind : String?
-  type_ : String?
-  display_name : String?
-  monitored_resource_types : Array[String]?
-  value_type : String?
-  metadata : MetricDescriptorMetadata?
-  name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema MetricDescriptorMetadata
-pub(all) struct MetricDescriptorMetadata {
-  sample_period : String?
-  time_series_resource_hierarchy_level : Array[String]?
-  ingest_delay : String?
-  launch_stage : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema LogMatch
-pub(all) struct LogMatch {
+/// Schema Criteria
+pub(all) struct Criteria {
+  policies : Array[String]?
   filter : String?
-  label_extractors : Json?
 } derive (
   Eq,
   Show,
@@ -1506,9 +1645,10 @@ pub(all) struct LogMatch {
 )
 
 ///|
-/// Schema LogMetadata
-pub(all) struct LogMetadata {
-  extracted_labels : Json?
+/// Schema CreateSnoozeRequest
+pub(all) struct CreateSnoozeRequest {
+  parent : String?
+  snooze : Snooze?
 } derive (
   Eq,
   Show,
@@ -1517,13 +1657,12 @@ pub(all) struct LogMetadata {
 )
 
 ///|
-/// Schema GkeService
-pub(all) struct GkeService {
-  project_id : String?
-  location : String?
-  cluster_name : String?
-  namespace_name : String?
-  service_name : String?
+/// Schema ListSnoozesRequest
+pub(all) struct ListSnoozesRequest {
+  parent : String?
+  filter : String?
+  page_size : Int?
+  page_token : String?
 } derive (
   Eq,
   Show,
@@ -1532,10 +1671,10 @@ pub(all) struct GkeService {
 )
 
 ///|
-/// Schema PointData
-pub(all) struct PointData {
-  values : Array[TypedValue]?
-  time_interval : TimeInterval?
+/// Schema ListSnoozesResponse
+pub(all) struct ListSnoozesResponse {
+  snoozes : Array[Snooze]?
+  next_page_token : String?
 } derive (
   Eq,
   Show,
@@ -1544,40 +1683,9 @@ pub(all) struct PointData {
 )
 
 ///|
-/// Schema AlertStrategy
-pub(all) struct AlertStrategy {
-  notification_rate_limit : NotificationRateLimit?
-  auto_close : String?
-  notification_channel_strategy : Array[NotificationChannelStrategy]?
-  notification_prompts : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema DroppedLabels
-pub(all) struct DroppedLabels {
-  label : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Type
-pub(all) struct Type {
-  oneofs : Array[String]?
-  syntax : String?
-  source_context : SourceContext?
-  options : Array[Option]?
-  fields : Array[Field]?
+/// Schema GetSnoozeRequest
+pub(all) struct GetSnoozeRequest {
   name : String?
-  edition : String?
 } derive (
   Eq,
   Show,
@@ -1586,42 +1694,37 @@ pub(all) struct Type {
 )
 
 ///|
-/// Schema Alert
-pub(all) struct Alert {
-  open_time : String?
-  resource : MonitoredResource?
-  state : String?
-  log : LogMetadata?
-  policy : PolicySnapshot?
-  metric : Metric?
+/// Schema UpdateSnoozeRequest
+pub(all) struct UpdateSnoozeRequest {
+  snooze : Snooze?
+  update_mask : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema SpanContext
+pub(all) struct SpanContext {
+  span_name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema InternalChecker
+pub(all) struct InternalChecker {
   name : String?
-  metadata : MonitoredResourceMetadata?
-  close_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Service
-pub(all) struct Service {
-  cloud_run : CloudRun?
-  app_engine : AppEngine?
-  mesh_istio : MeshIstio?
-  gke_workload : GkeWorkload?
   display_name : String?
-  basic_service : BasicService?
-  telemetry : Telemetry?
-  cloud_endpoints : CloudEndpoints?
-  custom : Custom?
-  gke_service : GkeService?
-  user_labels : Json?
-  cluster_istio : ClusterIstio?
-  name : String?
-  gke_namespace : GkeNamespace?
-  istio_canonical_service : IstioCanonicalService?
+  network : String?
+  gcp_zone : String?
+  peer_project_id : String?
+  state : String?
 } derive (
   Eq,
   Show,
@@ -1641,15 +1744,10 @@ pub(all) struct SyntheticMonitorTarget {
 )
 
 ///|
-/// Schema ServiceLevelObjective
-pub(all) struct ServiceLevelObjective {
-  service_level_indicator : ServiceLevelIndicator?
+/// Schema CloudFunctionV2Target
+pub(all) struct CloudFunctionV2Target {
   name : String?
-  goal : Double?
-  calendar_period : String?
-  display_name : String?
-  rolling_period : String?
-  user_labels : Json?
+  cloud_run_revision : Json?
 } derive (
   Eq,
   Show,
@@ -1658,41 +1756,23 @@ pub(all) struct ServiceLevelObjective {
 )
 
 ///|
-/// Schema MonitoredResourceMetadata
-pub(all) struct MonitoredResourceMetadata {
-  user_labels : Json?
-  system_labels : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema CreateTimeSeriesSummary
-pub(all) struct CreateTimeSeriesSummary {
-  total_point_count : Int?
-  errors : Array[Error_]?
-  success_point_count : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Condition
-pub(all) struct Condition {
-  display_name : String?
-  condition_threshold : MetricThreshold?
-  condition_absent : MetricAbsence?
-  condition_monitoring_query_language : MonitoringQueryLanguageCondition?
-  condition_sql : SqlCondition?
-  condition_matched_log : LogMatch?
-  condition_prometheus_query_language : PrometheusQueryLanguageCondition?
+/// Schema UptimeCheckConfig
+pub(all) struct UptimeCheckConfig {
   name : String?
+  display_name : String?
+  monitored_resource : Json?
+  resource_group : ResourceGroup?
+  synthetic_monitor : SyntheticMonitorTarget?
+  http_check : HttpCheck?
+  tcp_check : TcpCheck?
+  period : String?
+  timeout : String?
+  content_matchers : Array[ContentMatcher]?
+  checker_type : String?
+  selected_regions : Array[String]?
+  is_internal : Bool?
+  internal_checkers : Array[InternalChecker]?
+  user_labels : Array[UserLabelsEntry]?
 } derive (
   Eq,
   Show,
@@ -1701,12 +1781,117 @@ pub(all) struct Condition {
 )
 
 ///|
-/// Schema MetricAbsence
-pub(all) struct MetricAbsence {
-  filter : String?
-  aggregations : Array[Aggregation]?
-  duration : String?
-  trigger : Trigger?
+/// Schema ResourceGroup
+pub(all) struct ResourceGroup {
+  group_id : String?
+  resource_type : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema PingConfig
+pub(all) struct PingConfig {
+  pings_count : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema HttpCheck
+pub(all) struct HttpCheck {
+  request_method : String?
+  use_ssl : Bool?
+  path : String?
+  port : Int?
+  auth_info : BasicAuthentication?
+  mask_headers : Bool?
+  headers : Array[HeadersEntry]?
+  content_type : String?
+  custom_content_type : String?
+  validate_ssl : Bool?
+  body : String?
+  accepted_response_status_codes : Array[ResponseStatusCode]?
+  ping_config : PingConfig?
+  service_agent_authentication : ServiceAgentAuthentication?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BasicAuthentication
+pub(all) struct BasicAuthentication {
+  username : String?
+  password : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ResponseStatusCode
+pub(all) struct ResponseStatusCode {
+  status_value : Int?
+  status_class : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ServiceAgentAuthentication
+pub(all) struct ServiceAgentAuthentication {
+  type_ : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
+)
+
+///|
+/// Schema HeadersEntry
+pub(all) struct HeadersEntry {
+  key : String?
+  value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TcpCheck
+pub(all) struct TcpCheck {
+  port : Int?
+  ping_config : PingConfig?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ContentMatcher
+pub(all) struct ContentMatcher {
+  content : String?
+  matcher : String?
+  json_path_matcher : JsonPathMatcher?
 } derive (
   Eq,
   Show,
@@ -1727,10 +1912,11 @@ pub(all) struct JsonPathMatcher {
 )
 
 ///|
-/// Schema MutationRecord
-pub(all) struct MutationRecord {
-  mutate_time : String?
-  mutated_by : String?
+/// Schema UptimeCheckIp
+pub(all) struct UptimeCheckIp {
+  region : String?
+  location : String?
+  ip_address : String?
 } derive (
   Eq,
   Show,
@@ -1739,10 +1925,12 @@ pub(all) struct MutationRecord {
 )
 
 ///|
-/// Schema MetricRange
-pub(all) struct MetricRange {
-  range : GoogleMonitoringV3Range?
-  time_series : String?
+/// Schema ListUptimeCheckConfigsRequest
+pub(all) struct ListUptimeCheckConfigsRequest {
+  parent : String?
+  filter : String?
+  page_size : Int?
+  page_token : String?
 } derive (
   Eq,
   Show,
@@ -1751,9 +1939,81 @@ pub(all) struct MetricRange {
 )
 
 ///|
-/// Schema Explicit
-pub(all) struct Explicit {
-  bounds : Array[Double]?
+/// Schema ListUptimeCheckConfigsResponse
+pub(all) struct ListUptimeCheckConfigsResponse {
+  uptime_check_configs : Array[UptimeCheckConfig]?
+  next_page_token : String?
+  total_size : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetUptimeCheckConfigRequest
+pub(all) struct GetUptimeCheckConfigRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CreateUptimeCheckConfigRequest
+pub(all) struct CreateUptimeCheckConfigRequest {
+  parent : String?
+  uptime_check_config : UptimeCheckConfig?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema UpdateUptimeCheckConfigRequest
+pub(all) struct UpdateUptimeCheckConfigRequest {
+  update_mask : String?
+  uptime_check_config : UptimeCheckConfig?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteUptimeCheckConfigRequest
+pub(all) struct DeleteUptimeCheckConfigRequest {
+  name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListUptimeCheckIpsRequest
+pub(all) struct ListUptimeCheckIpsRequest {
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListUptimeCheckIpsResponse
+pub(all) struct ListUptimeCheckIpsResponse {
+  uptime_check_ips : Array[UptimeCheckIp]?
+  next_page_token : String?
 } derive (
   Eq,
   Show,

@@ -1,6 +1,6 @@
 ///| API client for cloudtrace v2
 
-///| Base URL: https://cloudtrace.googleapis.com/
+///| Base URL: https://cloudtrace.googleapis.com
 
 ///|
 pub struct CloudtraceService {
@@ -16,15 +16,13 @@ pub fn CloudtraceService::new(
   CloudtraceService::{ base_url, client }
 }
 
-///| cloudtrace.projects.traces.batchWrite
-
 ///|
-/// Batch writes new spans to new or existing traces. You cannot update existing spans. If a span ID already exists, an additional copy of the span will be stored.
-pub async fn CloudtraceService::projects_traces_batch_write(
+/// BatchWriteSpans
+pub async fn CloudtraceService::batch_write_spans(
   self : CloudtraceService,
   name : String,
   request : BatchWriteSpansRequest,
-) -> Empty raise @http.HttpError {
+) -> Json raise @http.HttpError {
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
@@ -50,11 +48,9 @@ pub async fn CloudtraceService::projects_traces_batch_write(
   }
 }
 
-///| cloudtrace.projects.traces.spans.createSpan
-
 ///|
-/// Creates a new span. If a span ID already exists, an additional copy of the span will be stored.
-pub async fn CloudtraceService::projects_traces_spans_create_span(
+/// CreateSpan
+pub async fn CloudtraceService::create_span(
   self : CloudtraceService,
   name : String,
   request : Span,

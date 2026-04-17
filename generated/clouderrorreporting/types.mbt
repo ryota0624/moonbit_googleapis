@@ -24,6 +24,117 @@ pub(all) struct TrackingIssue {
 )
 
 ///|
+/// Schema ErrorEvent
+pub(all) struct ErrorEvent {
+  event_time : String?
+  service_context : ServiceContext?
+  message : String?
+  context : ErrorContext?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ServiceContext
+pub(all) struct ServiceContext {
+  service : String?
+  version : String?
+  resource_type : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ErrorContext
+pub(all) struct ErrorContext {
+  http_request : HttpRequestContext?
+  user : String?
+  report_location : SourceLocation?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema HttpRequestContext
+pub(all) struct HttpRequestContext {
+  method_ : String?
+  url : String?
+  user_agent : String?
+  referrer : String?
+  response_status_code : Int?
+  remote_ip : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(method_(rename="method"))),
+  ToJson(rename_fields="camelCase", fields(method_(rename="method"))),
+)
+
+///|
+/// Schema SourceLocation
+pub(all) struct SourceLocation {
+  file_path : String?
+  line_number : Int?
+  function_name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetGroupRequest
+pub(all) struct GetGroupRequest {
+  group_name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema UpdateGroupRequest
+pub(all) struct UpdateGroupRequest {
+  group : ErrorGroup?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListGroupStatsRequest
+pub(all) struct ListGroupStatsRequest {
+  project_name : String?
+  group_id : Array[String]?
+  service_filter : ServiceContextFilter?
+  time_range : QueryTimeRange?
+  timed_count_duration : String?
+  alignment : String?
+  alignment_time : String?
+  order : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema ListGroupStatsResponse
 pub(all) struct ListGroupStatsResponse {
   error_group_stats : Array[ErrorGroupStats]?
@@ -69,80 +180,14 @@ pub(all) struct TimedCount {
 )
 
 ///|
-/// Schema ServiceContext
-pub(all) struct ServiceContext {
-  service : String?
-  version : String?
-  resource_type : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ErrorEvent
-pub(all) struct ErrorEvent {
-  event_time : String?
-  service_context : ServiceContext?
-  message : String?
-  context : ErrorContext?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ErrorContext
-pub(all) struct ErrorContext {
-  http_request : HttpRequestContext?
-  user : String?
-  report_location : SourceLocation?
-  source_references : Array[SourceReference]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema HttpRequestContext
-pub(all) struct HttpRequestContext {
-  method_ : String?
-  url : String?
-  user_agent : String?
-  referrer : String?
-  response_status_code : Int?
-  remote_ip : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(method_(rename="method"))),
-  ToJson(rename_fields="camelCase", fields(method_(rename="method"))),
-)
-
-///|
-/// Schema SourceLocation
-pub(all) struct SourceLocation {
-  file_path : String?
-  line_number : Int?
-  function_name : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema SourceReference
-pub(all) struct SourceReference {
-  repository : String?
-  revision_id : String?
+/// Schema ListEventsRequest
+pub(all) struct ListEventsRequest {
+  project_name : String?
+  group_id : String?
+  service_filter : ServiceContextFilter?
+  time_range : QueryTimeRange?
+  page_size : Int?
+  page_token : String?
 } derive (
   Eq,
   Show,
@@ -164,8 +209,64 @@ pub(all) struct ListEventsResponse {
 )
 
 ///|
+/// Schema QueryTimeRange
+pub(all) struct QueryTimeRange {
+  period : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ServiceContextFilter
+pub(all) struct ServiceContextFilter {
+  service : String?
+  version : String?
+  resource_type : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteEventsRequest
+pub(all) struct DeleteEventsRequest {
+  project_name : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema DeleteEventsResponse
 pub(all) struct DeleteEventsResponse {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ReportErrorEventRequest
+pub(all) struct ReportErrorEventRequest {
+  project_name : String?
+  event : ReportedErrorEvent?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ReportErrorEventResponse
+pub(all) struct ReportErrorEventResponse {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -180,15 +281,6 @@ pub(all) struct ReportedErrorEvent {
   message : String?
   context : ErrorContext?
 } derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ReportErrorEventResponse
-pub(all) struct ReportErrorEventResponse {} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),

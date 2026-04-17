@@ -12,1887 +12,246 @@ import {
 // Errors
 
 // Types and methods
-pub(all) struct AggregateClassificationMetrics {
-  accuracy : Double?
-  f1_score : Double?
-  log_loss : Double?
-  precision : Double?
-  recall : Double?
-  roc_auc : Double?
-  threshold : Double?
+pub(all) struct AppendResult {
+  offset : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct AggregationThresholdPolicy {
-  privacy_unit_columns : Array[String]?
-  threshold : String?
+pub(all) struct AppendRowsRequest {
+  write_stream : String?
+  offset : Json?
+  proto_rows : ProtoData?
+  arrow_rows : ArrowData?
+  trace_id : String?
+  missing_value_interpretations : Array[MissingValueInterpretationsEntry]?
+  default_missing_value_interpretation : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct Argument {
-  argument_kind : String?
-  data_type : StandardSqlDataType?
-  is_aggregate : Bool?
-  mode : String?
-  name : String?
+pub(all) struct AppendRowsResponse {
+  append_result : AppendResult?
+  error : Json?
+  updated_schema : TableSchema?
+  row_errors : Array[RowError]?
+  write_stream : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct ArimaCoefficients {
-  auto_regressive_coefficients : Array[Double]?
-  intercept_coefficient : Double?
-  moving_average_coefficients : Array[Double]?
+pub(all) struct ArrowData {
+  writer_schema : ArrowSchema?
+  rows : ArrowRecordBatch?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct ArimaFittingMetrics {
-  aic : Double?
-  log_likelihood : Double?
-  variance : Double?
+pub(all) struct ArrowRecordBatch {
+  serialized_record_batch : String?
+  row_count : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct ArimaForecastingMetrics {
-  arima_fitting_metrics : Array[ArimaFittingMetrics]?
-  arima_single_model_forecasting_metrics : Array[ArimaSingleModelForecastingMetrics]?
-  has_drift : Array[Bool]?
-  non_seasonal_order : Array[ArimaOrder]?
-  seasonal_periods : Array[String]?
-  time_series_id : Array[String]?
+pub(all) struct ArrowSchema {
+  serialized_schema : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct ArimaModelInfo {
-  arima_coefficients : ArimaCoefficients?
-  arima_fitting_metrics : ArimaFittingMetrics?
-  has_drift : Bool?
-  has_holiday_effect : Bool?
-  has_spikes_and_dips : Bool?
-  has_step_changes : Bool?
-  non_seasonal_order : ArimaOrder?
-  seasonal_periods : Array[String]?
-  time_series_id : String?
-  time_series_ids : Array[String]?
+pub(all) struct ArrowSerializationOptions {
+  buffer_compression : String?
+  picos_timestamp_precision : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct ArimaOrder {
-  d : String?
-  p : String?
-  q : String?
+pub(all) struct AvroRows {
+  serialized_binary_rows : String?
+  row_count : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct ArimaResult {
-  arima_model_info : Array[ArimaModelInfo]?
-  seasonal_periods : Array[String]?
+pub(all) struct AvroSchema {
+  schema : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct ArimaSingleModelForecastingMetrics {
-  arima_fitting_metrics : ArimaFittingMetrics?
-  has_drift : Bool?
-  has_holiday_effect : Bool?
-  has_spikes_and_dips : Bool?
-  has_step_changes : Bool?
-  non_seasonal_order : ArimaOrder?
-  seasonal_periods : Array[String]?
-  time_series_id : String?
-  time_series_ids : Array[String]?
+pub(all) struct AvroSerializationOptions {
+  enable_display_name_attribute : Bool?
+  picos_timestamp_precision : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct AuditConfig {
-  audit_log_configs : Array[AuditLogConfig]?
-  service : String?
+pub(all) struct BatchCommitWriteStreamsRequest {
+  parent : String?
+  write_streams : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct AuditLogConfig {
-  exempted_members : Array[String]?
-  log_type : String?
+pub(all) struct BatchCommitWriteStreamsResponse {
+  commit_time : String?
+  stream_errors : Array[StorageError]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct AvroOptions {
-  use_avro_logical_types : Bool?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct BatchDeleteRowAccessPoliciesRequest {
-  force : Bool?
-  policy_ids : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct BiEngineReason {
-  code : String?
-  message : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct BiEngineStatistics {
-  acceleration_mode : String?
-  bi_engine_mode : String?
-  bi_engine_reasons : Array[BiEngineReason]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct BigLakeConfiguration {
-  connection_id : String?
-  file_format : String?
-  storage_uri : String?
-  table_format : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct BigQueryModelTraining {
-  current_iteration : Int?
-  expected_total_iterations : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub struct BigqueryService {
+pub struct Bigquery_storageService {
   base_url : String
   client : @core.GoogleClient
 }
-pub async fn BigqueryService::datasets_delete(Self, String, String, delete_contents? : Bool?) -> Json raise @http.HttpError
-pub async fn BigqueryService::datasets_get(Self, String, String, access_policy_version? : Int?, dataset_view? : String?) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::datasets_insert(Self, String, Dataset, access_policy_version? : Int?) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::datasets_list(Self, String, all? : Bool?, filter? : String?, max_results? : Int?, page_token? : String?) -> DatasetList raise @http.HttpError
-pub async fn BigqueryService::datasets_patch(Self, String, String, Dataset, access_policy_version? : Int?, update_mode? : String?) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::datasets_undelete(Self, String, String, UndeleteDatasetRequest) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::datasets_update(Self, String, String, Dataset, access_policy_version? : Int?, update_mode? : String?) -> Dataset raise @http.HttpError
-pub async fn BigqueryService::jobs_cancel(Self, String, String, location? : String?) -> JobCancelResponse raise @http.HttpError
-pub async fn BigqueryService::jobs_delete(Self, String, String, location? : String?) -> Json raise @http.HttpError
-pub async fn BigqueryService::jobs_get(Self, String, String, location? : String?) -> Job raise @http.HttpError
-pub async fn BigqueryService::jobs_get_query_results(Self, String, String, format_options_timestamp_output_format? : String?, format_options_use_int64_timestamp? : Bool?, location? : String?, max_results? : Int?, page_token? : String?, start_index? : String?, timeout_ms? : Int?) -> GetQueryResultsResponse raise @http.HttpError
-pub async fn BigqueryService::jobs_insert(Self, String, Job) -> Job raise @http.HttpError
-pub async fn BigqueryService::jobs_list(Self, String, all_users? : Bool?, max_creation_time? : String?, max_results? : Int?, min_creation_time? : String?, page_token? : String?, parent_job_id? : String?, projection? : String?, state_filter? : Array[String]?) -> JobList raise @http.HttpError
-pub async fn BigqueryService::jobs_query(Self, String, QueryRequest) -> QueryResponse raise @http.HttpError
-pub async fn BigqueryService::models_delete(Self, String, String, String) -> Json raise @http.HttpError
-pub async fn BigqueryService::models_get(Self, String, String, String) -> Model raise @http.HttpError
-pub async fn BigqueryService::models_list(Self, String, String, max_results? : Int?, page_token? : String?) -> ListModelsResponse raise @http.HttpError
-pub async fn BigqueryService::models_patch(Self, String, String, String, Model) -> Model raise @http.HttpError
-pub fn BigqueryService::new(@core.GoogleClient, base_url? : String) -> Self
-pub async fn BigqueryService::projects_get_service_account(Self, String) -> GetServiceAccountResponse raise @http.HttpError
-pub async fn BigqueryService::projects_list(Self, max_results? : Int?, page_token? : String?) -> ProjectList raise @http.HttpError
-pub async fn BigqueryService::routines_delete(Self, String, String, String) -> Json raise @http.HttpError
-pub async fn BigqueryService::routines_get(Self, String, String, String, read_mask? : String?) -> Routine raise @http.HttpError
-pub async fn BigqueryService::routines_get_iam_policy(Self, String, GetIamPolicyRequest) -> Policy raise @http.HttpError
-pub async fn BigqueryService::routines_insert(Self, String, String, Routine) -> Routine raise @http.HttpError
-pub async fn BigqueryService::routines_list(Self, String, String, filter? : String?, max_results? : Int?, page_token? : String?, read_mask? : String?) -> ListRoutinesResponse raise @http.HttpError
-pub async fn BigqueryService::routines_set_iam_policy(Self, String, SetIamPolicyRequest) -> Policy raise @http.HttpError
-pub async fn BigqueryService::routines_test_iam_permissions(Self, String, TestIamPermissionsRequest) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn BigqueryService::routines_update(Self, String, String, String, Routine) -> Routine raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_batch_delete(Self, String, String, String, BatchDeleteRowAccessPoliciesRequest) -> Json raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_delete(Self, String, String, String, String, force? : Bool?) -> Json raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_get(Self, String, String, String, String) -> RowAccessPolicy raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_get_iam_policy(Self, String, GetIamPolicyRequest) -> Policy raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_insert(Self, String, String, String, RowAccessPolicy) -> RowAccessPolicy raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_list(Self, String, String, String, page_size? : Int?, page_token? : String?) -> ListRowAccessPoliciesResponse raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_test_iam_permissions(Self, String, TestIamPermissionsRequest) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn BigqueryService::row_access_policies_update(Self, String, String, String, String, RowAccessPolicy) -> RowAccessPolicy raise @http.HttpError
-pub async fn BigqueryService::tabledata_insert_all(Self, String, String, String, TableDataInsertAllRequest) -> TableDataInsertAllResponse raise @http.HttpError
-pub async fn BigqueryService::tabledata_list(Self, String, String, String, format_options_timestamp_output_format? : String?, format_options_use_int64_timestamp? : Bool?, max_results? : Int?, page_token? : String?, selected_fields? : String?, start_index? : String?) -> TableDataList raise @http.HttpError
-pub async fn BigqueryService::tables_delete(Self, String, String, String) -> Json raise @http.HttpError
-pub async fn BigqueryService::tables_get(Self, String, String, String, selected_fields? : String?, view? : String?) -> Table raise @http.HttpError
-pub async fn BigqueryService::tables_get_iam_policy(Self, String, GetIamPolicyRequest) -> Policy raise @http.HttpError
-pub async fn BigqueryService::tables_insert(Self, String, String, Table) -> Table raise @http.HttpError
-pub async fn BigqueryService::tables_list(Self, String, String, max_results? : Int?, page_token? : String?) -> TableList raise @http.HttpError
-pub async fn BigqueryService::tables_patch(Self, String, String, String, Table, autodetect_schema? : Bool?) -> Table raise @http.HttpError
-pub async fn BigqueryService::tables_set_iam_policy(Self, String, SetIamPolicyRequest) -> Policy raise @http.HttpError
-pub async fn BigqueryService::tables_test_iam_permissions(Self, String, TestIamPermissionsRequest) -> TestIamPermissionsResponse raise @http.HttpError
-pub async fn BigqueryService::tables_update(Self, String, String, String, Table, autodetect_schema? : Bool?) -> Table raise @http.HttpError
+pub async fn Bigquery_storageService::create_read_session(Self, String, CreateReadSessionRequest) -> ReadSession raise @http.HttpError
+pub fn Bigquery_storageService::new(@core.GoogleClient, base_url? : String) -> Self
+pub async fn Bigquery_storageService::read_rows(Self, String, offset? : String?) -> Array[ReadRowsResponse] raise @http.HttpError
+pub async fn Bigquery_storageService::split_read_stream(Self, String, fraction? : Double?) -> SplitReadStreamResponse raise @http.HttpError
 
-pub(all) struct BigtableColumn {
-  encoding : String?
-  field_name : String?
-  only_read_latest : Bool?
-  proto_config : BigtableProtoConfig?
-  qualifier_encoded : String?
-  qualifier_string : String?
+pub(all) struct CreateReadSessionRequest {
+  parent : String?
+  read_session : ReadSession?
+  max_stream_count : Int?
+  preferred_min_stream_count : Int?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct CreateWriteStreamRequest {
+  parent : String?
+  write_stream : WriteStream?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct FieldElementType {
   type_ : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct BigtableColumnFamily {
-  columns : Array[BigtableColumn]?
-  encoding : String?
-  family_id : String?
-  only_read_latest : Bool?
-  proto_config : BigtableProtoConfig?
-  type_ : String?
+pub(all) struct FinalizeWriteStreamRequest {
+  name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct BigtableOptions {
-  column_families : Array[BigtableColumnFamily]?
-  ignore_unspecified_column_families : Bool?
-  output_column_families_as_json : Bool?
-  read_rowkey_as_string : Bool?
+pub(all) struct FinalizeWriteStreamResponse {
+  row_count : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct BigtableProtoConfig {
-  proto_message_name : String?
-  schema_bundle_id : String?
+pub(all) struct FlushRowsRequest {
+  write_stream : String?
+  offset : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct BinaryClassificationMetrics {
-  aggregate_classification_metrics : AggregateClassificationMetrics?
-  binary_confusion_matrix_list : Array[BinaryConfusionMatrix]?
-  negative_label : String?
-  positive_label : String?
+pub(all) struct FlushRowsResponse {
+  offset : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct BinaryConfusionMatrix {
-  accuracy : Double?
-  f1_score : Double?
-  false_negatives : String?
-  false_positives : String?
-  positive_class_threshold : Double?
-  precision : Double?
-  recall : Double?
-  true_negatives : String?
-  true_positives : String?
+pub(all) struct GetWriteStreamRequest {
+  name : String?
+  view : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct Binding {
-  condition : Expr?
-  members : Array[String]?
-  role : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct BqmlIterationResult {
-  duration_ms : String?
-  eval_loss : Double?
-  index : Int?
-  learn_rate : Double?
-  training_loss : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct BqmlTrainingRun {
-  iteration_results : Array[BqmlIterationResult]?
-  start_time : String?
-  state : String?
-  training_options : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct CategoricalValue {
-  category_counts : Array[CategoryCount]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct CategoryCount {
-  category : String?
-  count : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct CloneDefinition {
-  base_table_reference : TableReference?
-  clone_time : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Cluster {
-  centroid_id : String?
-  count : String?
-  feature_values : Array[FeatureValue]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ClusterInfo {
-  centroid_id : String?
-  cluster_radius : Double?
-  cluster_size : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Clustering {
-  fields : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ClusteringMetrics {
-  clusters : Array[Cluster]?
-  davies_bouldin_index : Double?
-  mean_squared_distance : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ConfusionMatrix {
-  confidence_threshold : Double?
-  rows : Array[Row]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ConnectionProperty {
+pub(all) struct MissingValueInterpretationsEntry {
   key : String?
   value : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct CsvOptions {
-  allow_jagged_rows : Bool?
-  allow_quoted_newlines : Bool?
-  encoding : String?
-  field_delimiter : String?
-  null_marker : String?
-  null_markers : Array[String]?
-  preserve_ascii_control_characters : Bool?
-  quote : String?
-  skip_leading_rows : String?
-  source_column_match : String?
+pub(all) struct Progress {
+  at_response_start : Double?
+  at_response_end : Double?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct DataFormatOptions {
-  timestamp_output_format : String?
-  use_int64_timestamp : Bool?
+pub(all) struct ProtoData {
+  writer_schema : ProtoSchema?
+  rows : ProtoRows?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct DataMaskingStatistics {
-  data_masking_applied : Bool?
+pub(all) struct ProtoRows {
+  serialized_rows : Array[String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct DataPolicyOption {
-  name : String?
+pub(all) struct ProtoSchema {
+  proto_descriptor : Json?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct DataSplitResult {
-  evaluation_table : TableReference?
-  test_table : TableReference?
-  training_table : TableReference?
+pub(all) struct ReadRowsRequest {
+  read_stream : String?
+  offset : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct Dataset {
-  access : Array[Json]?
-  catalog_source : String?
-  creation_time : String?
-  dataset_reference : DatasetReference?
-  default_collation : String?
-  default_encryption_configuration : EncryptionConfiguration?
-  default_partition_expiration_ms : String?
-  default_rounding_mode : String?
-  default_table_expiration_ms : String?
-  description : String?
-  etag : String?
-  external_catalog_dataset_options : ExternalCatalogDatasetOptions?
-  external_dataset_reference : ExternalDatasetReference?
-  friendly_name : String?
-  id : String?
-  is_case_insensitive : Bool?
-  kind : String?
-  labels : Json?
-  last_modified_time : String?
-  linked_dataset_metadata : LinkedDatasetMetadata?
-  linked_dataset_source : LinkedDatasetSource?
-  location : String?
-  max_time_travel_hours : String?
-  resource_tags : Json?
-  restrictions : RestrictionConfig?
-  satisfies_pzi : Bool?
-  satisfies_pzs : Bool?
-  self_link : String?
-  storage_billing_model : String?
-  tags : Array[Json]?
-  type_ : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DatasetAccessEntry {
-  dataset : DatasetReference?
-  target_types : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DatasetList {
-  datasets : Array[Json]?
-  etag : String?
-  kind : String?
-  next_page_token : String?
-  unreachable_ : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DatasetReference {
-  dataset_id : String?
-  project_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DestinationTableProperties {
-  description : String?
-  expiration_time : String?
-  friendly_name : String?
-  labels : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DifferentialPrivacyPolicy {
-  delta_budget : Double?
-  delta_budget_remaining : Double?
-  delta_per_query : Double?
-  epsilon_budget : Double?
-  epsilon_budget_remaining : Double?
-  max_epsilon_per_query : Double?
-  max_groups_contributed : String?
-  privacy_unit_column : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DimensionalityReductionMetrics {
-  total_explained_variance_ratio : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DmlStatistics {
-  deleted_row_count : String?
-  dml_mode : String?
-  fine_grained_dml_unused_reason : String?
-  inserted_row_count : String?
-  updated_row_count : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DoubleCandidates {
-  candidates : Array[Double]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DoubleHparamSearchSpace {
-  candidates : DoubleCandidates?
-  range : DoubleRange?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct DoubleRange {
-  max : Double?
-  min : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct EncryptionConfiguration {
-  kms_key_name : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Entry {
-  item_count : String?
-  predicted_label : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ErrorProto {
-  debug_info : String?
-  location : String?
-  message : String?
-  reason : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct EvaluationMetrics {
-  arima_forecasting_metrics : ArimaForecastingMetrics?
-  binary_classification_metrics : BinaryClassificationMetrics?
-  clustering_metrics : ClusteringMetrics?
-  dimensionality_reduction_metrics : DimensionalityReductionMetrics?
-  multi_class_classification_metrics : MultiClassClassificationMetrics?
-  ranking_metrics : RankingMetrics?
-  regression_metrics : RegressionMetrics?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExplainQueryStage {
-  completed_parallel_inputs : String?
-  compute_mode : String?
-  compute_ms_avg : String?
-  compute_ms_max : String?
-  compute_ratio_avg : Double?
-  compute_ratio_max : Double?
-  end_ms : String?
-  id : String?
-  input_stages : Array[String]?
-  name : String?
-  parallel_inputs : String?
-  read_ms_avg : String?
-  read_ms_max : String?
-  read_ratio_avg : Double?
-  read_ratio_max : Double?
-  records_read : String?
-  records_written : String?
-  shuffle_output_bytes : String?
-  shuffle_output_bytes_spilled : String?
-  slot_ms : String?
-  start_ms : String?
-  status : String?
-  steps : Array[ExplainQueryStep]?
-  wait_ms_avg : String?
-  wait_ms_max : String?
-  wait_ratio_avg : Double?
-  wait_ratio_max : Double?
-  write_ms_avg : String?
-  write_ms_max : String?
-  write_ratio_avg : Double?
-  write_ratio_max : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExplainQueryStep {
-  kind : String?
-  substeps : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Explanation {
-  attribution : Double?
-  feature_name : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExportDataStatistics {
-  file_count : String?
+pub(all) struct ReadRowsResponse {
+  avro_rows : AvroRows?
+  arrow_record_batch : ArrowRecordBatch?
   row_count : String?
+  stats : StreamStats?
+  throttle_state : ThrottleState?
+  avro_schema : AvroSchema?
+  arrow_schema : ArrowSchema?
+  uncompressed_byte_size : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct Expr {
-  description : String?
-  expression : String?
-  location : String?
-  title : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExternalCatalogDatasetOptions {
-  default_storage_location_uri : String?
-  parameters : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExternalCatalogTableOptions {
-  connection_id : String?
-  parameters : Json?
-  storage_descriptor : StorageDescriptor?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExternalDataConfiguration {
-  autodetect : Bool?
-  avro_options : AvroOptions?
-  bigtable_options : BigtableOptions?
-  compression : String?
-  connection_id : String?
-  csv_options : CsvOptions?
-  date_format : String?
-  datetime_format : String?
-  decimal_target_types : Array[String]?
-  file_set_spec_type : String?
-  google_sheets_options : GoogleSheetsOptions?
-  hive_partitioning_options : HivePartitioningOptions?
-  ignore_unknown_values : Bool?
-  json_extension : String?
-  json_options : JsonOptions?
-  max_bad_records : Int?
-  metadata_cache_mode : String?
-  object_metadata : String?
-  parquet_options : ParquetOptions?
-  reference_file_schema_uri : String?
-  schema : TableSchema?
-  source_format : String?
-  source_uris : Array[String]?
-  time_format : String?
-  time_zone : String?
-  timestamp_format : String?
-  timestamp_target_precision : Array[Int]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExternalDatasetReference {
-  connection : String?
-  external_source : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExternalRuntimeOptions {
-  container_cpu : Double?
-  container_memory : String?
-  max_batching_rows : String?
-  runtime_connection : String?
-  runtime_version : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ExternalServiceCost {
-  billing_method : String?
-  bytes_billed : String?
-  bytes_processed : String?
-  external_service : String?
-  reserved_slot_count : String?
-  slot_ms : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct FeatureValue {
-  categorical_value : CategoricalValue?
-  feature_column : String?
-  numerical_value : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ForeignTypeInfo {
-  type_system : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ForeignViewDefinition {
-  dialect : String?
-  query : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GenAiErrorStats {
-  errors : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GenAiFunctionCostOptimizationStats {
-  message : String?
-  num_cost_optimized_rows : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GenAiFunctionErrorStats {
-  errors : Array[String]?
-  num_failed_rows : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GenAiFunctionStats {
-  cost_optimization_stats : GenAiFunctionCostOptimizationStats?
-  error_stats : GenAiFunctionErrorStats?
-  function_name : String?
-  num_processed_rows : String?
-  prompt : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GenAiStats {
-  error_stats : GenAiErrorStats?
-  function_stats : Array[GenAiFunctionStats]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GeneratedColumn {
-  generated_expression_info : GeneratedExpressionInfo?
-  generated_mode : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GeneratedExpressionInfo {
-  asynchronous : Bool?
-  generation_expression : String?
-  stored : Bool?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GetIamPolicyRequest {
-  options : GetPolicyOptions?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GetPolicyOptions {
-  requested_policy_version : Int?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GetQueryResultsResponse {
-  cache_hit : Bool?
-  errors : Array[ErrorProto]?
-  etag : String?
-  job_complete : Bool?
-  job_reference : JobReference?
-  kind : String?
-  num_dml_affected_rows : String?
-  page_token : String?
-  rows : Array[TableRow]?
-  schema : TableSchema?
-  total_bytes_processed : String?
-  total_rows : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GetServiceAccountResponse {
-  email : String?
-  kind : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GlobalExplanation {
-  class_label : String?
-  explanations : Array[Explanation]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct GoogleSheetsOptions {
-  range : String?
-  skip_leading_rows : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct HighCardinalityJoin {
-  left_rows : String?
-  output_rows : String?
-  right_rows : String?
-  step_index : Int?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct HivePartitioningOptions {
-  fields : Array[String]?
-  mode : String?
-  require_partition_filter : Bool?
-  source_uri_prefix : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct HparamSearchSpaces {
-  activation_fn : StringHparamSearchSpace?
-  batch_size : IntHparamSearchSpace?
-  booster_type : StringHparamSearchSpace?
-  colsample_bylevel : DoubleHparamSearchSpace?
-  colsample_bynode : DoubleHparamSearchSpace?
-  colsample_bytree : DoubleHparamSearchSpace?
-  dart_normalize_type : StringHparamSearchSpace?
-  dropout : DoubleHparamSearchSpace?
-  hidden_units : IntArrayHparamSearchSpace?
-  l1_reg : DoubleHparamSearchSpace?
-  l2_reg : DoubleHparamSearchSpace?
-  learn_rate : DoubleHparamSearchSpace?
-  max_tree_depth : IntHparamSearchSpace?
-  min_split_loss : DoubleHparamSearchSpace?
-  min_tree_child_weight : IntHparamSearchSpace?
-  num_clusters : IntHparamSearchSpace?
-  num_factors : IntHparamSearchSpace?
-  num_parallel_tree : IntHparamSearchSpace?
-  optimizer : StringHparamSearchSpace?
-  subsample : DoubleHparamSearchSpace?
-  tree_method : StringHparamSearchSpace?
-  wals_alpha : DoubleHparamSearchSpace?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct HparamTuningTrial {
-  end_time_ms : String?
-  error_message : String?
-  eval_loss : Double?
-  evaluation_metrics : EvaluationMetrics?
-  hparam_tuning_evaluation_metrics : EvaluationMetrics?
-  hparams : TrainingOptions?
-  start_time_ms : String?
-  status : String?
-  training_loss : Double?
-  trial_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IncrementalResultStats {
-  disabled_reason : String?
-  disabled_reason_details : String?
-  first_incremental_row_time : String?
-  incremental_row_count : String?
-  last_incremental_row_time : String?
-  result_set_last_modify_time : String?
-  result_set_last_replace_time : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IndexPruningStats {
-  base_table : TableReference?
-  index_id : String?
-  post_index_pruning_parallel_input_count : String?
-  pre_index_pruning_parallel_input_count : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IndexUnusedReason {
-  base_table : TableReference?
-  code : String?
-  index_name : String?
-  message : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct InputDataChange {
-  records_read_diff_percentage : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IntArray {
-  elements : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IntArrayHparamSearchSpace {
-  candidates : Array[IntArray]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IntCandidates {
-  candidates : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IntHparamSearchSpace {
-  candidates : IntCandidates?
-  range : IntRange?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IntRange {
-  max : String?
-  min : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct IterationResult {
-  arima_result : ArimaResult?
-  cluster_infos : Array[ClusterInfo]?
-  duration_ms : String?
-  eval_loss : Double?
-  index : Int?
-  learn_rate : Double?
-  principal_component_infos : Array[PrincipalComponentInfo]?
-  training_loss : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Job {
-  configuration : JobConfiguration?
-  etag : String?
-  id : String?
-  job_creation_reason : JobCreationReason?
-  job_reference : JobReference?
-  kind : String?
-  principal_subject : String?
-  self_link : String?
-  statistics : JobStatistics?
-  status : JobStatus?
-  user_email : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobCancelResponse {
-  job : Job?
-  kind : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobConfiguration {
-  copy : JobConfigurationTableCopy?
-  dry_run : Bool?
-  extract : JobConfigurationExtract?
-  job_timeout_ms : String?
-  job_type : String?
-  labels : Json?
-  load : JobConfigurationLoad?
-  max_slots : Int?
-  query : JobConfigurationQuery?
-  reservation : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobConfigurationExtract {
-  compression : String?
-  destination_format : String?
-  destination_uri : String?
-  destination_uris : Array[String]?
-  field_delimiter : String?
-  model_extract_options : ModelExtractOptions?
-  print_header : Bool?
-  source_model : ModelReference?
-  source_table : TableReference?
-  use_avro_logical_types : Bool?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobConfigurationLoad {
-  allow_jagged_rows : Bool?
-  allow_quoted_newlines : Bool?
-  autodetect : Bool?
-  clustering : Clustering?
-  column_name_character_map : String?
-  connection_properties : Array[ConnectionProperty]?
-  copy_files_only : Bool?
-  create_disposition : String?
-  create_session : Bool?
-  date_format : String?
-  datetime_format : String?
-  decimal_target_types : Array[String]?
-  destination_encryption_configuration : EncryptionConfiguration?
-  destination_table : TableReference?
-  destination_table_properties : DestinationTableProperties?
-  encoding : String?
-  field_delimiter : String?
-  file_set_spec_type : String?
-  hive_partitioning_options : HivePartitioningOptions?
-  ignore_unknown_values : Bool?
-  json_extension : String?
-  max_bad_records : Int?
-  null_marker : String?
-  null_markers : Array[String]?
-  parquet_options : ParquetOptions?
-  preserve_ascii_control_characters : Bool?
-  projection_fields : Array[String]?
-  quote : String?
-  range_partitioning : RangePartitioning?
-  reference_file_schema_uri : String?
-  schema : TableSchema?
-  schema_inline : String?
-  schema_inline_format : String?
-  schema_update_options : Array[String]?
-  skip_leading_rows : Int?
-  source_column_match : String?
-  source_format : String?
-  source_uris : Array[String]?
-  time_format : String?
-  time_partitioning : TimePartitioning?
-  time_zone : String?
-  timestamp_format : String?
-  timestamp_target_precision : Array[Int]?
-  use_avro_logical_types : Bool?
-  write_disposition : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobConfigurationQuery {
-  allow_large_results : Bool?
-  clustering : Clustering?
-  connection_properties : Array[ConnectionProperty]?
-  continuous : Bool?
-  create_disposition : String?
-  create_session : Bool?
-  default_dataset : DatasetReference?
-  destination_encryption_configuration : EncryptionConfiguration?
-  destination_table : TableReference?
-  flatten_results : Bool?
-  maximum_billing_tier : Int?
-  maximum_bytes_billed : String?
-  parameter_mode : String?
-  preserve_nulls : Bool?
-  priority : String?
-  query : String?
-  query_parameters : Array[QueryParameter]?
-  range_partitioning : RangePartitioning?
-  schema_update_options : Array[String]?
-  script_options : ScriptOptions?
-  system_variables : SystemVariables?
-  table_definitions : Json?
-  time_partitioning : TimePartitioning?
-  use_legacy_sql : Bool?
-  use_query_cache : Bool?
-  user_defined_function_resources : Array[UserDefinedFunctionResource]?
-  write_disposition : String?
-  write_incremental_results : Bool?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobConfigurationTableCopy {
-  create_disposition : String?
-  destination_encryption_configuration : EncryptionConfiguration?
-  destination_expiration_time : String?
-  destination_table : TableReference?
-  operation_type : String?
-  source_table : TableReference?
-  source_tables : Array[TableReference]?
-  write_disposition : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobCreationReason {
-  code : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobList {
-  etag : String?
-  jobs : Array[Json]?
-  kind : String?
-  next_page_token : String?
-  unreachable_ : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobReference {
-  job_id : String?
-  location : String?
-  project_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobStatistics {
-  completion_ratio : Double?
-  copy : JobStatistics5?
-  creation_time : String?
-  data_masking_statistics : DataMaskingStatistics?
-  edition : String?
-  end_time : String?
-  extract : JobStatistics4?
-  final_execution_duration_ms : String?
-  load : JobStatistics3?
-  num_child_jobs : String?
-  parent_job_id : String?
-  query : JobStatistics2?
-  quota_deferments : Array[String]?
-  reservation_group_path : Array[String]?
-  reservation_usage : Array[Json]?
-  reservation_id : String?
-  row_level_security_statistics : RowLevelSecurityStatistics?
-  script_statistics : ScriptStatistics?
-  session_info : SessionInfo?
-  start_time : String?
-  total_bytes_processed : String?
-  total_slot_ms : String?
-  transaction_info : TransactionInfo?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobStatistics2 {
-  bi_engine_statistics : BiEngineStatistics?
-  billing_tier : Int?
-  cache_hit : Bool?
-  dcl_target_dataset : DatasetReference?
-  dcl_target_table : TableReference?
-  dcl_target_view : TableReference?
-  ddl_affected_row_access_policy_count : String?
-  ddl_destination_table : TableReference?
-  ddl_operation_performed : String?
-  ddl_target_dataset : DatasetReference?
-  ddl_target_routine : RoutineReference?
-  ddl_target_row_access_policy : RowAccessPolicyReference?
-  ddl_target_table : TableReference?
-  dml_stats : DmlStatistics?
-  estimated_bytes_processed : String?
-  export_data_statistics : ExportDataStatistics?
-  external_service_costs : Array[ExternalServiceCost]?
-  gen_ai_stats : GenAiStats?
-  incremental_result_stats : IncrementalResultStats?
-  load_query_statistics : LoadQueryStatistics?
-  materialized_view_statistics : MaterializedViewStatistics?
-  metadata_cache_statistics : MetadataCacheStatistics?
-  ml_statistics : MlStatistics?
-  model_training : BigQueryModelTraining?
-  model_training_current_iteration : Int?
-  model_training_expected_total_iteration : String?
-  num_dml_affected_rows : String?
-  performance_insights : PerformanceInsights?
-  query_info : QueryInfo?
-  query_plan : Array[ExplainQueryStage]?
-  referenced_property_graphs : Array[PropertyGraphReference]?
-  referenced_routines : Array[RoutineReference]?
-  referenced_tables : Array[TableReference]?
-  reservation_usage : Array[Json]?
-  schema : TableSchema?
-  search_statistics : SearchStatistics?
-  spark_statistics : SparkStatistics?
-  statement_type : String?
-  timeline : Array[QueryTimelineSample]?
-  total_bytes_billed : String?
-  total_bytes_processed : String?
-  total_bytes_processed_accuracy : String?
-  total_partitions_processed : String?
-  total_services_sku_slot_ms : String?
-  total_slot_ms : String?
-  transferred_bytes : String?
-  undeclared_query_parameters : Array[QueryParameter]?
-  vector_search_statistics : VectorSearchStatistics?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobStatistics3 {
-  bad_records : String?
-  input_file_bytes : String?
-  input_files : String?
-  output_bytes : String?
-  output_rows : String?
-  timeline : Array[QueryTimelineSample]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobStatistics4 {
-  destination_uri_file_counts : Array[String]?
-  input_bytes : String?
-  timeline : Array[QueryTimelineSample]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobStatistics5 {
-  copied_logical_bytes : String?
-  copied_rows : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JobStatus {
-  error_result : ErrorProto?
-  errors : Array[ErrorProto]?
-  state : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JoinRestrictionPolicy {
-  join_allowed_columns : Array[String]?
-  join_condition : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JsonObject {
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JsonOptions {
-  encoding : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct JsonValue {
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct LinkedDatasetMetadata {
-  link_state : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct LinkedDatasetSource {
-  source_dataset : DatasetReference?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ListModelsResponse {
-  models : Array[Model]?
-  next_page_token : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ListRoutinesResponse {
-  next_page_token : String?
-  routines : Array[Routine]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ListRowAccessPoliciesResponse {
-  next_page_token : String?
-  row_access_policies : Array[RowAccessPolicy]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct LoadQueryStatistics {
-  bad_records : String?
-  bytes_transferred : String?
-  input_file_bytes : String?
-  input_files : String?
-  output_bytes : String?
-  output_rows : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct LocationMetadata {
-  legacy_location_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct MaterializedView {
-  chosen : Bool?
-  estimated_bytes_saved : String?
-  rejected_reason : String?
-  table_reference : TableReference?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct MaterializedViewDefinition {
-  allow_non_incremental_definition : Bool?
-  enable_refresh : Bool?
-  last_refresh_time : String?
-  max_staleness : String?
-  query : String?
-  refresh_interval_ms : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct MaterializedViewStatistics {
-  materialized_view : Array[MaterializedView]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct MaterializedViewStatus {
-  last_refresh_status : ErrorProto?
-  refresh_watermark : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct MetadataCacheStatistics {
-  table_metadata_cache_usage : Array[TableMetadataCacheUsage]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct MlStatistics {
-  hparam_trials : Array[HparamTuningTrial]?
-  iteration_results : Array[IterationResult]?
-  max_iterations : String?
-  model_type : String?
-  training_type : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Model {
-  best_trial_id : String?
-  creation_time : String?
-  default_trial_id : String?
-  description : String?
-  encryption_configuration : EncryptionConfiguration?
-  etag : String?
-  expiration_time : String?
-  feature_columns : Array[StandardSqlField]?
-  friendly_name : String?
-  hparam_search_spaces : HparamSearchSpaces?
-  hparam_trials : Array[HparamTuningTrial]?
-  label_columns : Array[StandardSqlField]?
-  labels : Json?
-  last_modified_time : String?
-  location : String?
-  model_reference : ModelReference?
-  model_type : String?
-  optimal_trial_ids : Array[String]?
-  remote_model_info : RemoteModelInfo?
-  training_runs : Array[TrainingRun]?
-  transform_columns : Array[TransformColumn]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ModelDefinition {
-  model_options : Json?
-  training_runs : Array[BqmlTrainingRun]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ModelExtractOptions {
-  trial_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ModelReference {
-  dataset_id : String?
-  model_id : String?
-  project_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct MultiClassClassificationMetrics {
-  aggregate_classification_metrics : AggregateClassificationMetrics?
-  confusion_matrix_list : Array[ConfusionMatrix]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ParquetOptions {
-  enable_list_inference : Bool?
-  enum_as_string : Bool?
-  map_target_type : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PartitionSkew {
-  skew_sources : Array[SkewSource]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PartitionedColumn {
-  field : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PartitioningDefinition {
-  partitioned_column : Array[PartitionedColumn]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PerformanceInsights {
-  avg_previous_execution_ms : String?
-  stage_performance_change_insights : Array[StagePerformanceChangeInsight]?
-  stage_performance_standalone_insights : Array[StagePerformanceStandaloneInsight]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Policy {
-  audit_configs : Array[AuditConfig]?
-  bindings : Array[Binding]?
-  etag : String?
-  version : Int?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PrincipalComponentInfo {
-  cumulative_explained_variance_ratio : Double?
-  explained_variance : Double?
-  explained_variance_ratio : Double?
-  principal_component_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PrivacyPolicy {
-  aggregation_threshold_policy : AggregationThresholdPolicy?
-  differential_privacy_policy : DifferentialPrivacyPolicy?
-  join_restriction_policy : JoinRestrictionPolicy?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ProjectList {
-  etag : String?
-  kind : String?
-  next_page_token : String?
-  projects : Array[Json]?
-  total_items : Int?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ProjectReference {
-  project_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PropertyGraphReference {
-  dataset_id : String?
-  project_id : String?
-  property_graph_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PruningStats {
-  post_cmeta_pruning_parallel_input_count : String?
-  post_cmeta_pruning_partition_count : String?
-  pre_cmeta_pruning_parallel_input_count : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct PythonOptions {
-  entry_point : String?
-  packages : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct QueryInfo {
-  optimization_details : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct QueryParameter {
+pub(all) struct ReadSession {
   name : String?
-  parameter_type : QueryParameterType?
-  parameter_value : QueryParameterValue?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct QueryParameterType {
-  array_type : QueryParameterType?
-  range_element_type : QueryParameterType?
-  struct_types : Array[Json]?
-  timestamp_precision : String?
-  type_ : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct QueryParameterValue {
-  array_values : Array[QueryParameterValue]?
-  range_value : RangeValue?
-  struct_values : Json?
-  value : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct QueryRequest {
-  connection_properties : Array[ConnectionProperty]?
-  continuous : Bool?
-  create_session : Bool?
-  default_dataset : DatasetReference?
-  destination_encryption_configuration : EncryptionConfiguration?
-  dry_run : Bool?
-  format_options : DataFormatOptions?
-  job_creation_mode : String?
-  job_timeout_ms : String?
-  kind : String?
-  labels : Json?
-  location : String?
-  max_results : Int?
-  max_slots : Int?
-  maximum_bytes_billed : String?
-  parameter_mode : String?
-  preserve_nulls : Bool?
-  query : String?
-  query_parameters : Array[QueryParameter]?
-  request_id : String?
-  reservation : String?
-  timeout_ms : Int?
-  use_legacy_sql : Bool?
-  use_query_cache : Bool?
-  write_incremental_results : Bool?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct QueryResponse {
-  cache_hit : Bool?
-  creation_time : String?
-  dml_stats : DmlStatistics?
-  end_time : String?
-  errors : Array[ErrorProto]?
-  job_complete : Bool?
-  job_creation_reason : JobCreationReason?
-  job_reference : JobReference?
-  kind : String?
-  location : String?
-  num_dml_affected_rows : String?
-  page_token : String?
-  query_id : String?
-  rows : Array[TableRow]?
-  schema : TableSchema?
-  session_info : SessionInfo?
-  start_time : String?
-  total_bytes_billed : String?
-  total_bytes_processed : String?
-  total_rows : String?
-  total_slot_ms : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct QueryTimelineSample {
-  active_units : String?
-  completed_units : String?
-  elapsed_ms : String?
-  estimated_runnable_units : String?
-  pending_units : String?
-  shuffle_ram_usage_ratio : Double?
-  total_slot_ms : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RangePartitioning {
-  field : String?
-  range : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RangeValue {
-  end : QueryParameterValue?
-  start : QueryParameterValue?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RankingMetrics {
-  average_rank : Double?
-  mean_average_precision : Double?
-  mean_squared_error : Double?
-  normalized_discounted_cumulative_gain : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RegressionMetrics {
-  mean_absolute_error : Double?
-  mean_squared_error : Double?
-  mean_squared_log_error : Double?
-  median_absolute_error : Double?
-  r_squared : Double?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RemoteFunctionOptions {
-  connection : String?
-  endpoint : String?
-  max_batching_rows : String?
-  user_defined_context : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RemoteModelInfo {
-  connection : String?
-  endpoint : String?
-  max_batching_rows : String?
-  remote_model_version : String?
-  remote_service_type : String?
-  speech_recognizer : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RestrictionConfig {
-  type_ : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Routine {
-  arguments : Array[Argument]?
-  build_status : RoutineBuildStatus?
-  creation_time : String?
-  data_governance_type : String?
-  definition_body : String?
-  description : String?
-  determinism_level : String?
-  etag : String?
-  external_runtime_options : ExternalRuntimeOptions?
-  imported_libraries : Array[String]?
-  language : String?
-  last_modified_time : String?
-  python_options : PythonOptions?
-  remote_function_options : RemoteFunctionOptions?
-  return_table_type : StandardSqlTableType?
-  return_type : StandardSqlDataType?
-  routine_reference : RoutineReference?
-  routine_type : String?
-  security_mode : String?
-  spark_options : SparkOptions?
-  strict_mode : Bool?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RoutineBuildStatus {
-  build_duration : String?
-  build_state : String?
-  build_state_update_time : String?
-  error_result : ErrorProto?
-  image_size_bytes : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RoutineReference {
-  dataset_id : String?
-  project_id : String?
-  routine_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Row {
-  actual_label : String?
-  entries : Array[Entry]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RowAccessPolicy {
-  creation_time : String?
-  etag : String?
-  filter_predicate : String?
-  grantees : Array[String]?
-  last_modified_time : String?
-  row_access_policy_reference : RowAccessPolicyReference?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RowAccessPolicyReference {
-  dataset_id : String?
-  policy_id : String?
-  project_id : String?
-  table_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct RowLevelSecurityStatistics {
-  row_level_security_applied : Bool?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ScriptOptions {
-  key_result_statement : String?
-  statement_byte_budget : String?
-  statement_timeout_ms : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ScriptStackFrame {
-  end_column : Int?
-  end_line : Int?
-  procedure_id : String?
-  start_column : Int?
-  start_line : Int?
-  text : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ScriptStatistics {
-  evaluation_kind : String?
-  stack_frames : Array[ScriptStackFrame]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SearchStatistics {
-  index_pruning_stats : Array[IndexPruningStats]?
-  index_unused_reasons : Array[IndexUnusedReason]?
-  index_usage_mode : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SerDeInfo {
-  name : String?
-  parameters : Json?
-  serialization_library : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SessionInfo {
-  session_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SetIamPolicyRequest {
-  policy : Policy?
-  update_mask : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SkewSource {
-  stage_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SnapshotDefinition {
-  base_table_reference : TableReference?
-  snapshot_time : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SparkLoggingInfo {
-  project_id : String?
-  resource_type : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SparkOptions {
-  archive_uris : Array[String]?
-  connection : String?
-  container_image : String?
-  file_uris : Array[String]?
-  jar_uris : Array[String]?
-  main_class : String?
-  main_file_uri : String?
-  properties : Json?
-  py_file_uris : Array[String]?
-  runtime_version : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SparkStatistics {
-  endpoints : Json?
-  gcs_staging_bucket : String?
-  kms_key_name : String?
-  logging_info : SparkLoggingInfo?
-  spark_job_id : String?
-  spark_job_location : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StagePerformanceChangeInsight {
-  input_data_change : InputDataChange?
-  stage_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StagePerformanceStandaloneInsight {
-  bi_engine_reasons : Array[BiEngineReason]?
-  high_cardinality_joins : Array[HighCardinalityJoin]?
-  insufficient_shuffle_quota : Bool?
-  partition_skew : PartitionSkew?
-  slot_contention : Bool?
-  stage_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StandardSqlDataType {
-  array_element_type : StandardSqlDataType?
-  range_element_type : StandardSqlDataType?
-  struct_type : StandardSqlStructType?
-  type_kind : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StandardSqlField {
-  name : String?
-  type_ : StandardSqlDataType?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StandardSqlStructType {
-  fields : Array[StandardSqlField]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StandardSqlTableType {
-  columns : Array[StandardSqlField]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StorageDescriptor {
-  input_format : String?
-  location_uri : String?
-  output_format : String?
-  serde_info : SerDeInfo?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StoredColumnsUnusedReason {
-  code : String?
-  message : String?
-  uncovered_columns : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StoredColumnsUsage {
-  base_table : TableReference?
-  is_query_accelerated : Bool?
-  stored_columns_unused_reasons : Array[StoredColumnsUnusedReason]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Streamingbuffer {
-  estimated_bytes : String?
-  estimated_rows : String?
-  oldest_entry_time : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct StringHparamSearchSpace {
-  candidates : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct SystemVariables {
-  types : Json?
-  values : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct Table {
-  biglake_configuration : BigLakeConfiguration?
-  clone_definition : CloneDefinition?
-  clustering : Clustering?
-  creation_time : String?
-  default_collation : String?
-  default_rounding_mode : String?
-  description : String?
-  encryption_configuration : EncryptionConfiguration?
-  etag : String?
-  expiration_time : String?
-  external_catalog_table_options : ExternalCatalogTableOptions?
-  external_data_configuration : ExternalDataConfiguration?
-  friendly_name : String?
-  id : String?
-  kind : String?
-  labels : Json?
-  last_modified_time : String?
-  location : String?
-  managed_table_type : String?
-  materialized_view : MaterializedViewDefinition?
-  materialized_view_status : MaterializedViewStatus?
-  max_staleness : String?
-  model : ModelDefinition?
-  num_active_logical_bytes : String?
-  num_active_physical_bytes : String?
-  num_bytes : String?
-  num_current_physical_bytes : String?
-  num_long_term_bytes : String?
-  num_long_term_logical_bytes : String?
-  num_long_term_physical_bytes : String?
-  num_partitions : String?
-  num_physical_bytes : String?
-  num_rows : String?
-  num_time_travel_physical_bytes : String?
-  num_total_logical_bytes : String?
-  num_total_physical_bytes : String?
-  partition_definition : PartitioningDefinition?
-  range_partitioning : RangePartitioning?
-  replicas : Array[TableReference]?
-  require_partition_filter : Bool?
-  resource_tags : Json?
-  restrictions : RestrictionConfig?
-  schema : TableSchema?
-  self_link : String?
-  snapshot_definition : SnapshotDefinition?
-  streaming_buffer : Streamingbuffer?
-  table_constraints : TableConstraints?
-  table_reference : TableReference?
-  table_replication_info : TableReplicationInfo?
-  time_partitioning : TimePartitioning?
-  type_ : String?
-  view : ViewDefinition?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TableCell {
-  v : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TableConstraints {
-  foreign_keys : Array[Json]?
-  primary_key : Json?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TableDataInsertAllRequest {
-  ignore_unknown_values : Bool?
-  kind : String?
-  rows : Array[Json]?
-  skip_invalid_rows : Bool?
-  template_suffix : String?
+  expire_time : String?
+  data_format : String?
+  avro_schema : AvroSchema?
+  arrow_schema : ArrowSchema?
+  table : String?
+  table_modifiers : TableModifiers?
+  read_options : TableReadOptions?
+  streams : Array[ReadStream]?
+  estimated_total_bytes_scanned : String?
+  estimated_total_physical_file_size : String?
+  estimated_row_count : String?
   trace_id : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct TableDataInsertAllResponse {
-  insert_errors : Array[Json]?
-  kind : String?
+pub(all) struct ReadStream {
+  name : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct TableDataList {
-  etag : String?
-  kind : String?
-  page_token : String?
-  rows : Array[TableRow]?
-  total_rows : String?
+pub(all) struct RowError {
+  index : String?
+  code : String?
+  message : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct SplitReadStreamRequest {
+  name : String?
+  fraction : Double?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct SplitReadStreamResponse {
+  primary_stream : ReadStream?
+  remainder_stream : ReadStream?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct StorageError {
+  code : String?
+  entity : String?
+  error_message : String?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
+pub(all) struct StreamStats {
+  progress : Progress?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TableFieldSchema {
-  categories : Json?
-  collation : String?
-  data_policies : Array[DataPolicyOption]?
-  default_value_expression : String?
-  description : String?
-  fields : Array[TableFieldSchema]?
-  foreign_type_definition : String?
-  generated_column : GeneratedColumn?
-  max_length : String?
-  mode : String?
   name : String?
-  policy_tags : Json?
-  precision : String?
-  range_element_type : Json?
-  rounding_mode : String?
-  scale : String?
-  timestamp_precision : String?
   type_ : String?
+  mode : String?
+  fields : Array[TableFieldSchema]?
+  description : String?
+  max_length : String?
+  precision : String?
+  scale : String?
+  default_value_expression : String?
+  timestamp_precision : Json?
+  range_element_type : FieldElementType?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct TableList {
-  etag : String?
-  kind : String?
-  next_page_token : String?
-  tables : Array[Json]?
-  total_items : Int?
+pub(all) struct TableModifiers {
+  snapshot_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct TableMetadataCacheUsage {
-  explanation : String?
-  pruning_stats : PruningStats?
-  staleness : String?
-  table_reference : TableReference?
-  table_type : String?
-  unused_reason : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TableReference {
-  dataset_id : String?
-  project_id : String?
-  table_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TableReplicationInfo {
-  replicated_source_last_refresh_time : String?
-  replication_error : ErrorProto?
-  replication_interval_ms : String?
-  replication_status : String?
-  source_table : TableReference?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TableRow {
-  f : Array[TableCell]?
+pub(all) struct TableReadOptions {
+  selected_fields : Array[String]?
+  row_restriction : String?
+  arrow_serialization_options : ArrowSerializationOptions?
+  avro_serialization_options : AvroSerializationOptions?
+  sample_percentage : Double?
+  response_compression_codec : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TableSchema {
   fields : Array[TableFieldSchema]?
-  foreign_type_info : ForeignTypeInfo?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct TestIamPermissionsRequest {
-  permissions : Array[String]?
+pub(all) struct ThrottleState {
+  throttle_percent : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct TestIamPermissionsResponse {
-  permissions : Array[String]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TimePartitioning {
-  expiration_ms : String?
-  field : String?
-  require_partition_filter : Bool?
-  type_ : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TrainingOptions {
-  activation_fn : String?
-  adjust_step_changes : Bool?
-  approx_global_feature_contrib : Bool?
-  auto_arima : Bool?
-  auto_arima_max_order : String?
-  auto_arima_min_order : String?
-  auto_class_weights : Bool?
-  batch_size : String?
-  booster_type : String?
-  budget_hours : Double?
-  calculate_p_values : Bool?
-  category_encoding_method : String?
-  clean_spikes_and_dips : Bool?
-  color_space : String?
-  colsample_bylevel : Double?
-  colsample_bynode : Double?
-  colsample_bytree : Double?
-  contribution_metric : String?
-  dart_normalize_type : String?
-  data_frequency : String?
-  data_split_column : String?
-  data_split_eval_fraction : Double?
-  data_split_method : String?
-  decompose_time_series : Bool?
-  dimension_id_columns : Array[String]?
-  distance_type : String?
-  dropout : Double?
-  early_stop : Bool?
-  enable_global_explain : Bool?
-  endpoint_idle_ttl : String?
-  feedback_type : String?
-  fit_intercept : Bool?
-  forecast_limit_lower_bound : Double?
-  forecast_limit_upper_bound : Double?
-  hidden_units : Array[String]?
-  holiday_region : String?
-  holiday_regions : Array[String]?
-  horizon : String?
-  hparam_tuning_objectives : Array[String]?
-  hugging_face_model_id : String?
-  include_drift : Bool?
-  initial_learn_rate : Double?
-  input_label_columns : Array[String]?
-  instance_weight_column : String?
-  integrated_gradients_num_steps : String?
-  is_test_column : String?
-  item_column : String?
-  kmeans_initialization_column : String?
-  kmeans_initialization_method : String?
-  l1_reg_activation : Double?
-  l1_regularization : Double?
-  l2_regularization : Double?
-  label_class_weights : Json?
-  learn_rate : Double?
-  learn_rate_strategy : String?
-  loss_type : String?
-  machine_type : String?
-  max_iterations : String?
-  max_parallel_trials : String?
-  max_replica_count : String?
-  max_time_series_length : String?
-  max_tree_depth : String?
-  min_apriori_support : Double?
-  min_relative_progress : Double?
-  min_replica_count : String?
-  min_split_loss : Double?
-  min_time_series_length : String?
-  min_tree_child_weight : String?
-  model_garden_model_name : String?
-  model_registry : String?
-  model_uri : String?
-  non_seasonal_order : ArimaOrder?
-  num_clusters : String?
-  num_factors : String?
-  num_parallel_tree : String?
-  num_principal_components : String?
-  num_trials : String?
-  optimization_strategy : String?
-  optimizer : String?
-  pca_explained_variance_ratio : Double?
-  pca_solver : String?
-  reservation_affinity_key : String?
-  reservation_affinity_type : String?
-  reservation_affinity_values : Array[String]?
-  sampled_shapley_num_paths : String?
-  scale_features : Bool?
-  standardize_features : Bool?
-  subsample : Double?
-  tf_version : String?
-  time_series_data_column : String?
-  time_series_id_column : String?
-  time_series_id_columns : Array[String]?
-  time_series_length_fraction : Double?
-  time_series_timestamp_column : String?
-  tree_method : String?
-  trend_smoothing_window_size : String?
-  user_column : String?
-  vertex_ai_model_version_aliases : Array[String]?
-  wals_alpha : Double?
-  warm_start : Bool?
-  xgboost_version : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TrainingRun {
-  class_level_global_explanations : Array[GlobalExplanation]?
-  data_split_result : DataSplitResult?
-  evaluation_metrics : EvaluationMetrics?
-  model_level_global_explanation : GlobalExplanation?
-  results : Array[IterationResult]?
-  start_time : String?
-  training_options : TrainingOptions?
-  training_start_time : String?
-  vertex_ai_model_id : String?
-  vertex_ai_model_version : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TransactionInfo {
-  transaction_id : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TransformColumn {
+pub(all) struct WriteStream {
   name : String?
-  transform_sql : String?
-  type_ : StandardSqlDataType?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct UndeleteDatasetRequest {
-  deletion_time : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct UserDefinedFunctionResource {
-  inline_code : String?
-  resource_uri : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct VectorSearchStatistics {
-  index_unused_reasons : Array[IndexUnusedReason]?
-  index_usage_mode : String?
-  stored_columns_usages : Array[StoredColumnsUsage]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct ViewDefinition {
-  foreign_definitions : Array[ForeignViewDefinition]?
-  privacy_policy : PrivacyPolicy?
-  query : String?
-  use_explicit_column_names : Bool?
-  use_legacy_sql : Bool?
-  user_defined_function_resources : Array[UserDefinedFunctionResource]?
+  type_ : String?
+  create_time : String?
+  commit_time : String?
+  table_schema : TableSchema?
+  write_mode : String?
+  location : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 // Type aliases

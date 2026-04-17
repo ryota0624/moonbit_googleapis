@@ -19,7 +19,9 @@ pub fn generate_types(RestDescription) -> String
 
 pub fn param_type_to_moonbit(String?) -> String
 
-pub fn parse_discovery(String) -> RestDescription raise ParseError
+pub fn parse_proto_image(String) -> ProtoImage raise ParseError
+
+pub fn proto_package_to_rest_description(ProtoImage, String) -> RestDescription raise ParseError
 
 pub fn to_snake_case(String) -> String
 
@@ -31,6 +33,16 @@ pub suberror ParseError {
 pub impl Show for ParseError
 
 // Types and methods
+pub struct HttpRule {
+  get : String?
+  post : String?
+  patch : String?
+  put : String?
+  delete : String?
+  body : String?
+  additional_bindings : Array[HttpRule]?
+} derive(@json.FromJson)
+
 pub struct JsonSchema {
   id : String?
   type_ : String?
@@ -50,6 +62,57 @@ pub struct MethodParameter {
   required : Bool?
   location : String?
   repeated : Bool?
+} derive(@json.FromJson)
+
+pub struct ProtoEnum {
+  name : String?
+} derive(@json.FromJson)
+
+pub struct ProtoField {
+  name : String?
+  label : String?
+  type_ : String?
+  type_name : String?
+  json_name : String?
+  oneof_index : Int?
+} derive(@json.FromJson)
+
+pub struct ProtoFile {
+  name : String?
+  package_ : String?
+  message_type : Array[ProtoMessage]?
+  service : Array[ProtoService]?
+  enum_type : Array[ProtoEnum]?
+} derive(@json.FromJson)
+
+pub struct ProtoImage {
+  file : Array[ProtoFile]
+} derive(@json.FromJson)
+
+pub struct ProtoMessage {
+  name : String?
+  field : Array[ProtoField]?
+  nested_type : Array[ProtoMessage]?
+  enum_type : Array[ProtoEnum]?
+  oneof_decl : Array[ProtoOneofDecl]?
+} derive(@json.FromJson)
+
+pub struct ProtoOneofDecl {
+  name : String?
+} derive(@json.FromJson)
+
+pub struct ProtoRpcMethod {
+  name : String?
+  input_type : String?
+  output_type : String?
+  server_streaming : Bool?
+  options : Map[String, Json]?
+} derive(@json.FromJson)
+
+pub struct ProtoService {
+  name : String?
+  methods : Array[ProtoRpcMethod]?
+  options : Map[String, Json]?
 } derive(@json.FromJson)
 
 pub struct RestDescription {

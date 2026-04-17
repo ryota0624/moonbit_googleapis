@@ -1,32 +1,20 @@
 ///|
-/// Schema Links
-pub(all) struct Links {
-  link : Array[Link]?
-  dropped_links_count : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
 /// Schema Span
 pub(all) struct Span {
-  parent_span_id : String?
-  span_kind : String?
   name : String?
-  time_events : TimeEvents?
-  attributes : Attributes?
-  end_time : String?
-  same_process_as_parent_span : Bool?
   span_id : String?
-  links : Links?
+  parent_span_id : String?
   display_name : TruncatableString?
   start_time : String?
-  child_span_count : Int?
+  end_time : String?
+  attributes : Attributes?
   stack_trace : StackTrace?
-  status : Status?
+  time_events : TimeEvents?
+  links : Links?
+  status : Json?
+  same_process_as_parent_span : Bool?
+  child_span_count : Int?
+  span_kind : String?
 } derive (
   Eq,
   Show,
@@ -35,10 +23,10 @@ pub(all) struct Span {
 )
 
 ///|
-/// Schema StackTrace
-pub(all) struct StackTrace {
-  stack_frames : StackFrames?
-  stack_trace_hash_id : String?
+/// Schema Attributes
+pub(all) struct Attributes {
+  attribute_map : Array[AttributeMapEntry]?
+  dropped_attributes_count : Int?
 } derive (
   Eq,
   Show,
@@ -47,19 +35,10 @@ pub(all) struct StackTrace {
 )
 
 ///|
-/// Schema Empty
-pub(all) struct Empty {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TruncatableString
-pub(all) struct TruncatableString {
-  truncated_byte_count : Int?
-  value : String?
+/// Schema AttributeMapEntry
+pub(all) struct AttributeMapEntry {
+  key : String?
+  value : AttributeValue?
 } derive (
   Eq,
   Show,
@@ -68,10 +47,11 @@ pub(all) struct TruncatableString {
 )
 
 ///|
-/// Schema StackFrames
-pub(all) struct StackFrames {
-  frame : Array[StackFrame]?
-  dropped_frames_count : Int?
+/// Schema TimeEvent
+pub(all) struct TimeEvent {
+  time : String?
+  annotation : Annotation?
+  message_event : MessageEvent?
 } derive (
   Eq,
   Show,
@@ -84,6 +64,59 @@ pub(all) struct StackFrames {
 pub(all) struct Annotation {
   description : TruncatableString?
   attributes : Attributes?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema MessageEvent
+pub(all) struct MessageEvent {
+  type_ : String?
+  id : String?
+  uncompressed_size_bytes : String?
+  compressed_size_bytes : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
+)
+
+///|
+/// Schema TimeEvents
+pub(all) struct TimeEvents {
+  time_event : Array[TimeEvent]?
+  dropped_annotations_count : Int?
+  dropped_message_events_count : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Link
+pub(all) struct Link {
+  trace_id : String?
+  span_id : String?
+  type_ : String?
+  attributes : Attributes?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
+  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
+)
+
+///|
+/// Schema Links
+pub(all) struct Links {
+  link : Array[Link]?
+  dropped_links_count : Int?
 } derive (
   Eq,
   Show,
@@ -105,9 +138,10 @@ pub(all) struct AttributeValue {
 )
 
 ///|
-/// Schema BatchWriteSpansRequest
-pub(all) struct BatchWriteSpansRequest {
-  spans : Array[Span]?
+/// Schema StackTrace
+pub(all) struct StackTrace {
+  stack_frames : StackFrames?
+  stack_trace_hash_id : String?
 } derive (
   Eq,
   Show,
@@ -119,12 +153,12 @@ pub(all) struct BatchWriteSpansRequest {
 /// Schema StackFrame
 pub(all) struct StackFrame {
   function_name : TruncatableString?
+  original_function_name : TruncatableString?
   file_name : TruncatableString?
   line_number : String?
-  source_version : TruncatableString?
-  original_function_name : TruncatableString?
   column_number : String?
   load_module : Module?
+  source_version : TruncatableString?
 } derive (
   Eq,
   Show,
@@ -133,10 +167,10 @@ pub(all) struct StackFrame {
 )
 
 ///|
-/// Schema Attributes
-pub(all) struct Attributes {
-  attribute_map : Json?
-  dropped_attributes_count : Int?
+/// Schema StackFrames
+pub(all) struct StackFrames {
+  frame : Array[StackFrame]?
+  dropped_frames_count : Int?
 } derive (
   Eq,
   Show,
@@ -157,11 +191,10 @@ pub(all) struct Module {
 )
 
 ///|
-/// Schema TimeEvent
-pub(all) struct TimeEvent {
-  time : String?
-  message_event : MessageEvent?
-  annotation : Annotation?
+/// Schema TruncatableString
+pub(all) struct TruncatableString {
+  value : String?
+  truncated_byte_count : Int?
 } derive (
   Eq,
   Show,
@@ -170,55 +203,13 @@ pub(all) struct TimeEvent {
 )
 
 ///|
-/// Schema Status
-pub(all) struct Status {
-  code : Int?
-  details : Array[Json]?
-  message : String?
+/// Schema BatchWriteSpansRequest
+pub(all) struct BatchWriteSpansRequest {
+  name : String?
+  spans : Array[Span]?
 } derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
   ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TimeEvents
-pub(all) struct TimeEvents {
-  dropped_message_events_count : Int?
-  time_event : Array[TimeEvent]?
-  dropped_annotations_count : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema MessageEvent
-pub(all) struct MessageEvent {
-  id : String?
-  uncompressed_size_bytes : String?
-  compressed_size_bytes : String?
-  type_ : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
-)
-
-///|
-/// Schema Link
-pub(all) struct Link {
-  span_id : String?
-  type_ : String?
-  attributes : Attributes?
-  trace_id : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase", fields(type_(rename="type"))),
-  ToJson(rename_fields="camelCase", fields(type_(rename="type"))),
 )

@@ -794,7 +794,11 @@ fn walk_resources_for_client(
     }
     for method_key in collect_sorted_method_keys(methods_or_empty(res.methods)) {
       let rest_m = methods_or_empty(res.methods).get(method_key).unwrap()
-      let fn_name = to_snake_case("\{path_prefix}_\{method_key}")
+      let fn_name = if path_prefix.is_empty() {
+        to_snake_case(method_key)
+      } else {
+        to_snake_case("\{path_prefix}_\{method_key}")
+      }
       write_rest_method(b, service_ty, fn_name, rest_m)
     }
     walk_resources_for_client(

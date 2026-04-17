@@ -17,6 +17,11 @@ pub(all) struct Annotation {
   attributes : Attributes?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
+pub(all) struct AttributeMapEntry {
+  key : String?
+  value : AttributeValue?
+} derive(Eq, Show, ToJson, @json.FromJson)
+
 pub(all) struct AttributeValue {
   string_value : TruncatableString?
   int_value : String?
@@ -24,11 +29,12 @@ pub(all) struct AttributeValue {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Attributes {
-  attribute_map : Json?
+  attribute_map : Array[AttributeMapEntry]?
   dropped_attributes_count : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BatchWriteSpansRequest {
+  name : String?
   spans : Array[Span]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
@@ -36,18 +42,15 @@ pub struct CloudtraceService {
   base_url : String
   client : @core.GoogleClient
 }
+pub async fn CloudtraceService::batch_write_spans(Self, String, BatchWriteSpansRequest) -> Json raise @http.HttpError
+pub async fn CloudtraceService::create_span(Self, String, Span) -> Span raise @http.HttpError
 pub fn CloudtraceService::new(@core.GoogleClient, base_url? : String) -> Self
-pub async fn CloudtraceService::projects_traces_batch_write(Self, String, BatchWriteSpansRequest) -> Empty raise @http.HttpError
-pub async fn CloudtraceService::projects_traces_spans_create_span(Self, String, Span) -> Span raise @http.HttpError
-
-pub(all) struct Empty {
-} derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Link {
+  trace_id : String?
   span_id : String?
   type_ : String?
   attributes : Attributes?
-  trace_id : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Links {
@@ -56,10 +59,10 @@ pub(all) struct Links {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct MessageEvent {
+  type_ : String?
   id : String?
   uncompressed_size_bytes : String?
   compressed_size_bytes : String?
-  type_ : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Module {
@@ -68,30 +71,30 @@ pub(all) struct Module {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Span {
-  parent_span_id : String?
-  span_kind : String?
   name : String?
-  time_events : TimeEvents?
-  attributes : Attributes?
-  end_time : String?
-  same_process_as_parent_span : Bool?
   span_id : String?
-  links : Links?
+  parent_span_id : String?
   display_name : TruncatableString?
   start_time : String?
-  child_span_count : Int?
+  end_time : String?
+  attributes : Attributes?
   stack_trace : StackTrace?
-  status : Status?
+  time_events : TimeEvents?
+  links : Links?
+  status : Json?
+  same_process_as_parent_span : Bool?
+  child_span_count : Int?
+  span_kind : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StackFrame {
   function_name : TruncatableString?
+  original_function_name : TruncatableString?
   file_name : TruncatableString?
   line_number : String?
-  source_version : TruncatableString?
-  original_function_name : TruncatableString?
   column_number : String?
   load_module : Module?
+  source_version : TruncatableString?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StackFrames {
@@ -104,27 +107,21 @@ pub(all) struct StackTrace {
   stack_trace_hash_id : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct Status {
-  code : Int?
-  details : Array[Json]?
-  message : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
 pub(all) struct TimeEvent {
   time : String?
-  message_event : MessageEvent?
   annotation : Annotation?
+  message_event : MessageEvent?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TimeEvents {
-  dropped_message_events_count : Int?
   time_event : Array[TimeEvent]?
   dropped_annotations_count : Int?
+  dropped_message_events_count : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TruncatableString {
-  truncated_byte_count : Int?
   value : String?
+  truncated_byte_count : Int?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 // Type aliases

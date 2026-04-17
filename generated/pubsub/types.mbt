@@ -1,77 +1,4 @@
 ///|
-/// Schema SetIamPolicyRequest
-pub(all) struct SetIamPolicyRequest {
-  policy : Policy?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Policy
-pub(all) struct Policy {
-  version : Int?
-  bindings : Array[Binding]?
-  etag : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Binding
-pub(all) struct Binding {
-  role : String?
-  members : Array[String]?
-  condition : Expr?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Expr
-pub(all) struct Expr {
-  expression : String?
-  title : String?
-  description : String?
-  location : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TestIamPermissionsRequest
-pub(all) struct TestIamPermissionsRequest {
-  permissions : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TestIamPermissionsResponse
-pub(all) struct TestIamPermissionsResponse {
-  permissions : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
 /// Schema Schema
 pub(all) struct Schema {
   name : String?
@@ -87,10 +14,63 @@ pub(all) struct Schema {
 )
 
 ///|
+/// Schema CreateSchemaRequest
+pub(all) struct CreateSchemaRequest {
+  parent : String?
+  schema : Schema?
+  schema_id : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetSchemaRequest
+pub(all) struct GetSchemaRequest {
+  name : String?
+  view : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListSchemasRequest
+pub(all) struct ListSchemasRequest {
+  parent : String?
+  view : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema ListSchemasResponse
 pub(all) struct ListSchemasResponse {
   schemas : Array[Schema]?
   next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListSchemaRevisionsRequest
+pub(all) struct ListSchemaRevisionsRequest {
+  name : String?
+  view : String?
+  page_size : Int?
+  page_token : String?
 } derive (
   Eq,
   Show,
@@ -113,6 +93,7 @@ pub(all) struct ListSchemaRevisionsResponse {
 ///|
 /// Schema CommitSchemaRequest
 pub(all) struct CommitSchemaRequest {
+  name : String?
   schema : Schema?
 } derive (
   Eq,
@@ -124,6 +105,7 @@ pub(all) struct CommitSchemaRequest {
 ///|
 /// Schema RollbackSchemaRequest
 pub(all) struct RollbackSchemaRequest {
+  name : String?
   revision_id : String?
 } derive (
   Eq,
@@ -133,8 +115,22 @@ pub(all) struct RollbackSchemaRequest {
 )
 
 ///|
-/// Schema Empty
-pub(all) struct Empty {} derive (
+/// Schema DeleteSchemaRevisionRequest
+pub(all) struct DeleteSchemaRevisionRequest {
+  name : String?
+  revision_id : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteSchemaRequest
+pub(all) struct DeleteSchemaRequest {
+  name : String?
+} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -144,6 +140,7 @@ pub(all) struct Empty {} derive (
 ///|
 /// Schema ValidateSchemaRequest
 pub(all) struct ValidateSchemaRequest {
+  parent : String?
   schema : Schema?
 } derive (
   Eq,
@@ -164,6 +161,7 @@ pub(all) struct ValidateSchemaResponse {} derive (
 ///|
 /// Schema ValidateMessageRequest
 pub(all) struct ValidateMessageRequest {
+  parent : String?
   name : String?
   schema : Schema?
   message : String?
@@ -178,27 +176,6 @@ pub(all) struct ValidateMessageRequest {
 ///|
 /// Schema ValidateMessageResponse
 pub(all) struct ValidateMessageResponse {} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Topic
-pub(all) struct Topic {
-  name : String?
-  labels : Json?
-  message_storage_policy : MessageStoragePolicy?
-  kms_key_name : String?
-  schema_settings : SchemaSettings?
-  satisfies_pzs : Bool?
-  message_retention_duration : String?
-  state : String?
-  ingestion_data_source_settings : IngestionDataSourceSettings?
-  message_transforms : Array[MessageTransform]?
-  tags : Json?
-} derive (
   Eq,
   Show,
   FromJson(rename_fields="camelCase"),
@@ -369,12 +346,135 @@ pub(all) struct PlatformLogsSettings {
 )
 
 ///|
-/// Schema MessageTransform
-pub(all) struct MessageTransform {
-  javascript_udf : JavaScriptUDF?
-  ai_inference : AIInference?
-  enabled : Bool?
-  disabled : Bool?
+/// Schema IngestionFailureEvent
+pub(all) struct IngestionFailureEvent {
+  topic : String?
+  error_message : String?
+  cloud_storage_failure : CloudStorageFailure?
+  aws_msk_failure : AwsMskFailureReason?
+  azure_event_hubs_failure : AzureEventHubsFailureReason?
+  confluent_cloud_failure : ConfluentCloudFailureReason?
+  aws_kinesis_failure : AwsKinesisFailureReason?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ApiViolationReason
+pub(all) struct ApiViolationReason {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AvroFailureReason
+pub(all) struct AvroFailureReason {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema SchemaViolationReason
+pub(all) struct SchemaViolationReason {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema MessageTransformationFailureReason
+pub(all) struct MessageTransformationFailureReason {} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema CloudStorageFailure
+pub(all) struct CloudStorageFailure {
+  bucket : String?
+  object_name : String?
+  object_generation : String?
+  avro_failure_reason : AvroFailureReason?
+  api_violation_reason : ApiViolationReason?
+  schema_violation_reason : SchemaViolationReason?
+  message_transformation_failure_reason : MessageTransformationFailureReason?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AwsMskFailureReason
+pub(all) struct AwsMskFailureReason {
+  cluster_arn : String?
+  kafka_topic : String?
+  partition_id : String?
+  offset : String?
+  api_violation_reason : ApiViolationReason?
+  schema_violation_reason : SchemaViolationReason?
+  message_transformation_failure_reason : MessageTransformationFailureReason?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AzureEventHubsFailureReason
+pub(all) struct AzureEventHubsFailureReason {
+  namespace_ : String?
+  event_hub : String?
+  partition_id : String?
+  offset : String?
+  api_violation_reason : ApiViolationReason?
+  schema_violation_reason : SchemaViolationReason?
+  message_transformation_failure_reason : MessageTransformationFailureReason?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase", fields(namespace_(rename="namespace"))),
+  ToJson(rename_fields="camelCase", fields(namespace_(rename="namespace"))),
+)
+
+///|
+/// Schema ConfluentCloudFailureReason
+pub(all) struct ConfluentCloudFailureReason {
+  cluster_id : String?
+  kafka_topic : String?
+  partition_id : String?
+  offset : String?
+  api_violation_reason : ApiViolationReason?
+  schema_violation_reason : SchemaViolationReason?
+  message_transformation_failure_reason : MessageTransformationFailureReason?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AwsKinesisFailureReason
+pub(all) struct AwsKinesisFailureReason {
+  stream_arn : String?
+  partition_key : String?
+  sequence_number : String?
+  schema_violation_reason : SchemaViolationReason?
+  message_transformation_failure_reason : MessageTransformationFailureReason?
+  api_violation_reason : ApiViolationReason?
 } derive (
   Eq,
   Show,
@@ -419,6 +519,103 @@ pub(all) struct UnstructuredInference {
 )
 
 ///|
+/// Schema MessageTransform
+pub(all) struct MessageTransform {
+  javascript_udf : JavaScriptUDF?
+  ai_inference : AIInference?
+  enabled : Bool?
+  disabled : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Topic
+pub(all) struct Topic {
+  name : String?
+  labels : Array[LabelsEntry]?
+  message_storage_policy : MessageStoragePolicy?
+  kms_key_name : String?
+  schema_settings : SchemaSettings?
+  satisfies_pzs : Bool?
+  message_retention_duration : String?
+  state : String?
+  ingestion_data_source_settings : IngestionDataSourceSettings?
+  message_transforms : Array[MessageTransform]?
+  tags : Array[TagsEntry]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema LabelsEntry
+pub(all) struct LabelsEntry {
+  key : String?
+  value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TagsEntry
+pub(all) struct TagsEntry {
+  key : String?
+  value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema PubsubMessage
+pub(all) struct PubsubMessage {
+  data : String?
+  attributes : Array[AttributesEntry]?
+  message_id : String?
+  publish_time : String?
+  ordering_key : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AttributesEntry
+pub(all) struct AttributesEntry {
+  key : String?
+  value : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetTopicRequest
+pub(all) struct GetTopicRequest {
+  topic : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema UpdateTopicRequest
 pub(all) struct UpdateTopicRequest {
   topic : Topic?
@@ -433,22 +630,8 @@ pub(all) struct UpdateTopicRequest {
 ///|
 /// Schema PublishRequest
 pub(all) struct PublishRequest {
+  topic : String?
   messages : Array[PubsubMessage]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema PubsubMessage
-pub(all) struct PubsubMessage {
-  data : String?
-  attributes : Json?
-  message_id : String?
-  publish_time : String?
-  ordering_key : String?
 } derive (
   Eq,
   Show,
@@ -460,6 +643,19 @@ pub(all) struct PubsubMessage {
 /// Schema PublishResponse
 pub(all) struct PublishResponse {
   message_ids : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListTopicsRequest
+pub(all) struct ListTopicsRequest {
+  project : String?
+  page_size : Int?
+  page_token : String?
 } derive (
   Eq,
   Show,
@@ -480,6 +676,19 @@ pub(all) struct ListTopicsResponse {
 )
 
 ///|
+/// Schema ListTopicSubscriptionsRequest
+pub(all) struct ListTopicSubscriptionsRequest {
+  topic : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema ListTopicSubscriptionsResponse
 pub(all) struct ListTopicSubscriptionsResponse {
   subscriptions : Array[String]?
@@ -492,10 +701,45 @@ pub(all) struct ListTopicSubscriptionsResponse {
 )
 
 ///|
+/// Schema ListTopicSnapshotsRequest
+pub(all) struct ListTopicSnapshotsRequest {
+  topic : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema ListTopicSnapshotsResponse
 pub(all) struct ListTopicSnapshotsResponse {
   snapshots : Array[String]?
   next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteTopicRequest
+pub(all) struct DeleteTopicRequest {
+  topic : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DetachSubscriptionRequest
+pub(all) struct DetachSubscriptionRequest {
+  subscription : String?
 } derive (
   Eq,
   Show,
@@ -524,7 +768,7 @@ pub(all) struct Subscription {
   ack_deadline_seconds : Int?
   retain_acked_messages : Bool?
   message_retention_duration : String?
-  labels : Json?
+  labels : Array[LabelsEntry]?
   enable_message_ordering : Bool?
   expiration_policy : ExpirationPolicy?
   filter : String?
@@ -536,7 +780,54 @@ pub(all) struct Subscription {
   state : String?
   analytics_hub_subscription_info : AnalyticsHubSubscriptionInfo?
   message_transforms : Array[MessageTransform]?
-  tags : Json?
+  tags : Array[TagsEntry]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AnalyticsHubSubscriptionInfo
+pub(all) struct AnalyticsHubSubscriptionInfo {
+  listing : String?
+  subscription : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema RetryPolicy
+pub(all) struct RetryPolicy {
+  minimum_backoff : String?
+  maximum_backoff : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeadLetterPolicy
+pub(all) struct DeadLetterPolicy {
+  dead_letter_topic : String?
+  max_delivery_attempts : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ExpirationPolicy
+pub(all) struct ExpirationPolicy {
+  ttl : String?
 } derive (
   Eq,
   Show,
@@ -548,7 +839,7 @@ pub(all) struct Subscription {
 /// Schema PushConfig
 pub(all) struct PushConfig {
   push_endpoint : String?
-  attributes : Json?
+  attributes : Array[AttributesEntry]?
   oidc_token : OidcToken?
   pubsub_wrapper : PubsubWrapper?
   no_wrapper : NoWrapper?
@@ -609,6 +900,21 @@ pub(all) struct BigQueryConfig {
 )
 
 ///|
+/// Schema BigtableConfig
+pub(all) struct BigtableConfig {
+  table : String?
+  app_profile_id : String?
+  service_account_email : String?
+  write_metadata : Bool?
+  state : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema CloudStorageConfig
 pub(all) struct CloudStorageConfig {
   bucket : String?
@@ -651,13 +957,11 @@ pub(all) struct AvroConfig {
 )
 
 ///|
-/// Schema BigtableConfig
-pub(all) struct BigtableConfig {
-  table : String?
-  app_profile_id : String?
-  service_account_email : String?
-  write_metadata : Bool?
-  state : String?
+/// Schema ReceivedMessage
+pub(all) struct ReceivedMessage {
+  ack_id : String?
+  message : PubsubMessage?
+  delivery_attempt : Int?
 } derive (
   Eq,
   Show,
@@ -666,44 +970,8 @@ pub(all) struct BigtableConfig {
 )
 
 ///|
-/// Schema ExpirationPolicy
-pub(all) struct ExpirationPolicy {
-  ttl : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema DeadLetterPolicy
-pub(all) struct DeadLetterPolicy {
-  dead_letter_topic : String?
-  max_delivery_attempts : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema RetryPolicy
-pub(all) struct RetryPolicy {
-  minimum_backoff : String?
-  maximum_backoff : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema AnalyticsHubSubscriptionInfo
-pub(all) struct AnalyticsHubSubscriptionInfo {
-  listing : String?
+/// Schema GetSubscriptionRequest
+pub(all) struct GetSubscriptionRequest {
   subscription : String?
 } derive (
   Eq,
@@ -725,6 +993,19 @@ pub(all) struct UpdateSubscriptionRequest {
 )
 
 ///|
+/// Schema ListSubscriptionsRequest
+pub(all) struct ListSubscriptionsRequest {
+  project : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema ListSubscriptionsResponse
 pub(all) struct ListSubscriptionsResponse {
   subscriptions : Array[Subscription]?
@@ -737,10 +1018,9 @@ pub(all) struct ListSubscriptionsResponse {
 )
 
 ///|
-/// Schema ModifyAckDeadlineRequest
-pub(all) struct ModifyAckDeadlineRequest {
-  ack_ids : Array[String]?
-  ack_deadline_seconds : Int?
+/// Schema DeleteSubscriptionRequest
+pub(all) struct DeleteSubscriptionRequest {
+  subscription : String?
 } derive (
   Eq,
   Show,
@@ -749,9 +1029,10 @@ pub(all) struct ModifyAckDeadlineRequest {
 )
 
 ///|
-/// Schema AcknowledgeRequest
-pub(all) struct AcknowledgeRequest {
-  ack_ids : Array[String]?
+/// Schema ModifyPushConfigRequest
+pub(all) struct ModifyPushConfigRequest {
+  subscription : String?
+  push_config : PushConfig?
 } derive (
   Eq,
   Show,
@@ -762,6 +1043,7 @@ pub(all) struct AcknowledgeRequest {
 ///|
 /// Schema PullRequest
 pub(all) struct PullRequest {
+  subscription : String?
   return_immediately : Bool?
   max_messages : Int?
 } derive (
@@ -783,11 +1065,11 @@ pub(all) struct PullResponse {
 )
 
 ///|
-/// Schema ReceivedMessage
-pub(all) struct ReceivedMessage {
-  ack_id : String?
-  message : PubsubMessage?
-  delivery_attempt : Int?
+/// Schema ModifyAckDeadlineRequest
+pub(all) struct ModifyAckDeadlineRequest {
+  subscription : String?
+  ack_ids : Array[String]?
+  ack_deadline_seconds : Int?
 } derive (
   Eq,
   Show,
@@ -796,9 +1078,10 @@ pub(all) struct ReceivedMessage {
 )
 
 ///|
-/// Schema ModifyPushConfigRequest
-pub(all) struct ModifyPushConfigRequest {
-  push_config : PushConfig?
+/// Schema AcknowledgeRequest
+pub(all) struct AcknowledgeRequest {
+  subscription : String?
+  ack_ids : Array[String]?
 } derive (
   Eq,
   Show,
@@ -807,12 +1090,17 @@ pub(all) struct ModifyPushConfigRequest {
 )
 
 ///|
-/// Schema Snapshot
-pub(all) struct Snapshot {
-  name : String?
-  topic : String?
-  expire_time : String?
-  labels : Json?
+/// Schema StreamingPullRequest
+pub(all) struct StreamingPullRequest {
+  subscription : String?
+  ack_ids : Array[String]?
+  modify_deadline_seconds : Array[Int]?
+  modify_deadline_ack_ids : Array[String]?
+  stream_ack_deadline_seconds : Int?
+  client_id : String?
+  max_outstanding_messages : String?
+  max_outstanding_bytes : String?
+  protocol_version : String?
 } derive (
   Eq,
   Show,
@@ -821,10 +1109,51 @@ pub(all) struct Snapshot {
 )
 
 ///|
-/// Schema ListSnapshotsResponse
-pub(all) struct ListSnapshotsResponse {
-  snapshots : Array[Snapshot]?
-  next_page_token : String?
+/// Schema StreamingPullResponse
+pub(all) struct StreamingPullResponse {
+  received_messages : Array[ReceivedMessage]?
+  acknowledge_confirmation : AcknowledgeConfirmation?
+  modify_ack_deadline_confirmation : ModifyAckDeadlineConfirmation?
+  subscription_properties : SubscriptionProperties?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AcknowledgeConfirmation
+pub(all) struct AcknowledgeConfirmation {
+  ack_ids : Array[String]?
+  invalid_ack_ids : Array[String]?
+  unordered_ack_ids : Array[String]?
+  temporary_failed_ack_ids : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ModifyAckDeadlineConfirmation
+pub(all) struct ModifyAckDeadlineConfirmation {
+  ack_ids : Array[String]?
+  invalid_ack_ids : Array[String]?
+  temporary_failed_ack_ids : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema SubscriptionProperties
+pub(all) struct SubscriptionProperties {
+  exactly_once_delivery_enabled : Bool?
+  message_ordering_enabled : Bool?
 } derive (
   Eq,
   Show,
@@ -835,9 +1164,10 @@ pub(all) struct ListSnapshotsResponse {
 ///|
 /// Schema CreateSnapshotRequest
 pub(all) struct CreateSnapshotRequest {
+  name : String?
   subscription : String?
-  labels : Json?
-  tags : Json?
+  labels : Array[LabelsEntry]?
+  tags : Array[TagsEntry]?
 } derive (
   Eq,
   Show,
@@ -858,8 +1188,70 @@ pub(all) struct UpdateSnapshotRequest {
 )
 
 ///|
+/// Schema Snapshot
+pub(all) struct Snapshot {
+  name : String?
+  topic : String?
+  expire_time : String?
+  labels : Array[LabelsEntry]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema GetSnapshotRequest
+pub(all) struct GetSnapshotRequest {
+  snapshot : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListSnapshotsRequest
+pub(all) struct ListSnapshotsRequest {
+  project : String?
+  page_size : Int?
+  page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ListSnapshotsResponse
+pub(all) struct ListSnapshotsResponse {
+  snapshots : Array[Snapshot]?
+  next_page_token : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DeleteSnapshotRequest
+pub(all) struct DeleteSnapshotRequest {
+  snapshot : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema SeekRequest
 pub(all) struct SeekRequest {
+  subscription : String?
   time : String?
   snapshot : String?
 } derive (
