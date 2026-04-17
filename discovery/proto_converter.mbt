@@ -488,7 +488,10 @@ pub fn proto_package_to_rest_description(
 
   let schemas : Map[String, JsonSchema] = Map::new()
   let mut default_host = "googleapis.com"
-  let mut service_opt : ProtoService? = None
+  let rpc_methods_to_generate : Array[ProtoRpcMethod] = Array::new()
+  let methods : Map[String, RestMethod] = Map::new()
+  let mut title = ""
+  let mut has_http_annotated_method = false
 
   for file in files {
     match file.message_type {
@@ -506,27 +509,22 @@ pub fn proto_package_to_rest_description(
               }
             None => ()
           }
-          if service_opt is None {
-            match svc.methods {
-              Some(methods) => {
-                let mut has_http = false
-                for m in methods {
-                  if !has_http {
-                    match m.options {
-                      Some(o) =>
-                        if option_get(o, "google.api.http") is Some(_) {
-                          has_http = true
-                        }
-                      None => ()
+          match svc.methods {
+            Some(rpc_methods) =>
+              for m in rpc_methods {
+                rpc_methods_to_generate.push(m)
+                match m.options {
+                  Some(o) =>
+                    if option_get(o, "google.api.http") is Some(_) {
+                      has_http_annotated_method = true
+                      if title.is_empty() {
+                        title = svc.name.unwrap_or("")
+                      }
                     }
-                  }
-                }
-                if has_http {
-                  service_opt = Some(svc)
+                  None => ()
                 }
               }
-              None => ()
-            }
+            None => ()
           }
         }
       None => ()
@@ -534,30 +532,23 @@ pub fn proto_package_to_rest_description(
   }
   post_process_map_schemas(schemas)
 
-  let service = match service_opt {
-    Some(s) => s
-    None =>
-      raise ParseError::WrongJsonType(
-        "No service with [google.api.http] annotations found in package: " +
-        package_name,
-      )
+  if !has_http_annotated_method {
+    raise ParseError::WrongJsonType(
+      "No service with [google.api.http] annotations found in package: " +
+      package_name,
+    )
   }
 
-  let methods : Map[String, RestMethod] = Map::new()
-  match service.methods {
-    Some(rpc_methods) =>
-      for m in rpc_methods {
-        match build_rest_method(m, schemas, package_name) {
-          Some(rm) => {
-            let method_name = m.name.unwrap_or("")
-            if !method_name.is_empty() {
-              methods.set(method_name, rm)
-            }
-          }
-          None => ()
+  for m in rpc_methods_to_generate {
+    match build_rest_method(m, schemas, package_name) {
+      Some(rm) => {
+        let method_name = m.name.unwrap_or("")
+        if !method_name.is_empty() {
+          methods.set(method_name, rm)
         }
       }
-    None => ()
+      None => ()
+    }
   }
 
   let resources : Map[String, RestResource] = Map::new()
@@ -567,7 +558,11 @@ pub fn proto_package_to_rest_description(
   RestDescription::{
     name: api_name,
     version: api_version,
-    title: service.name.unwrap_or(api_name),
+    title: if title.is_empty() {
+      api_name
+    } else {
+      title
+    },
     description: None,
     base_url: "https://" + default_host,
     schemas: Some(schemas),

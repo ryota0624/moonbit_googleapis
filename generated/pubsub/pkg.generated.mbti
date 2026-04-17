@@ -38,11 +38,6 @@ pub(all) struct AnalyticsHubSubscriptionInfo {
 pub(all) struct ApiViolationReason {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct AttributesEntry {
-  key : String?
-  value : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
 pub(all) struct AvroConfig {
   write_metadata : Bool?
   use_topic_schema : Bool?
@@ -195,8 +190,8 @@ pub(all) struct CreateSchemaRequest {
 pub(all) struct CreateSnapshotRequest {
   name : String?
   subscription : String?
-  labels : Array[LabelsEntry]?
-  tags : Array[TagsEntry]?
+  labels : Map[String, String]?
+  tags : Map[String, String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct DeadLetterPolicy {
@@ -275,11 +270,6 @@ pub(all) struct IngestionFailureEvent {
 pub(all) struct JavaScriptUDF {
   function_name : String?
   code : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct LabelsEntry {
-  key : String?
-  value : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListSchemaRevisionsRequest {
@@ -420,7 +410,7 @@ pub(all) struct PublishResponse {
 
 pub(all) struct PubsubMessage {
   data : String?
-  attributes : Array[AttributesEntry]?
+  attributes : Map[String, String]?
   message_id : String?
   publish_time : String?
   ordering_key : String?
@@ -430,15 +420,39 @@ pub struct PubsubService {
   base_url : String
   client : @core.GoogleClient
 }
+pub async fn PubsubService::acknowledge(Self, String, AcknowledgeRequest) -> Json raise @http.HttpError
 pub async fn PubsubService::commit_schema(Self, String, CommitSchemaRequest) -> Schema raise @http.HttpError
 pub async fn PubsubService::create_schema(Self, String, Schema, schema_id? : String?) -> Schema raise @http.HttpError
+pub async fn PubsubService::create_snapshot(Self, String, CreateSnapshotRequest) -> Snapshot raise @http.HttpError
+pub async fn PubsubService::create_subscription(Self, String, Subscription) -> Subscription raise @http.HttpError
+pub async fn PubsubService::create_topic(Self, String, Topic) -> Topic raise @http.HttpError
 pub async fn PubsubService::delete_schema(Self, String) -> Json raise @http.HttpError
 pub async fn PubsubService::delete_schema_revision(Self, String, revision_id? : String?) -> Schema raise @http.HttpError
+pub async fn PubsubService::delete_snapshot(Self, String) -> Json raise @http.HttpError
+pub async fn PubsubService::delete_subscription(Self, String) -> Json raise @http.HttpError
+pub async fn PubsubService::delete_topic(Self, String) -> Json raise @http.HttpError
+pub async fn PubsubService::detach_subscription(Self, String, DetachSubscriptionRequest) -> DetachSubscriptionResponse raise @http.HttpError
 pub async fn PubsubService::get_schema(Self, String, view? : String?) -> Schema raise @http.HttpError
+pub async fn PubsubService::get_snapshot(Self, String) -> Snapshot raise @http.HttpError
+pub async fn PubsubService::get_subscription(Self, String) -> Subscription raise @http.HttpError
+pub async fn PubsubService::get_topic(Self, String) -> Topic raise @http.HttpError
 pub async fn PubsubService::list_schema_revisions(Self, String, page_size? : Int?, page_token? : String?, view? : String?) -> ListSchemaRevisionsResponse raise @http.HttpError
 pub async fn PubsubService::list_schemas(Self, String, page_size? : Int?, page_token? : String?, view? : String?) -> ListSchemasResponse raise @http.HttpError
+pub async fn PubsubService::list_snapshots(Self, String, page_size? : Int?, page_token? : String?) -> ListSnapshotsResponse raise @http.HttpError
+pub async fn PubsubService::list_subscriptions(Self, String, page_size? : Int?, page_token? : String?) -> ListSubscriptionsResponse raise @http.HttpError
+pub async fn PubsubService::list_topic_snapshots(Self, String, page_size? : Int?, page_token? : String?) -> ListTopicSnapshotsResponse raise @http.HttpError
+pub async fn PubsubService::list_topic_subscriptions(Self, String, page_size? : Int?, page_token? : String?) -> ListTopicSubscriptionsResponse raise @http.HttpError
+pub async fn PubsubService::list_topics(Self, String, page_size? : Int?, page_token? : String?) -> ListTopicsResponse raise @http.HttpError
+pub async fn PubsubService::modify_ack_deadline(Self, String, ModifyAckDeadlineRequest) -> Json raise @http.HttpError
+pub async fn PubsubService::modify_push_config(Self, String, ModifyPushConfigRequest) -> Json raise @http.HttpError
 pub fn PubsubService::new(@core.GoogleClient, base_url? : String) -> Self
+pub async fn PubsubService::publish(Self, String, PublishRequest) -> PublishResponse raise @http.HttpError
+pub async fn PubsubService::pull(Self, String, PullRequest) -> PullResponse raise @http.HttpError
 pub async fn PubsubService::rollback_schema(Self, String, RollbackSchemaRequest) -> Schema raise @http.HttpError
+pub async fn PubsubService::seek(Self, String, SeekRequest) -> SeekResponse raise @http.HttpError
+pub async fn PubsubService::update_snapshot(Self, String, UpdateSnapshotRequest) -> Snapshot raise @http.HttpError
+pub async fn PubsubService::update_subscription(Self, String, UpdateSubscriptionRequest) -> Subscription raise @http.HttpError
+pub async fn PubsubService::update_topic(Self, String, UpdateTopicRequest) -> Topic raise @http.HttpError
 pub async fn PubsubService::validate_message(Self, String, ValidateMessageRequest) -> ValidateMessageResponse raise @http.HttpError
 pub async fn PubsubService::validate_schema(Self, String, ValidateSchemaRequest) -> ValidateSchemaResponse raise @http.HttpError
 
@@ -457,7 +471,7 @@ pub(all) struct PullResponse {
 
 pub(all) struct PushConfig {
   push_endpoint : String?
-  attributes : Array[AttributesEntry]?
+  attributes : Map[String, String]?
   oidc_token : OidcToken?
   pubsub_wrapper : PubsubWrapper?
   no_wrapper : NoWrapper?
@@ -510,7 +524,7 @@ pub(all) struct Snapshot {
   name : String?
   topic : String?
   expire_time : String?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StreamingPullRequest {
@@ -542,7 +556,7 @@ pub(all) struct Subscription {
   ack_deadline_seconds : Int?
   retain_acked_messages : Bool?
   message_retention_duration : String?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
   enable_message_ordering : Bool?
   expiration_policy : ExpirationPolicy?
   filter : String?
@@ -554,17 +568,12 @@ pub(all) struct Subscription {
   state : String?
   analytics_hub_subscription_info : AnalyticsHubSubscriptionInfo?
   message_transforms : Array[MessageTransform]?
-  tags : Array[TagsEntry]?
+  tags : Map[String, String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct SubscriptionProperties {
   exactly_once_delivery_enabled : Bool?
   message_ordering_enabled : Bool?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct TagsEntry {
-  key : String?
-  value : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct TextConfig {
@@ -576,7 +585,7 @@ pub(all) struct TextFormat {
 
 pub(all) struct Topic {
   name : String?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
   message_storage_policy : MessageStoragePolicy?
   kms_key_name : String?
   schema_settings : SchemaSettings?
@@ -585,7 +594,7 @@ pub(all) struct Topic {
   state : String?
   ingestion_data_source_settings : IngestionDataSourceSettings?
   message_transforms : Array[MessageTransform]?
-  tags : Array[TagsEntry]?
+  tags : Map[String, String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct UnstructuredInference {

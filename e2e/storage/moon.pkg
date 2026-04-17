@@ -1,0 +1,14 @@
+import {
+  "moonbitlang/async",
+  "moonbitlang/core/json" @json,
+  "ryota0624/moonbit_test_containers" @tc,
+  "ryota0624/googleapis/core" @core,
+  "ryota0624/googleapis/http" @http,
+  "ryota0624/googleapis/generated/storage" @gstorage,
+}
+
+warnings = "-0029"
+
+options(
+  targets: { "e2e_test.mbt": [ "native" ] },
+)

@@ -97,6 +97,121 @@ pub(all) struct Stage {
 )
 
 ///|
+/// Schema AggregationResult
+pub(all) struct AggregationResult {
+  aggregate_fields : Map[String, Value]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BitSequence
+pub(all) struct BitSequence {
+  bitmap : String?
+  padding : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BloomFilter
+pub(all) struct BloomFilter {
+  bits : BitSequence?
+  hash_count : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DocumentMask
+pub(all) struct DocumentMask {
+  field_paths : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Precondition
+pub(all) struct Precondition {
+  exists : Bool?
+  update_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TransactionOptions
+pub(all) struct TransactionOptions {
+  read_only : ReadOnly?
+  read_write : ReadWrite?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ReadWrite
+pub(all) struct ReadWrite {
+  retry_transaction : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ReadOnly
+pub(all) struct ReadOnly {
+  read_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ExplainStats
+pub(all) struct ExplainStats {
+  data : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema StructuredPipeline
+pub(all) struct StructuredPipeline {
+  pipeline : Pipeline?
+  options : Map[String, Value]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
 /// Schema StructuredQuery
 pub(all) struct StructuredQuery {
   select : Projection?
@@ -291,121 +406,6 @@ pub(all) struct Avg {
 pub(all) struct Cursor {
   values : Array[Value]?
   before : Bool?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema AggregationResult
-pub(all) struct AggregationResult {
-  aggregate_fields : Map[String, Value]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BitSequence
-pub(all) struct BitSequence {
-  bitmap : String?
-  padding : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BloomFilter
-pub(all) struct BloomFilter {
-  bits : BitSequence?
-  hash_count : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema DocumentMask
-pub(all) struct DocumentMask {
-  field_paths : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Precondition
-pub(all) struct Precondition {
-  exists : Bool?
-  update_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TransactionOptions
-pub(all) struct TransactionOptions {
-  read_only : ReadOnly?
-  read_write : ReadWrite?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ReadWrite
-pub(all) struct ReadWrite {
-  retry_transaction : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ReadOnly
-pub(all) struct ReadOnly {
-  read_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ExplainStats
-pub(all) struct ExplainStats {
-  data : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema StructuredPipeline
-pub(all) struct StructuredPipeline {
-  pipeline : Pipeline?
-  options : Map[String, Value]?
 } derive (
   Eq,
   Show,

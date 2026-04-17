@@ -536,7 +536,7 @@ pub(all) struct MessageTransform {
 /// Schema Topic
 pub(all) struct Topic {
   name : String?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
   message_storage_policy : MessageStoragePolicy?
   kms_key_name : String?
   schema_settings : SchemaSettings?
@@ -545,31 +545,7 @@ pub(all) struct Topic {
   state : String?
   ingestion_data_source_settings : IngestionDataSourceSettings?
   message_transforms : Array[MessageTransform]?
-  tags : Array[TagsEntry]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema LabelsEntry
-pub(all) struct LabelsEntry {
-  key : String?
-  value : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TagsEntry
-pub(all) struct TagsEntry {
-  key : String?
-  value : String?
+  tags : Map[String, String]?
 } derive (
   Eq,
   Show,
@@ -581,22 +557,10 @@ pub(all) struct TagsEntry {
 /// Schema PubsubMessage
 pub(all) struct PubsubMessage {
   data : String?
-  attributes : Array[AttributesEntry]?
+  attributes : Map[String, String]?
   message_id : String?
   publish_time : String?
   ordering_key : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema AttributesEntry
-pub(all) struct AttributesEntry {
-  key : String?
-  value : String?
 } derive (
   Eq,
   Show,
@@ -768,7 +732,7 @@ pub(all) struct Subscription {
   ack_deadline_seconds : Int?
   retain_acked_messages : Bool?
   message_retention_duration : String?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
   enable_message_ordering : Bool?
   expiration_policy : ExpirationPolicy?
   filter : String?
@@ -780,7 +744,7 @@ pub(all) struct Subscription {
   state : String?
   analytics_hub_subscription_info : AnalyticsHubSubscriptionInfo?
   message_transforms : Array[MessageTransform]?
-  tags : Array[TagsEntry]?
+  tags : Map[String, String]?
 } derive (
   Eq,
   Show,
@@ -839,7 +803,7 @@ pub(all) struct ExpirationPolicy {
 /// Schema PushConfig
 pub(all) struct PushConfig {
   push_endpoint : String?
-  attributes : Array[AttributesEntry]?
+  attributes : Map[String, String]?
   oidc_token : OidcToken?
   pubsub_wrapper : PubsubWrapper?
   no_wrapper : NoWrapper?
@@ -1166,8 +1130,8 @@ pub(all) struct SubscriptionProperties {
 pub(all) struct CreateSnapshotRequest {
   name : String?
   subscription : String?
-  labels : Array[LabelsEntry]?
-  tags : Array[TagsEntry]?
+  labels : Map[String, String]?
+  tags : Map[String, String]?
 } derive (
   Eq,
   Show,
@@ -1193,7 +1157,7 @@ pub(all) struct Snapshot {
   name : String?
   topic : String?
   expire_time : String?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
 } derive (
   Eq,
   Show,
