@@ -172,8 +172,19 @@ fn path_param_names_ordered(template : String) -> Array[String] {
 }
 
 ///|
-fn append_lit_path_operands(lit : String, operands : Array[String]) -> Unit {
+/// Appends operands parsed from a literal path segment. Each operand is
+/// `(expr, needs_slash_prefix)` where `needs_slash_prefix = false` indicates
+/// the operand should be concatenated without a leading `/` separator — used
+/// for Google API `:verb` suffixes like `{parent}:runQuery`.
+fn append_lit_path_operands(
+  lit : String,
+  operands : Array[(String, Bool)],
+) -> Unit {
   if lit.is_empty() {
+    return
+  }
+  if lit.has_prefix(":") {
+    operands.push(("\"" + escape_moonbit_string_lit(lit) + "\"", false))
     return
   }
   let trimmed = lit.trim(chars="/")
@@ -182,7 +193,9 @@ fn append_lit_path_operands(lit : String, operands : Array[String]) -> Unit {
   }
   for part in trimmed.split("/") {
     if !part.is_empty() {
-      operands.push("\"" + escape_moonbit_string_lit(part.to_string()) + "\"")
+      operands.push(
+        ("\"" + escape_moonbit_string_lit(part.to_string()) + "\"", true),
+      )
     }
   }
 }
@@ -190,10 +203,10 @@ fn append_lit_path_operands(lit : String, operands : Array[String]) -> Unit {
 ///|
 fn path_expr_from_template(template : String) -> String {
   let segs = path_parse_segments(template)
-  let operands : Array[String] = Array::new()
+  let operands : Array[(String, Bool)] = Array::new()
   for seg in segs {
     if seg.1 {
-      operands.push(safe_field_name(seg.0))
+      operands.push((safe_field_name(seg.0), true))
     } else {
       append_lit_path_operands(seg.0, operands)
     }
@@ -201,11 +214,21 @@ fn path_expr_from_template(template : String) -> String {
   if operands.is_empty() {
     return "\"/\""
   }
-  let mut expr = operands[0]
-  for k in 1..<operands.length() {
-    expr = expr + " + \"/\" + " + operands[k]
+  let b = StringBuilder::new()
+  for k in 0..<operands.length() {
+    let (op, needs_slash) = operands[k]
+    if k == 0 {
+      b.write_string("\"/\" + ")
+      b.write_string(op)
+    } else if needs_slash {
+      b.write_string(" + \"/\" + ")
+      b.write_string(op)
+    } else {
+      b.write_string(" + ")
+      b.write_string(op)
+    }
   }
-  "\"/\" + " + expr
+  b.to_string()
 }
 
 ///|
@@ -767,14 +790,43 @@ fn write_rest_method(
   b.write_string(
     "  if resp.status_code >= 400 {\n    raise @http.HttpError::network_message(\n      \"HTTP \" + resp.status_code.to_string() + \": \" + resp.body,\n    )\n  }\n",
   )
-  b.write_string("  let json = @json.parse(resp.body) catch {\n")
-  b.write_string(
-    "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
-  )
-  b.write_string("  @json.from_json(json) catch {\n")
-  b.write_string(
-    "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
-  )
+  let base_type = match rest_m.response {
+    Some({ ref_: Some(r) }) => ref_to_type_name(r)
+    _ => "Json"
+  }
+  if rest_m.server_streaming.unwrap_or(false) {
+    // Google server-streaming RPCs exposed via REST return a single JSON
+    // array whose elements are the streamed response messages.
+    b.write_string("  let json = @json.parse(resp.body) catch {\n")
+    b.write_string(
+      "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
+    )
+    b.write_string("  let arr = match json {\n")
+    b.write_string("    Array(xs) => xs\n")
+    b.write_string(
+      "    _ => raise @http.HttpError::network_message(\"expected JSON array for server-streaming response\")\n",
+    )
+    b.write_string("  }\n")
+    b.write_string("  let items : Array[\{base_type}] = Array::new()\n")
+    b.write_string("  for el in arr {\n")
+    b.write_string(
+      "    let item : \{base_type} = @json.from_json(el) catch {\n",
+    )
+    b.write_string(
+      "      e => raise @http.HttpError::network_message(e.to_string())\n    }\n",
+    )
+    b.write_string("    items.push(item)\n  }\n")
+    b.write_string("  items\n")
+  } else {
+    b.write_string("  let json = @json.parse(resp.body) catch {\n")
+    b.write_string(
+      "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
+    )
+    b.write_string("  @json.from_json(json) catch {\n")
+    b.write_string(
+      "    e => raise @http.HttpError::network_message(e.to_string())\n  }\n",
+    )
+  }
   b.write_string("}\n\n")
 }
 
@@ -845,6 +897,11 @@ fn schema_to_field_type(schema : JsonSchema) -> String {
           match schema.items {
             Some(it) => "Array[\{schema_to_field_type(it)}]"
             None => "Array[Json]"
+          }
+        Some("map") =>
+          match schema.items {
+            Some(it) => "Map[String, \{schema_to_field_type(it)}]"
+            None => "Map[String, Json]"
           }
         Some("object") => "Json"
         Some(_) => "Json"

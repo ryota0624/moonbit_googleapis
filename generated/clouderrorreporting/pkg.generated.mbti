@@ -18,6 +18,7 @@ pub struct ClouderrorreportingService {
 }
 pub async fn ClouderrorreportingService::get_group(Self, String) -> ErrorGroup raise @http.HttpError
 pub fn ClouderrorreportingService::new(@core.GoogleClient, base_url? : String) -> Self
+pub async fn ClouderrorreportingService::projects_events_report(Self, String, ReportedErrorEvent) -> ReportErrorEventResponse raise @http.HttpError
 pub async fn ClouderrorreportingService::update_group(Self, String, ErrorGroup) -> ErrorGroup raise @http.HttpError
 
 pub(all) struct DeleteEventsRequest {

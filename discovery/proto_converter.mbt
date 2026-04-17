@@ -189,6 +189,83 @@ fn collect_messages(
 }
 
 ///|
+fn is_map_entry_schema(name : String, schema : JsonSchema) -> Bool {
+  if !name.has_suffix("Entry") {
+    return false
+  }
+  match schema.properties {
+    Some(props) =>
+      match props.get("key") {
+        Some(k) if k.type_ == Some("string") => props.get("value") is Some(_)
+        _ => false
+      }
+    None => false
+  }
+}
+
+///|
+fn post_process_map_schemas(schemas : Map[String, JsonSchema]) -> Unit {
+  let entry_schemas : Map[String, JsonSchema] = Map::new()
+  schemas.each((name, sch) => {
+    if is_map_entry_schema(name, sch) {
+      entry_schemas.set(name, sch)
+    }
+  })
+  if entry_schemas.is_empty() {
+    return
+  }
+  schemas.each((_name, sch) => {
+    match sch.properties {
+      Some(props) => {
+        let replacements : Array[(String, JsonSchema)] = Array::new()
+        props.each((field_name, field_schema) => {
+          if field_schema.type_ == Some("array") {
+            match field_schema.items {
+              Some(items) =>
+                match items.ref_ {
+                  Some(ref_name) =>
+                    match entry_schemas.get(ref_name) {
+                      Some(entry_sch) =>
+                        match entry_sch.properties {
+                          Some(entry_props) =>
+                            match entry_props.get("value") {
+                              Some(value_schema) =>
+                                replacements.push(
+                                  (
+                                    field_name,
+                                    JsonSchema::{
+                                      id: None,
+                                      type_: Some("map"),
+                                      description: None,
+                                      properties: None,
+                                      items: Some(value_schema),
+                                      ref_: None,
+                                    },
+                                  ),
+                                )
+                              None => ()
+                            }
+                          None => ()
+                        }
+                      None => ()
+                    }
+                  None => ()
+                }
+              None => ()
+            }
+          }
+        })
+        for pair in replacements {
+          props.set(pair.0, pair.1)
+        }
+      }
+      None => ()
+    }
+  })
+  entry_schemas.each((name, _) => schemas.remove(name))
+}
+
+///|
 fn option_get(options : Map[String, Json], key : String) -> Json? {
   match options.get("[" + key + "]") {
     Some(v) => Some(v)
@@ -455,6 +532,7 @@ pub fn proto_package_to_rest_description(
       None => ()
     }
   }
+  post_process_map_schemas(schemas)
 
   let service = match service_opt {
     Some(s) => s

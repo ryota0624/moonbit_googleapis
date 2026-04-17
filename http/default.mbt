@@ -45,18 +45,6 @@ fn extract_path_from_url(url : String) -> String {
 }
 
 ///|
-fn headers_with_patch_override(
-  headers : Map[String, String],
-) -> Map[String, String] {
-  let out : Map[String, String] = {}
-  for k, v in headers {
-    out[k] = v
-  }
-  out["x-http-method-override"] = "PATCH"
-  out
-}
-
-///|
 fn to_xhttp_method(m : HttpMethod) -> @xhttp.RequestMethod {
   match m {
     GET => @xhttp.RequestMethod::Get
@@ -84,7 +72,7 @@ fn read_text_response(
 }
 
 ///|
-async fn client_request_skip_body(
+async fn client_request_with_body(
   req : HttpRequest,
   meth : HttpMethod,
 ) -> HttpResponse raise HttpError {
@@ -99,6 +87,18 @@ async fn client_request_skip_body(
       raise HttpError::NetworkError(e.to_string())
     }
   }
+  let payload : String = match req.body {
+    Some(s) => s
+    None => ""
+  }
+  if !payload.is_empty() {
+    @io.Writer::write(client, payload) catch {
+      e => {
+        client.close()
+        raise HttpError::NetworkError(e.to_string())
+      }
+    }
+  }
   client.flush() catch {
     e => {
       client.close()
@@ -111,14 +111,14 @@ async fn client_request_skip_body(
       raise HttpError::NetworkError(e.to_string())
     }
   }
-  client.skip_response_body() catch {
+  let data = @io.Reader::read_all(client) catch {
     e => {
       client.close()
       raise HttpError::NetworkError(e.to_string())
     }
   }
   client.close()
-  response_from_xhttp(resp, "")
+  read_text_response(resp, data)
 }
 
 ///|
@@ -152,18 +152,8 @@ pub async fn default_http_request(
       }
       read_text_response(resp, data)
     }
-    DELETE => client_request_skip_body(req, DELETE)
-    PATCH =>
-      match req.body {
-        Some(payload) => {
-          let headers = headers_with_patch_override(req.headers)
-          let (resp, data) = @xhttp.post(req.url, payload, headers~) catch {
-            e => raise HttpError::NetworkError(e.to_string())
-          }
-          read_text_response(resp, data)
-        }
-        None => client_request_skip_body(req, PATCH)
-      }
+    DELETE => client_request_with_body(req, DELETE)
+    PATCH => client_request_with_body(req, PATCH)
   }
 }
 

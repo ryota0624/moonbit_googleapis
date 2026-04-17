@@ -43,9 +43,21 @@ pub async fn FirestoreService::batch_get_documents(
   let json = @json.parse(resp.body) catch {
     e => raise @http.HttpError::network_message(e.to_string())
   }
-  @json.from_json(json) catch {
-    e => raise @http.HttpError::network_message(e.to_string())
+  let arr = match json {
+    Array(xs) => xs
+    _ =>
+      raise @http.HttpError::network_message(
+        "expected JSON array for server-streaming response",
+      )
   }
+  let items : Array[BatchGetDocumentsResponse] = Array::new()
+  for el in arr {
+    let item : BatchGetDocumentsResponse = @json.from_json(el) catch {
+      e => raise @http.HttpError::network_message(e.to_string())
+    }
+    items.push(item)
+  }
+  items
 }
 
 ///|
@@ -238,9 +250,21 @@ pub async fn FirestoreService::execute_pipeline(
   let json = @json.parse(resp.body) catch {
     e => raise @http.HttpError::network_message(e.to_string())
   }
-  @json.from_json(json) catch {
-    e => raise @http.HttpError::network_message(e.to_string())
+  let arr = match json {
+    Array(xs) => xs
+    _ =>
+      raise @http.HttpError::network_message(
+        "expected JSON array for server-streaming response",
+      )
   }
+  let items : Array[ExecutePipelineResponse] = Array::new()
+  for el in arr {
+    let item : ExecutePipelineResponse = @json.from_json(el) catch {
+      e => raise @http.HttpError::network_message(e.to_string())
+    }
+    items.push(item)
+  }
+  items
 }
 
 ///|
@@ -292,7 +316,7 @@ pub async fn FirestoreService::list_collection_ids(
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
-  let path = "/" + "v1" + "/" + parent + "/" + ":listCollectionIds"
+  let path = "/" + "v1" + "/" + parent + ":listCollectionIds"
   let url = self.base_url + path
   let req = @http.HttpRequest::new(
     url,
@@ -401,9 +425,21 @@ pub async fn FirestoreService::listen(
   let json = @json.parse(resp.body) catch {
     e => raise @http.HttpError::network_message(e.to_string())
   }
-  @json.from_json(json) catch {
-    e => raise @http.HttpError::network_message(e.to_string())
+  let arr = match json {
+    Array(xs) => xs
+    _ =>
+      raise @http.HttpError::network_message(
+        "expected JSON array for server-streaming response",
+      )
   }
+  let items : Array[ListenResponse] = Array::new()
+  for el in arr {
+    let item : ListenResponse = @json.from_json(el) catch {
+      e => raise @http.HttpError::network_message(e.to_string())
+    }
+    items.push(item)
+  }
+  items
 }
 
 ///|
@@ -416,7 +452,7 @@ pub async fn FirestoreService::partition_query(
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
-  let path = "/" + "v1" + "/" + parent + "/" + ":partitionQuery"
+  let path = "/" + "v1" + "/" + parent + ":partitionQuery"
   let url = self.base_url + path
   let req = @http.HttpRequest::new(
     url,
@@ -480,7 +516,7 @@ pub async fn FirestoreService::run_aggregation_query(
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
-  let path = "/" + "v1" + "/" + parent + "/" + ":runAggregationQuery"
+  let path = "/" + "v1" + "/" + parent + ":runAggregationQuery"
   let url = self.base_url + path
   let req = @http.HttpRequest::new(
     url,
@@ -497,9 +533,21 @@ pub async fn FirestoreService::run_aggregation_query(
   let json = @json.parse(resp.body) catch {
     e => raise @http.HttpError::network_message(e.to_string())
   }
-  @json.from_json(json) catch {
-    e => raise @http.HttpError::network_message(e.to_string())
+  let arr = match json {
+    Array(xs) => xs
+    _ =>
+      raise @http.HttpError::network_message(
+        "expected JSON array for server-streaming response",
+      )
   }
+  let items : Array[RunAggregationQueryResponse] = Array::new()
+  for el in arr {
+    let item : RunAggregationQueryResponse = @json.from_json(el) catch {
+      e => raise @http.HttpError::network_message(e.to_string())
+    }
+    items.push(item)
+  }
+  items
 }
 
 ///|
@@ -512,7 +560,7 @@ pub async fn FirestoreService::run_query(
   let body = request.to_json().stringify()
   let h : Map[String, String] = {}
   h.set("Content-Type", "application/json")
-  let path = "/" + "v1" + "/" + parent + "/" + ":runQuery"
+  let path = "/" + "v1" + "/" + parent + ":runQuery"
   let url = self.base_url + path
   let req = @http.HttpRequest::new(
     url,
@@ -529,9 +577,21 @@ pub async fn FirestoreService::run_query(
   let json = @json.parse(resp.body) catch {
     e => raise @http.HttpError::network_message(e.to_string())
   }
-  @json.from_json(json) catch {
-    e => raise @http.HttpError::network_message(e.to_string())
+  let arr = match json {
+    Array(xs) => xs
+    _ =>
+      raise @http.HttpError::network_message(
+        "expected JSON array for server-streaming response",
+      )
   }
+  let items : Array[RunQueryResponse] = Array::new()
+  for el in arr {
+    let item : RunQueryResponse = @json.from_json(el) catch {
+      e => raise @http.HttpError::network_message(e.to_string())
+    }
+    items.push(item)
+  }
+  items
 }
 
 ///|
@@ -593,7 +653,19 @@ pub async fn FirestoreService::write(
   let json = @json.parse(resp.body) catch {
     e => raise @http.HttpError::network_message(e.to_string())
   }
-  @json.from_json(json) catch {
-    e => raise @http.HttpError::network_message(e.to_string())
+  let arr = match json {
+    Array(xs) => xs
+    _ =>
+      raise @http.HttpError::network_message(
+        "expected JSON array for server-streaming response",
+      )
   }
+  let items : Array[WriteResponse] = Array::new()
+  for el in arr {
+    let item : WriteResponse = @json.from_json(el) catch {
+      e => raise @http.HttpError::network_message(e.to_string())
+    }
+    items.push(item)
+  }
+  items
 }

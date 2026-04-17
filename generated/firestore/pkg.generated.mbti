@@ -12,11 +12,6 @@ import {
 // Errors
 
 // Types and methods
-pub(all) struct AggregateFieldsEntry {
-  key : String?
-  value : Value?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
 pub(all) struct Aggregation {
   count : Count?
   sum : Sum?
@@ -25,7 +20,7 @@ pub(all) struct Aggregation {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct AggregationResult {
-  aggregate_fields : Array[AggregateFieldsEntry]?
+  aggregate_fields : Map[String, Value]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ArrayValue {
@@ -55,7 +50,7 @@ pub(all) struct BatchGetDocumentsResponse {
 pub(all) struct BatchWriteRequest {
   database : String?
   writes : Array[Write]?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct BatchWriteResponse {
@@ -127,7 +122,7 @@ pub(all) struct DeleteDocumentRequest {
 
 pub(all) struct Document {
   name : String?
-  fields : Array[FieldsEntry]?
+  fields : Map[String, Value]?
   create_time : String?
   update_time : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
@@ -224,11 +219,6 @@ pub(all) struct FieldTransform {
   remove_all_from_array : ArrayValue?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
-pub(all) struct FieldsEntry {
-  key : String?
-  value : Value?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
 pub(all) struct Filter {
   composite_filter : CompositeFilter?
   field_filter : FieldFilter?
@@ -270,7 +260,7 @@ pub async fn FirestoreService::write(Self, String, WriteRequest) -> Array[WriteR
 pub(all) struct Function {
   name : String?
   args : Array[Value]?
-  options : Array[OptionsEntry]?
+  options : Map[String, Value]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct GetDocumentRequest {
@@ -278,11 +268,6 @@ pub(all) struct GetDocumentRequest {
   mask : DocumentMask?
   transaction : String?
   read_time : String?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct LabelsEntry {
-  key : String?
-  value : String?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListCollectionIdsRequest {
@@ -318,7 +303,7 @@ pub(all) struct ListenRequest {
   database : String?
   add_target : Target?
   remove_target : Int?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct ListenResponse {
@@ -330,12 +315,7 @@ pub(all) struct ListenResponse {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct MapValue {
-  fields : Array[FieldsEntry]?
-} derive(Eq, Show, ToJson, @json.FromJson)
-
-pub(all) struct OptionsEntry {
-  key : String?
-  value : Value?
+  fields : Map[String, Value]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Order {
@@ -429,7 +409,7 @@ pub(all) struct RunQueryResponse {
 pub(all) struct Stage {
   name : String?
   args : Array[Value]?
-  options : Array[OptionsEntry]?
+  options : Map[String, Value]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StructuredAggregationQuery {
@@ -439,7 +419,7 @@ pub(all) struct StructuredAggregationQuery {
 
 pub(all) struct StructuredPipeline {
   pipeline : Pipeline?
-  options : Array[OptionsEntry]?
+  options : Map[String, Value]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct StructuredQuery {
@@ -525,7 +505,7 @@ pub(all) struct WriteRequest {
   stream_id : String?
   writes : Array[Write]?
   stream_token : String?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct WriteResponse {

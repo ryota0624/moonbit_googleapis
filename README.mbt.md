@@ -37,7 +37,11 @@ async fn main {
   let client = @core.GoogleClient::new(fn() { token })
   let firestore = @gfs.FirestoreService::new(client)
   let parent = "projects/" + project + "/databases/(default)/documents"
-  let result = firestore.list_documents(parent, "my-collection", page_size=Some(10))
+  let result = firestore.list_documents(
+    parent,
+    "my-collection",
+    page_size=Some(10),
+  )
   match result.documents {
     Some(docs) =>
       for doc in docs {

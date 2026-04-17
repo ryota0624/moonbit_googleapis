@@ -2,21 +2,9 @@
 /// Schema Document
 pub(all) struct Document {
   name : String?
-  fields : Array[FieldsEntry]?
+  fields : Map[String, Value]?
   create_time : String?
   update_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema FieldsEntry
-pub(all) struct FieldsEntry {
-  key : String?
-  value : Value?
 } derive (
   Eq,
   Show,
@@ -63,7 +51,7 @@ pub(all) struct ArrayValue {
 ///|
 /// Schema MapValue
 pub(all) struct MapValue {
-  fields : Array[FieldsEntry]?
+  fields : Map[String, Value]?
 } derive (
   Eq,
   Show,
@@ -76,19 +64,7 @@ pub(all) struct MapValue {
 pub(all) struct Function {
   name : String?
   args : Array[Value]?
-  options : Array[OptionsEntry]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema OptionsEntry
-pub(all) struct OptionsEntry {
-  key : String?
-  value : Value?
+  options : Map[String, Value]?
 } derive (
   Eq,
   Show,
@@ -112,134 +88,7 @@ pub(all) struct Pipeline {
 pub(all) struct Stage {
   name : String?
   args : Array[Value]?
-  options : Array[OptionsEntry]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema AggregationResult
-pub(all) struct AggregationResult {
-  aggregate_fields : Array[AggregateFieldsEntry]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema AggregateFieldsEntry
-pub(all) struct AggregateFieldsEntry {
-  key : String?
-  value : Value?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BitSequence
-pub(all) struct BitSequence {
-  bitmap : String?
-  padding : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema BloomFilter
-pub(all) struct BloomFilter {
-  bits : BitSequence?
-  hash_count : Int?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema DocumentMask
-pub(all) struct DocumentMask {
-  field_paths : Array[String]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema Precondition
-pub(all) struct Precondition {
-  exists : Bool?
-  update_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema TransactionOptions
-pub(all) struct TransactionOptions {
-  read_only : ReadOnly?
-  read_write : ReadWrite?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ReadWrite
-pub(all) struct ReadWrite {
-  retry_transaction : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ReadOnly
-pub(all) struct ReadOnly {
-  read_time : String?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema ExplainStats
-pub(all) struct ExplainStats {
-  data : Json?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema StructuredPipeline
-pub(all) struct StructuredPipeline {
-  pipeline : Pipeline?
-  options : Array[OptionsEntry]?
+  options : Map[String, Value]?
 } derive (
   Eq,
   Show,
@@ -442,6 +291,121 @@ pub(all) struct Avg {
 pub(all) struct Cursor {
   values : Array[Value]?
   before : Bool?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema AggregationResult
+pub(all) struct AggregationResult {
+  aggregate_fields : Map[String, Value]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BitSequence
+pub(all) struct BitSequence {
+  bitmap : String?
+  padding : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema BloomFilter
+pub(all) struct BloomFilter {
+  bits : BitSequence?
+  hash_count : Int?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema DocumentMask
+pub(all) struct DocumentMask {
+  field_paths : Array[String]?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema Precondition
+pub(all) struct Precondition {
+  exists : Bool?
+  update_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema TransactionOptions
+pub(all) struct TransactionOptions {
+  read_only : ReadOnly?
+  read_write : ReadWrite?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ReadWrite
+pub(all) struct ReadWrite {
+  retry_transaction : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ReadOnly
+pub(all) struct ReadOnly {
+  read_time : String?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema ExplainStats
+pub(all) struct ExplainStats {
+  data : Json?
+} derive (
+  Eq,
+  Show,
+  FromJson(rename_fields="camelCase"),
+  ToJson(rename_fields="camelCase"),
+)
+
+///|
+/// Schema StructuredPipeline
+pub(all) struct StructuredPipeline {
+  pipeline : Pipeline?
+  options : Map[String, Value]?
 } derive (
   Eq,
   Show,
@@ -908,19 +872,7 @@ pub(all) struct WriteRequest {
   stream_id : String?
   writes : Array[Write]?
   stream_token : String?
-  labels : Array[LabelsEntry]?
-} derive (
-  Eq,
-  Show,
-  FromJson(rename_fields="camelCase"),
-  ToJson(rename_fields="camelCase"),
-)
-
-///|
-/// Schema LabelsEntry
-pub(all) struct LabelsEntry {
-  key : String?
-  value : String?
+  labels : Map[String, String]?
 } derive (
   Eq,
   Show,
@@ -948,7 +900,7 @@ pub(all) struct ListenRequest {
   database : String?
   add_target : Target?
   remove_target : Int?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
 } derive (
   Eq,
   Show,
@@ -1057,7 +1009,7 @@ pub(all) struct ListCollectionIdsResponse {
 pub(all) struct BatchWriteRequest {
   database : String?
   writes : Array[Write]?
-  labels : Array[LabelsEntry]?
+  labels : Map[String, String]?
 } derive (
   Eq,
   Show,
