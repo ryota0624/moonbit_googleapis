@@ -442,3 +442,18 @@ test "generate_types and generate_client snapshot" {
     ),
   )
 }
+
+///|
+test "proto_field_to_schema maps google.protobuf.NullValue to Json (proto3 JSON spec)" {
+  let field = ProtoField::{
+    name: Some("null_value"),
+    label: Some("LABEL_OPTIONAL"),
+    type_: Some("TYPE_ENUM"),
+    type_name: Some(".google.protobuf.NullValue"),
+    json_name: Some("nullValue"),
+    oneof_index: Some(0),
+  }
+  let schema = proto_field_to_schema(field, "google.firestore.v1")
+  assert_eq(schema.type_, Some("object"))
+  assert_eq(schema_to_field_type(schema), "Json")
+}

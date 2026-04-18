@@ -82,51 +82,66 @@ fn proto_field_type_to_discovery(f : ProtoField) -> String {
 ///|
 fn proto_field_to_schema(f : ProtoField, package_name : String) -> JsonSchema {
   let is_repeated = f.label == Some("LABEL_REPEATED")
-  let base_schema = match f.type_ {
-    Some("TYPE_MESSAGE") => {
-      let type_name = f.type_name.unwrap_or("")
-      match well_known_type_to_discovery(type_name) {
-        Some(wk) =>
-          JsonSchema::{
-            id: None,
-            type_: Some(wk),
-            description: None,
-            properties: None,
-            items: None,
-            ref_: None,
-          }
-        None =>
-          if type_name.has_prefix("." + package_name + ".") ||
-            !type_name.has_prefix(".") {
+  // proto3 JSON mapping represents `google.protobuf.NullValue` as JSON `null`
+  // (not a string). Map it to `Json` so `null` decodes and `Some(Json::Null)`
+  // serializes as `null`. Placed before the type_ match to handle any path
+  // that references NullValue, regardless of TYPE_ENUM/TYPE_MESSAGE.
+  let base_schema = if f.type_name == Some(".google.protobuf.NullValue") {
+    JsonSchema::{
+      id: None,
+      type_: Some("object"),
+      description: None,
+      properties: None,
+      items: None,
+      ref_: None,
+    }
+  } else {
+    match f.type_ {
+      Some("TYPE_MESSAGE") => {
+        let type_name = f.type_name.unwrap_or("")
+        match well_known_type_to_discovery(type_name) {
+          Some(wk) =>
             JsonSchema::{
               id: None,
-              type_: None,
-              description: None,
-              properties: None,
-              items: None,
-              ref_: Some(short_type_name(type_name)),
-            }
-          } else {
-            JsonSchema::{
-              id: None,
-              type_: Some("object"),
+              type_: Some(wk),
               description: None,
               properties: None,
               items: None,
               ref_: None,
             }
-          }
+          None =>
+            if type_name.has_prefix("." + package_name + ".") ||
+              !type_name.has_prefix(".") {
+              JsonSchema::{
+                id: None,
+                type_: None,
+                description: None,
+                properties: None,
+                items: None,
+                ref_: Some(short_type_name(type_name)),
+              }
+            } else {
+              JsonSchema::{
+                id: None,
+                type_: Some("object"),
+                description: None,
+                properties: None,
+                items: None,
+                ref_: None,
+              }
+            }
+        }
       }
-    }
-    _ => {
-      let discovery_type = proto_field_type_to_discovery(f)
-      JsonSchema::{
-        id: None,
-        type_: Some(discovery_type),
-        description: None,
-        properties: None,
-        items: None,
-        ref_: None,
+      _ => {
+        let discovery_type = proto_field_type_to_discovery(f)
+        JsonSchema::{
+          id: None,
+          type_: Some(discovery_type),
+          description: None,
+          properties: None,
+          items: None,
+          ref_: None,
+        }
       }
     }
   }

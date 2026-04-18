@@ -344,3 +344,50 @@ async test "firestore e2e" {
   scenario_commit(svc, database, parent)
   let _ = c.cleanup()
 }
+
+///|
+/// proto3 represents `google.protobuf.NullValue` as JSON `null`.
+/// Regression test for decoding `{"nullValue": null}` into `@gfs.Value`.
+test "Document decodes nullValue: null (proto3 JSON mapping)" {
+  let raw =
+    #|{
+    #|  "name": "projects/p/databases/(default)/documents/c/d",
+    #|  "fields": {
+    #|    "expirationTime": { "nullValue": null }
+    #|  }
+    #|}
+
+  let parsed = @json.parse(raw) catch { e => fail("parse: \{e}") }
+  let doc : @gfs.Document = @json.from_json(parsed) catch {
+    e => fail("decode: \{e}")
+  }
+  let fields = doc.fields.unwrap()
+  let v = fields.get("expirationTime").unwrap()
+  assert_eq(v.null_value, Some(Json::null()))
+  assert_eq(v.string_value, None)
+}
+
+///|
+/// proto3 JSON mapping: `NullValue` must encode as JSON `null`, not string.
+/// Regression test for `Value { null_value: Some(Json::null()) }.to_json()`.
+test "Value encodes null_value: Some(Json::null()) as JSON null" {
+  let v = @gfs.Value::{
+    null_value: Some(Json::null()),
+    boolean_value: None,
+    integer_value: None,
+    double_value: None,
+    timestamp_value: None,
+    string_value: None,
+    bytes_value: None,
+    reference_value: None,
+    geo_point_value: None,
+    array_value: None,
+    map_value: None,
+    field_reference_value: None,
+    variable_reference_value: None,
+    function_value: None,
+    pipeline_value: None,
+  }
+  let encoded = v.to_json().stringify()
+  assert_eq(encoded, "{\"nullValue\":null}")
+}

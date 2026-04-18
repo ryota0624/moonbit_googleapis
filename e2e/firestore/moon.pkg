@@ -1,5 +1,6 @@
 import {
   "moonbitlang/async",
+  "moonbitlang/core/json" @json,
   "ryota0624/moonbit_test_containers" @tc,
   "ryota0624/googleapis/core" @core,
   "ryota0624/googleapis/http" @http,

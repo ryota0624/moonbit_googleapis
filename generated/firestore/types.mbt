@@ -15,7 +15,7 @@ pub(all) struct Document {
 ///|
 /// Schema Value
 pub(all) struct Value {
-  null_value : String?
+  null_value : Json?
   boolean_value : Bool?
   integer_value : String?
   double_value : Double?

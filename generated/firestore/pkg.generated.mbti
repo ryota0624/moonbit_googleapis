@@ -474,7 +474,7 @@ pub(all) struct UpdateDocumentRequest {
 } derive(Eq, Show, ToJson, @json.FromJson)
 
 pub(all) struct Value {
-  null_value : String?
+  null_value : Json?
   boolean_value : Bool?
   integer_value : String?
   double_value : Double?
